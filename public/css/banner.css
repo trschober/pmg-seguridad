@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face {
+  @font-face{font-family:'gobCL';src:url('fonts/gobcl_bold-webfont.eot');src:url('fonts/gobcl_bold-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/gobcl_bold-webfont.woff') format('woff'),url('fonts/gobcl_bold-webfont.ttf') format('truetype'),url('fonts/gobcl_bold-webfont.svg#gobCL') format('svg');font-weight:700;font-style:normal}@font-face{font-family:'gobCL';src:url('fonts/gobcl_light-webfont.eot');src:url('fonts/gobcl_light-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/gobcl_light-webfont.woff') format('woff'),url('fonts/gobcl_light-webfont.ttf') format('truetype'),url('fonts/gobcl_light-webfont.svg#gobCL') format('svg');font-weight:100;font-style:normal}@font-face{font-family:'gobCL';src:url('fonts/gobcl_regular-webfont.eot');src:url('fonts/gobcl_regular-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/gobcl_regular-webfont.woff') format('woff'),url('fonts/gobcl_regular-webfont.ttf') format('truetype'),url('fonts/gobcl_regular-webfont.svg#gobCL') format('svg');font-weight:400;font-style:normal}.gobCL{font-family:gobCL,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body{font-family:gobCL,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding-top:90px}
+}
+#widget {
+    font-family:gobCL,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    min-height: 140px;
+    width: 234px;
+    border: solid 1px #d9d9d9;
+    background-repeat: repeat-x;
+    background-color: #042842;
+    font-size: 87.5%;
+	text-align: left;
+}
+
+.list-group {
+  margin-bottom: 20px;
+  padding-left: 0;
+}
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+}
+.list-group-item:first-child {
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.h2{
+  font-family:gobCL,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #ffffff;
+}
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-align: center;
+  background-color: #777777;
+  border-radius: 10px;
+}
+.list-group-item > .badge {
+  float: right;
+}
+.fh2{
+    color: #ffffff;
+}
+

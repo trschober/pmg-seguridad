@@ -1,0 +1,94 @@
+.print-hide {
+  display: none;
+}
+.print-show {
+  display: block;
+}
+body {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.well {
+  border: none;
+  padding: 10px;
+  margin: 0px;
+}
+.well h2 {
+  font-size: 24px;
+}
+.well fieldset {
+  margin-bottom: 0px;
+}
+.well fieldset legend {
+  font-size: 15px;
+}
+.well fieldset label {
+  font-size: 12px;
+}
+.well fieldset p {
+  font-size: 12px;
+}
+.well fieldset input {
+  font-size: 12px;
+  padding: 0px 5px;
+  height: 20px;
+}
+.well fieldset select {
+  font-size: 12px;
+  padding: 0px 5px;
+  height: 20px;
+}
+.well fieldset textarea {
+  font-size: 12px;
+  padding: 0px 5px;
+}
+.well fieldset .input-group label {
+  display: none;
+}
+.well fieldset .input-group .input-group-addon {
+  font-size: 12px;
+  padding: 0px 5px;
+  height: 20px;
+}
+.well fieldset table th {
+  font-size: 12px;
+}
+.well fieldset table td {
+  font-size: 12px;
+}
+#print_helper { 
+    display: block;
+    overflow: visible;
+    white-space: pre;
+    white-space: pre-wrap;
+}
+#obs_ins {
+  display: none;
+}
+#print_observaciones { 
+    display: block;
+    overflow: visible;
+    white-space: pre;
+    white-space: pre-wrap;
+}
+#print_observaciones_opcional { 
+    display: block;
+    overflow: visible;
+    white-space: pre;
+    white-space: pre-wrap;
+}
+#observacion {
+  display: none;
+}
+#obs_val {
+  display: none;
+}
+.cat_observaciones { 
+    display: block;
+    overflow: visible;
+    white-space: pre;
+    white-space: pre-wrap;
+}
+.cat_observacion {
+  display: none;
+}
