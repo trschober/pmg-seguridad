@@ -15,3 +15,8 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+//Controles
+Route::get('controles/index', 'ControlController@getIndex');
+Route::get('controles/estado', 'ControlController@getEstado');
+Route::post('controles/incumplimiento', 'ControlController@setIncumplimiento');
