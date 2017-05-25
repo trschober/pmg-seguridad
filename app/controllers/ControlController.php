@@ -45,9 +45,22 @@ class ControlController extends BaseController{
 		//echo $control_id."<br>";
 		//exit;
 
-		$file = Input::file('archivo');
-		$file->move('public/uploads',$file->getClientOriginalName());
-		return Response::json(['success' => true, 'message'=>'file uploaded']);
+		//$file = Input::file('archivo');
+		//$file->move('public/uploads',$file->getClientOriginalName());
+		//return Response::json(['success' => true, 'message'=>'file uploaded']);
+
+		
+		foreach(Input::file('archivo') as $file){
+			$file->move('public/uploads',$file->getClientOriginalName());
+			$archivo = new Archivo;
+			$archivo->institucion_id=1;
+			$archivo->control_id=Input::get('control_id');
+			$archivo->filename=$file->getClientOriginalName();
+			$archivo->save();
+		}
+		
+		return Response::json(['success' => true,'message'=>'<div class="alert alert-success"><strong>Success!</strong> OK.</div>']);
+		//return Response::json(array('success'=>true,'message'=>'OK'));
 	}
 
 }
