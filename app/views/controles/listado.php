@@ -92,7 +92,7 @@
       </div>
       <div id="thanks"></div>
       <div class="modal-body">
-    <form action="<?=URL::to('controles/incumplimiento')?>" id="myform" method="POST" enctype="multipart/form-data">
+    <form action="<?=URL::to('controles/cumplimiento')?>" id="myform" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="message-text" class="control-label">Observaciones:</label>
             <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
@@ -107,7 +107,6 @@
       </div>
     </div>
     </form>
-
   </div>
 </div>
 

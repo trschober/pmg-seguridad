@@ -2,7 +2,6 @@
 
 class ControlController extends BaseController{
 
-
 	public function getIndex(){
 		$controles = Control::with(array('comentarios' => function( $query ){
 		    $query->where('institucion_id',1);
@@ -29,27 +28,7 @@ class ControlController extends BaseController{
 		}
 	}
 
-	public function setIncumplimiento(){
-		/*
-		$incumplimiento = Input::get('comentario_incumplimiento');
-		$control_id = Input::get('control_id');
-		$file = Input::file('archivo');
-		//$mime = $archivo->getMimeType();
-		if ($file !== null) {
-		    echo $file->getClientOriginalExtension();  
-		}
-		*/
-		//print_r(Input::all());
-
-		//echo $incumplimiento."<br>";
-		//echo $control_id."<br>";
-		//exit;
-
-		//$file = Input::file('archivo');
-		//$file->move('public/uploads',$file->getClientOriginalName());
-		//return Response::json(['success' => true, 'message'=>'file uploaded']);
-
-		
+	public function setCumplimiento(){		
 		foreach(Input::file('archivo') as $file){
 			$file->move('public/uploads',$file->getClientOriginalName());
 			$archivo = new Archivo;
@@ -58,9 +37,55 @@ class ControlController extends BaseController{
 			$archivo->filename=$file->getClientOriginalName();
 			$archivo->save();
 		}
-		
 		return Response::json(['success' => true,'message'=>'<div class="alert alert-success"><strong>Success!</strong> OK.</div>']);
-		//return Response::json(array('success'=>true,'message'=>'OK'));
 	}
 
+	public function cargaPlanilla(){
+		$this->layout->title= "Carga de controles";
+        $this->layout->content = View::make('controles/cargar');
+	}
+
+	public function uploadPlanilla(){
+			$file = array('excel' => Input::file('excel'));
+			$rules = array('excel' => 'required',);
+			$validator = Validator::make($file, $rules);
+			if ($validator->fails()) {
+				return Redirect::to('controles/carga')->withInput()->withErrors($validator);
+			}
+			else {
+				if (Input::file('excel')->isValid()) {
+					$destinationPath = 'public/uploads';
+					$extension = Input::file('excel')->getClientOriginalExtension();
+					$name = Input::file('excel')->getClientOriginalName();
+					$fileName = $name;
+					Input::file('excel')->move($destinationPath, $fileName);
+
+					//Cargar excel en tabla
+					$archivo = $destinationPath."/".$fileName;
+					$inputFileType = PHPExcel_IOFactory::identify($archivo);
+					$objReader= PHPExcel_IOFactory::createReader($inputFileType);
+					$objReader->setReadDataOnly(true);
+					$objPHPExcel=$objReader->load($archivo);
+					$objWorksheet = $objPHPExcel->getActiveSheet();
+					$rows = $objPHPExcel->getActiveSheet()->getHighestRow();
+					for($fila=2;$fila<=$rows;$fila++){
+						$institucion = Institucion::where('servicio',$objWorksheet->getCellByColumnAndRow(1, $fila)->getValue())->first();
+						$control = Control::where('codigo',$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue());
+						if(!is_null($institucion) && !is_null($control) ){
+							$comentario = new Comentario();
+							$comentario->institucion_id = $institucion->id;
+							$comentario->control_id = $control->id;
+							$comentario->anio_implementacion = $objWorksheet->getCellByColumnAndRow(4, $fila)->getValue();
+							$comentario->cumple = null;
+							$comentario->save();
+						}
+					}
+					Session::flash('success', 'Carga exitosa');
+					return Redirect::to('controles/carga');
+				}else {
+					Session::flash('error', 'Archivo invalido');
+					return Redirect::to('controles/carga');
+				}
+			}
+		}
 }
