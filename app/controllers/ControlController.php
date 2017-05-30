@@ -21,7 +21,7 @@ class ControlController extends BaseController{
 				));
 			}else{
 				return Response::json(array(
-					'success'=>true,
+					'success'=>false,
 				    'message'=>'existe'
 				));
 			}
@@ -70,7 +70,7 @@ class ControlController extends BaseController{
 					$rows = $objPHPExcel->getActiveSheet()->getHighestRow();
 					for($fila=2;$fila<=$rows;$fila++){
 						$institucion = Institucion::where('servicio',$objWorksheet->getCellByColumnAndRow(1, $fila)->getValue())->first();
-						$control = Control::where('codigo',$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue());
+						$control = Control::where('codigo',$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue())->first();
 						if(!is_null($institucion) && !is_null($control) ){
 							$comentario = new Comentario();
 							$comentario->institucion_id = $institucion->id;
@@ -78,10 +78,13 @@ class ControlController extends BaseController{
 							$comentario->anio_implementacion = $objWorksheet->getCellByColumnAndRow(4, $fila)->getValue();
 							$comentario->cumple = null;
 							$comentario->save();
+						}else{
+							echo $objWorksheet->getCellByColumnAndRow(1, $fila)->getValue()."---".$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue()."<br>";
 						}
 					}
-					Session::flash('success', 'Carga exitosa');
-					return Redirect::to('controles/carga');
+					exit;
+					//Session::flash('success', 'Carga exitosa');
+					//return Redirect::to('controles/carga');
 				}else {
 					Session::flash('error', 'Archivo invalido');
 					return Redirect::to('controles/carga');

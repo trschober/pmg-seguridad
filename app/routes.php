@@ -17,7 +17,7 @@ Route::get('/', function()
 });
 
 //Controles
-Route::get('controles/index', 'ControlController@getIndex');
+Route::get('controles', 'ControlController@getIndex');
 Route::get('controles/estado', 'ControlController@getEstado');
 Route::post('controles/cumplimiento', 'ControlController@setCumplimiento');
 Route::get('controles/carga', 'ControlController@cargaPlanilla');

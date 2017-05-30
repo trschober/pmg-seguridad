@@ -18,7 +18,7 @@ class CreateComentarios extends Migration {
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
 			$table->integer('control_id')->unsigned();
 			$table->foreign('control_id')->references('id')->on('controles')->onDelete('cascade');
-			$table->enum('cumple', array('si','no'));
+			$table->enum('cumple', array('si','no'))->nullable();
 			$table->text('observaciones_institucion')->nullable();
 			$table->text('observaciones_red')->nullable();
 			$table->timestamps();

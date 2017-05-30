@@ -43,12 +43,12 @@
                         <? endforeach ?>
                     <?php else: ?>
                         <select class="form-control" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
-                        <option value="" disabled selected>Seleccione opción</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2016">2015</option>
-                        <option value="2016">2014</option>
-                        <option value="-">-</option>
+                            <option value="" disabled selected>Seleccione opción</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2016">2015</option>
+                            <option value="2016">2014</option>
+                            <option value="-">-</option>
                         </select>
                     <?php endif ?>
                     <div class="cid">
@@ -60,15 +60,15 @@
                         <?php foreach ($control->comentarios as $comentario): ?>
                         <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
                             <option value="" disabled selected> Seleccion opción </option>
-                            <option value="<?=$comentario->cumple ?>" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
-                            <option value="<?=$comentario->cumple ?>" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
+                            <option value="<?=is_null($comentario->cumple) ? 'si' : $comentario->cumple ?>" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
+                            <option value="<?=is_null($comentario->cumple) ? 'no' : $comentario->cumple ?>" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
                         </select>
                         <? endforeach ?>
                     <?php else: ?>
                         <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                        <option value="" disabled selected>Seleccione opción</option>
-                        <option value="si">Si</option>
-                        <option value="no">No</option>
+                            <option value="" disabled selected>Seleccione opcióasdn</option>
+                            <option value="si">Si</option>
+                            <option value="no">No</option>
                         </select>
                     <?php endif ?>
                     <div class="cid">
