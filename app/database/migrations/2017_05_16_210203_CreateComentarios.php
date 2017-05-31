@@ -14,6 +14,7 @@ class CreateComentarios extends Migration {
 	{
 		//
 		Schema::create('comentarios', function($table) {
+			$table->increments('id');
 			$table->integer('institucion_id')->unsigned();
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
 			$table->integer('control_id')->unsigned();

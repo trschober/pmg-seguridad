@@ -28,15 +28,27 @@ class ControlController extends BaseController{
 		}
 	}
 
-	public function setCumplimiento(){		
-		foreach(Input::file('archivo') as $file){
-			$file->move('public/uploads',$file->getClientOriginalName());
-			$archivo = new Archivo;
-			$archivo->institucion_id=1;
-			$archivo->control_id=Input::get('control_id');
-			$archivo->filename=$file->getClientOriginalName();
-			$archivo->save();
+	public function setCumplimiento(){
+		$comentario = Comentario::where('institucion_id',1)->where('control_id',Input::get('control_id'))->first();
+		if($comentario===null){
+			$comentario = new Comentario;
 		}
+		$comentario->cumple = Input::get('cumple');
+		$comentario->observaciones_institucion = Input::get('comentario');
+		$comentario->anio_implementacion = Input::has('anio') ? Input::get('anio') : "-";
+		$comentario->institucion_id = 1;
+		$comentario->control_id = Input::get('control_id');
+		if(Input::hasFile('archivo')){
+			foreach(Input::file('archivo') as $file){
+				$file->move('public/uploads',$file->getClientOriginalName());
+				$archivo = new Archivo;
+				$archivo->institucion_id=1;
+				$archivo->control_id=Input::get('control_id');
+				$archivo->filename=$file->getClientOriginalName();
+				$archivo->save();
+			}
+		}
+		$comentario->save();
 		return Response::json(['success' => true,'message'=>'<div class="alert alert-success"><strong>Success!</strong> OK.</div>']);
 	}
 

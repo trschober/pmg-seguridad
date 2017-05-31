@@ -34,11 +34,11 @@
                         <?php foreach ($control->comentarios as $comentario): ?>
                         <select class="form-control" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
                             <option value="" disabled selected> Seleccion opción </option>
-                            <option value="<?=$comentario->anio_implementacion ?>" <?=$comentario->anio_implementacion=='2017' ? 'selected' : '' ?>>2017</option>
-                            <option value="<?=$comentario->anio_implementacion ?>" <?=$comentario->anio_implementacion=='2016' ? 'selected' : '' ?>>2016</option>
-                            <option value="<?=$comentario->anio_implementacion ?>" <?=$comentario->anio_implementacion=='2015' ? 'selected' : '' ?>>2015</option>
-                            <option value="<?=$comentario->anio_implementacion ?>" <?=$comentario->anio_implementacion=='2014' ? 'selected' : '' ?>>2014</option>
-                            <option value="<?=$comentario->anio_implementacion ?>" <?=$comentario->anio_implementacion=='-' ? 'selected' : '' ?>>-</option>
+                            <option value="2017" <?=$comentario->anio_implementacion=='2017' ? 'selected' : '' ?>>2017</option>
+                            <option value="2016" <?=$comentario->anio_implementacion=='2016' ? 'selected' : '' ?>>2016</option>
+                            <option value="2015" <?=$comentario->anio_implementacion=='2015' ? 'selected' : '' ?>>2015</option>
+                            <option value="2014" <?=$comentario->anio_implementacion=='2014' ? 'selected' : '' ?>>2014</option>
+                            <option value="-" <?=$comentario->anio_implementacion=='-' ? 'selected' : '' ?>>-</option>
                         </select>
                         <? endforeach ?>
                     <?php else: ?>
@@ -103,7 +103,7 @@
       <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
       <div class="modal-footer">
         <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger upload-image registrar" data-dismiss="modal">Registrar</button>
+        <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
       </div>
     </div>
     </form>
@@ -141,7 +141,6 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success:function(data){
-
                 //si el registro no existe verificar que opcion esta marcando. Si es "si" habilitar botón cargar archivos, de lo contrario levantar modal para registrar razones de no cumplimiento
                 if(data.success==false){
                     $("#control_id").val(cid);
@@ -164,6 +163,26 @@
             }
         });
      });
+
+    $("#registrar").click(function(e) {
+        var cid = $("#control_id").val();
+        $.ajax({
+            type: "POST",
+            url: "<?=URL::to('controles/cumplimiento')?>",
+            data: { 
+                control_id: cid,
+                comentario: $("#comentario_incumplimiento").val(),
+                cumple: $('#cumple_'+cid).val(),
+                anio: $('#anio_'+cid).val()
+            },
+            success: function(result) {
+                alert('ok');
+            },
+            error: function(result) {
+                alert('error');
+            }
+        });
+    });
 
     //files
     $(document).ready(function() {
