@@ -32,7 +32,7 @@
                 <td>
                     <?php if(count($control->comentarios)>0):?>    
                         <?php foreach ($control->comentarios as $comentario): ?>
-                        <select class="form-control" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
+                        <select class="form-control implementacion" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
                             <option value="" disabled selected> Seleccion opción </option>
                             <option value="2017" <?=$comentario->anio_implementacion=='2017' ? 'selected' : '' ?>>2017</option>
                             <option value="2016" <?=$comentario->anio_implementacion=='2016' ? 'selected' : '' ?>>2016</option>
@@ -42,12 +42,12 @@
                         </select>
                         <? endforeach ?>
                     <?php else: ?>
-                        <select class="form-control" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
+                        <select class="form-control implementacion" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
                             <option value="" disabled selected>Seleccione opción</option>
                             <option value="2017">2017</option>
                             <option value="2016">2016</option>
-                            <option value="2016">2015</option>
-                            <option value="2016">2014</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
                             <option value="-">-</option>
                         </select>
                     <?php endif ?>
@@ -66,7 +66,7 @@
                         <? endforeach ?>
                     <?php else: ?>
                         <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccione opcióasdn</option>
+                            <option value="" disabled selected>Seleccione opción</option>
                             <option value="si">Si</option>
                             <option value="no">No</option>
                         </select>
@@ -164,11 +164,35 @@
         });
      });
 
-    $("#registrar").click(function(e) {
+    //actualizar año de implementación
+    $('.implementacion').change(function(){
+        showPleaseWait();
+        var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
+        var anio = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "<?=URL::to('controles/actualizar')?>",
+            data: { 
+                control_id: cid,
+                cumple: $('#cumple_'+cid).val(),
+                anio: $('#anio_'+cid).val()
+            },
+            success: function(result) {
+                hidePleaseWait();
+            },
+            error: function(result) {
+                alert('error');
+            }
+        });
+    });
+
+    //registrar comentario incumplimiento de control
+    $('#registrar').click(function(e) {
+        showPleaseWait();
         var cid = $("#control_id").val();
         $.ajax({
             type: "POST",
-            url: "<?=URL::to('controles/cumplimiento')?>",
+            url: "<?=URL::to('controles/actualizar')?>",
             data: { 
                 control_id: cid,
                 comentario: $("#comentario_incumplimiento").val(),
@@ -176,7 +200,8 @@
                 anio: $('#anio_'+cid).val()
             },
             success: function(result) {
-                alert('ok');
+                //alert('ok');
+                hidePleaseWait();
             },
             error: function(result) {
                 alert('error');

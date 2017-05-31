@@ -19,6 +19,6 @@ Route::get('/', function()
 //Controles
 Route::get('controles', 'ControlController@getIndex');
 Route::get('controles/estado', 'ControlController@getEstado');
-Route::post('controles/cumplimiento', 'ControlController@setCumplimiento');
+Route::post('controles/actualizar', 'ControlController@setCumplimiento');
 Route::get('controles/carga', 'ControlController@cargaPlanilla');
 Route::post('controles/upload', 'ControlController@uploadPlanilla');
