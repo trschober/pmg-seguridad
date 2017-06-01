@@ -59,9 +59,9 @@
                     <?php if(count($control->comentarios)>0):?>    
                         <?php foreach ($control->comentarios as $comentario): ?>
                         <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected> Seleccion opción </option>
-                            <option value="<?=is_null($comentario->cumple) ? 'si' : $comentario->cumple ?>" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
-                            <option value="<?=is_null($comentario->cumple) ? 'no' : $comentario->cumple ?>" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
+                            <option value="" disabled selected>Seleccion opción</option>
+                            <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
+                            <option value="no" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
                         </select>
                         <? endforeach ?>
                     <?php else: ?>
@@ -92,7 +92,7 @@
       </div>
       <div id="thanks"></div>
       <div class="modal-body">
-    <form action="<?=URL::to('controles/cumplimiento')?>" id="myform" method="POST" enctype="multipart/form-data">
+    <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="message-text" class="control-label">Observaciones:</label>
             <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
@@ -141,10 +141,12 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success:function(data){
-                //si el registro no existe verificar que opcion esta marcando. Si es "si" habilitar botón cargar archivos, de lo contrario levantar modal para registrar razones de no cumplimiento
-                if(data.success==false){
+                //Comentario no existe
+                if(data.success==true){
+                    var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
                     $("#control_id").val(cid);
                     if($('#cumple_'+cid).val()=='no'){
+                        $('#comentario_incumplimiento').val(comentarios);
                         $('h4.modal-title').text('Indique las razones del no cumplimiento');
                         $('.form-group').show();
                         $('.modal-archivo').hide();
@@ -209,7 +211,7 @@
         });
     });
 
-    //files
+    //archivos
     $(document).ready(function() {
         var options = { 
             //beforeSubmit:  showRequest,

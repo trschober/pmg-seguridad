@@ -14,32 +14,37 @@ class ControlController extends BaseController{
 		if(Request::ajax()){
 			$control_id = Input::get('control_id');
 			$comentario = Comentario::where('institucion_id',1)->where('control_id',$control_id)->first();
+			//$archivos = Files::where('institucion_id',1)->where('control_id',$control_id)->get();
 			if($comentario===null){
 				return Response::json(array(
-					'success'=>false,
-				    'message'=>'No existe'
+					'success'=>true,
+				    'comentario'=>null
 				));
 			}else{
 				return Response::json(array(
-					'success'=>false,
-				    'message'=>'existe'
+					'success'=>true,
+				    'comentario'=>$comentario
 				));
 			}
 		}
 	}
 
-	public function setCumplimiento(){
+	public function actualizarControl(){
 		$comentario = Comentario::where('institucion_id',1)->where('control_id',Input::get('control_id'))->first();
 		$control = Control::find(Input::get('control_id'));
-		if($comentario===null){
+		if($comentario===null)
 			$comentario = new Comentario;
-		}
-		$comentario->cumple = Input::get('cumple');
-		$comentario->observaciones_institucion = Input::has('comentario') ? Input::get('comentario') : null;
-		$comentario->anio_implementacion = Input::has('anio') ? Input::get('anio') : "-";
+		if(Input::has('cumple'))
+			$comentario->cumple = Input::get('cumple');
+		if(Input::has('comentario'))
+			$comentario->observaciones_institucion = Input::get('comentario');
+		if(Input::has('anio'))
+			$comentario->anio_implementacion = Input::get('anio');
 		$comentario->institucion_id = 1;
 		$comentario->control_id = Input::get('control_id');
 		if(Input::hasFile('archivo')){
+			$comentario->observaciones_institucion = null;
+			$comentario->cumple = 'si';
 			foreach(Input::file('archivo') as $file){
 				//generar carpetas con la estructura institucion/control/archivo
 				//cambiar el nombre del archivo
