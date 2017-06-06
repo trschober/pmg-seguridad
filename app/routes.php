@@ -11,14 +11,19 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+//Inicio
+Route::get('/', 'HomeController@showWelcome');
+//Claveunica
+Route::post('claveunica/autenticar', 'ClaveUnicaController@autenticar');
+Route::get('claveunica/validar', 'ClaveUnicaController@validar');
+Route::get('login', 'ClaveUnicaController@login');
+Route::get('logout', 'ClaveUnicaController@logout');
 
-//Controles
-Route::get('controles', 'ControlController@getIndex');
-Route::get('controles/estado', 'ControlController@getEstado');
-Route::post('controles/actualizar', 'ControlController@actualizarControl');
-Route::get('controles/carga', 'ControlController@cargaPlanilla');
-Route::post('controles/upload', 'ControlController@uploadPlanilla');
+Route::group(["before" => "auth"], function() {
+	//Controles
+	Route::get('controles', 'ControlController@getIndex');
+	Route::get('controles/estado', 'ControlController@getEstado');
+	Route::post('controles/actualizar', 'ControlController@actualizarControl');
+	Route::get('controles/carga', 'ControlController@cargaPlanilla');
+	Route::post('controles/upload', 'ControlController@uploadPlanilla');
+});
