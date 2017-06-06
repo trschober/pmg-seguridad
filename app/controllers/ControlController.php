@@ -4,7 +4,7 @@ class ControlController extends BaseController{
 
 	public function getIndex(){
 		$controles = Control::with(array('comentarios' => function( $query ){
-		    $query->where('institucion_id',1);
+		    $query->where('institucion_id',Auth::user()->institucion_id);
 		}))->paginate(10);
 		$this->layout->title= "Revisión de controles";
         $this->layout->content = View::make('controles/listado', array('controles'=>$controles));
@@ -13,7 +13,7 @@ class ControlController extends BaseController{
 	public function getEstado(){
 		if(Request::ajax()){
 			$control_id = Input::get('control_id');
-			$comentario = Comentario::where('institucion_id',1)->where('control_id',$control_id)->first();
+			$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
 			//$archivos = Files::where('institucion_id',1)->where('control_id',$control_id)->get();
 			if($comentario===null){
 				return Response::json(array(
@@ -30,7 +30,7 @@ class ControlController extends BaseController{
 	}
 
 	public function actualizarControl(){
-		$comentario = Comentario::where('institucion_id',1)->where('control_id',Input::get('control_id'))->first();
+		$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->first();
 		$control = Control::find(Input::get('control_id'));
 		if($comentario===null)
 			$comentario = new Comentario;
@@ -40,7 +40,7 @@ class ControlController extends BaseController{
 			$comentario->observaciones_institucion = Input::get('comentario');
 		if(Input::has('anio'))
 			$comentario->anio_implementacion = Input::get('anio');
-		$comentario->institucion_id = 1;
+		$comentario->institucion_id = Auth::user()->institucion_id;
 		$comentario->control_id = Input::get('control_id');
 		if(Input::hasFile('archivo')){
 			$comentario->observaciones_institucion = null;

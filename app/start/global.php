@@ -49,6 +49,15 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	switch ($code) {
+		case 500:
+			return Response::view('errores/500',array(), 500);
+	}
+});
+
+App::missing(function($exception)
+{
+    return Response::view('errores/400', array(), 404);
 });
 
 /*

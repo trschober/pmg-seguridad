@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Seguridad de la Información - <?=$title?></title>
+    <title>Seguridad de la Información</title>
 
     <!-- Bootstrap -->
     <link href="<?= asset('css/bootstrap.min.css') ?>" rel="stylesheet" >
@@ -32,30 +32,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <?php if(Auth::check()):?>
-            <a href="<?=URL::to('bienvenida')?>" class="navbar-brand">Seguridad de la Información</a>
-        <?php else: ?>
-            <a href="<?=URL::to('/')?>" class="navbar-brand">Seguridad de la Información</a>
-        <?php endif ?>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <?php if(Auth::check()):?>
-        <ul class="nav navbar-nav" id="menu-superior">
-            <li><a href="<?=URL::to('controles')?>">Controles</a></li>
-            <li><a href="<?=URL::to('/')?>">Retroalimentación</a></li>
-        </ul>
-        <?php endif?>
-
-        <ul class="nav navbar-nav navbar-right">
-            <?php if(Auth::check()):?>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">16006363-7<span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="<?=URL::to('logout')?>">Cerrar sesión</a></li>
-                </ul>
-            </li>
-            <?php endif?>
-        </ul>
+        <a href="<?=URL::to('/')?>" class="navbar-brand">Seguridad de la Información</a>
     </div>
     </div>
     </nav>
@@ -64,7 +41,14 @@
     <div class='container container-form'>
     <div class="col-lg-offset-1 col-lg-11">
     <div class="well well-lg">
-        <?=$content?>
+        <div class="row">
+		    <div class="col-md-12">
+		        <div class="alert alert-danger">
+		            <h3>Página no encontrada</h3>
+		            <p>Favor comuníquese con el administrador del sitio</p>
+		        </div>
+		    </div>
+		</div>
     </div>
     </div>
     </div>

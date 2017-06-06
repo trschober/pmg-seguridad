@@ -55,7 +55,7 @@
 	        $user = Usuario::where('rut',$rut)->first();
 	        if($user){
 	        	Auth::login($user);
-	        	return Redirect::to(URL::to('controles'));	
+	        	return Redirect::to(URL::to('bienvenida'));	
 	        }else{
 	        	return Redirect::to(URL::to('/'));
 	        }

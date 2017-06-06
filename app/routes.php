@@ -11,8 +11,9 @@
 |
 */
 
-//Inicio
-Route::get('/', 'HomeController@showWelcome');
+//Home
+Route::get('/', 'HomeController@index');
+
 //Claveunica
 Route::post('claveunica/autenticar', 'ClaveUnicaController@autenticar');
 Route::get('claveunica/validar', 'ClaveUnicaController@validar');
@@ -20,6 +21,9 @@ Route::get('login', 'ClaveUnicaController@login');
 Route::get('logout', 'ClaveUnicaController@logout');
 
 Route::group(["before" => "auth"], function() {
+	//Home
+	Route::get('bienvenida', 'HomeController@bienvenida');
+
 	//Controles
 	Route::get('controles', 'ControlController@getIndex');
 	Route::get('controles/estado', 'ControlController@getEstado');
