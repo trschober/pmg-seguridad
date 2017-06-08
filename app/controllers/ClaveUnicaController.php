@@ -52,9 +52,14 @@
 	        $infoPersonal = $flow->getUserInfo($token);
 	        $rut = $infoPersonal['RUT'];
 	        $rut = str_replace(".", "", $rut);
-	        $user = Usuario::where('rut',$rut)->first();
-	        if($user){
-	        	Auth::login($user);
+	        $usuario = Usuario::where('rut',$rut)->first();
+	        if($usuario){
+	        	if(is_null($usuario->nombres) && is_null($usuario->apellidos)){
+	        		$usuario->nombres=$infoPersonal['nombres'];
+	        		$usuario->apellidos=$infoPersonal['apellidoPaterno']." ".$infoPersonal['apellidoMaterno'];
+	        		$usuario->save();
+	        	}
+	        	Auth::login($usuario);
 	        	return Redirect::to(URL::to('bienvenida'));	
 	        }else{
 	        	return Redirect::to(URL::to('/'));

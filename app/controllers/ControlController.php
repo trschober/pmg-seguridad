@@ -3,11 +3,21 @@
 class ControlController extends BaseController{
 
 	public function getIndex(){
-		$controles = Control::with(array('comentarios' => function( $query ){
-		    $query->where('institucion_id',Auth::user()->institucion_id);
-		}))->paginate(10);
-		$this->layout->title= "Revisión de controles";
-        $this->layout->content = View::make('controles/listado', array('controles'=>$controles));
+		if(Input::has('institucion'))
+			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
+		else
+			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o aprobador
+		$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
+			    $query->where('institucion_id',$valor_institucion);
+			}))->paginate(10);
+		$data['controles']=$controles;
+		if(Auth::user()->perfil==='expertos'){
+			$instituciones = Institucion::orderBy('servicio')->get();
+			Session::put('sesion_institucion',$valor_institucion);
+			$data['instituciones']=$instituciones;
+		}
+		$this->layout->title="Revisión de controles";
+        $this->layout->content = View::make('controles/listado',$data);
 	}
 
 	public function getEstado(){
@@ -50,7 +60,7 @@ class ControlController extends BaseController{
 				//cambiar el nombre del archivo
 				$file->move('public/uploads/1/'.$control->id,$file->getClientOriginalName());
 				$archivo = new Archivo;
-				$archivo->institucion_id=1;
+				$archivo->institucion_id=Auth::user()->institucion_id;
 				$archivo->control_id=Input::get('control_id');
 				$archivo->filename=$file->getClientOriginalName();
 				$archivo->save();

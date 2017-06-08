@@ -11,7 +11,7 @@
     <link href="<?= asset('css/admin.css') ?>" rel="stylesheet">
     <script src="<?=URL::asset('js/jquery.min.js')?>"></script>
     <script src="<?=URL::asset('js/bootstrap.min.js')?>"></script>
-    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="<?=URL::asset('js/jquery.form.js')?>"></script>
     
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -32,7 +32,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="<?=URL::to('/')?>" class="navbar-brand">Seguridad de la Información</a>
+        <?php if(Auth::check()):?>
+            <a href="<?=URL::to('bienvenida')?>" class="navbar-brand">Seguridad de la Información</a>
+        <?php else: ?>
+            <a href="<?=URL::to('/')?>" class="navbar-brand">Seguridad de la Información</a>
+        <?php endif ?>
     </div>
     </div>
     </nav>
@@ -44,7 +48,7 @@
         <div class="row">
 		    <div class="col-md-12">
 		        <div class="alert alert-danger">
-		            <h3>Página no encontrada</h3>
+                <h3>Página no encontrada. Será redirigido en <strong><span class="c" id="5"></span></strong> segundos.</h3>
 		            <p>Favor comuníquese con el administrador del sitio</p>
 		        </div>
 		    </div>
@@ -78,7 +82,23 @@
         </div>
     </footer>
 
-
+<script type="text/javascript">
+function c(){
+  var n=$('.c').attr('id');
+  var c=n;
+  $('.c').text(c);
+  setInterval(function(){
+    c--;
+    if(c>=0){
+      $('.c').text(c);
+    }
+        if(c==0){
+            window.location.href = "<?=URL::to('bienvenida')?>";
+        }
+  },1000);
+}
+c();
+</script>
     
 </body>
 </html>

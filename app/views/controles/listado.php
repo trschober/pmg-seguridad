@@ -13,6 +13,25 @@
     </div>
 </div>
 
+<?php if(Auth::user()->perfil==='expertos'): ?>
+        <div class="form-group pull-right">
+            <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
+            <label for="institucion">Instituciones</label>
+            <select id="institucion" name="institucion">
+                <option value="" disabled selected>Seleccione opción</option>
+                <?php foreach($instituciones as $i): ?>
+                   <?php if($i->id == Session::get('sesion_institucion')): ?>
+                    <option value="<?=$i->id?>" selected><?=$i->servicio?></option>
+                   <?php else: ?>
+                    <option value="<?=$i->id?>"><?=$i->servicio?></option>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </select>
+            <input type="submit" value="Actualizar" class="btn btn-success" />
+            </form>
+        </div>
+<?php endif ?>
+
 <table id="controles" class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
@@ -21,6 +40,9 @@
             <th>Nombre</th>
             <th>Año implementación</th>
             <th>Cumple</th>
+            <?php if(Auth::user()->perfil==='expertos'): ?>
+            <th>Comentario Red</th>
+            <?php endif; ?>
         </tr>
     </thead>
     <tbody>
@@ -75,6 +97,9 @@
                         <input type="hidden" name="cidv" value="<?=$control->id ?>">
                     </div>
                 </td>
+                <?php if(Auth::user()->perfil==='expertos'): ?>
+                <td><button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
+                <?php endif; ?>
             </tr>
         <?php endforeach ?>
     </tbody>
@@ -125,6 +150,31 @@
       </div>
       
     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalexpertos" tabindex="-1" role="dialog" aria-labelledby="modalexpertos">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modalexpertos"></h4>
+      </div>
+      <div class="modal-body">
+    <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="message-text" class="control-label">Observaciones:</label>
+            <textarea cols="10" rows="5" style="resize:none" class="form-control" id="observaciones_expertos" name="observaciones_expertos"></textarea>
+          </div>
+      </div>
+      <input type="hidden" name="control_id" id="control_id">
+      <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
+      </div>
+    </div>
+    </form>
   </div>
 </div>
 
@@ -256,5 +306,27 @@
             },3000);
         }
     }
+
+    $('.actualizar').click(function(e) {
+        var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
+        $.ajax({
+            type: 'GET',
+            url:  "<?=URL::to('controles/estado')?>",
+            data: 'control_id='+cid ,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success:function(data){
+                //Comentario no existe
+                if(data.success==true){
+                    var observaciones = data.comentario===null ? '' : data.comentario.observaciones_red;
+                    $('#observaciones_expertos').val(observaciones);
+                    $('#modalexpertos').modal('show');
+                }
+            },
+            error:function(errors){
+                console.log('errors'+errors);
+            }
+        });
+    });
 
 </script>

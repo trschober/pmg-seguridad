@@ -26,6 +26,7 @@ Route::group(["before" => "auth"], function() {
 
 	//Controles
 	Route::get('controles', 'ControlController@getIndex');
+	Route::post('controles', 'ControlController@getIndex');
 	Route::get('controles/estado', 'ControlController@getEstado');
 	Route::post('controles/actualizar', 'ControlController@actualizarControl');
 	Route::get('controles/carga', 'ControlController@cargaPlanilla');
