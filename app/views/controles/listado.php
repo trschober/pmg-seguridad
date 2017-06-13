@@ -40,6 +40,7 @@
             <th>Nombre</th>
             <th>Año compromiso</th>
             <th>Cumple</th>
+            <th>Actualizado</th>
             <?php if(Auth::user()->perfil==='expertos'): ?>
             <th>Comentario Red</th>
             <?php endif; ?>
@@ -76,6 +77,18 @@
                         <input type="hidden" name="cidv" value="<?=$control->id ?>">
                     </div>
                 </td>
+                <td>
+                    <span id="actualizado_<?=$control->id?>">
+                    <?php
+                        if(count($control->comentarios)==0){
+                            $actualizado = '';
+                        }else{
+                            $actualizado = !is_null($control->comentarios[0]->cumple) ? '<a href="#" class="ver"><span class="label label-success">ver</span></a>' : '';
+                        }
+                        echo $actualizado;
+                    ?>
+                    </span>
+                </td>
                 <?php if(Auth::user()->perfil==='expertos'): ?>
                 <td><button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
                 <?php endif; ?>
@@ -94,18 +107,20 @@
         </div>
         <div id="thanks"></div>
         <div class="modal-body">
-          <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
+          <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
             <div class="form-group nocumpleform">
               <label for="message-text" class="control-label">Observaciones:</label>
               <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
               <label for="archivo">Archivo</label>
-              <input class="form-control modal-archivo" type="file" name="archivo[]" id="archivo" multiple />
-              <p class="help-block">Se pueden agregar varios archivos a la vez..</p>
+              <input class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
+              <p class="help-block">Se pueden agregar varios archivos a la vez</p>
             </div>
+            <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
-               <select class="form-control" name="anio_implementacion" id="anio_implementacion">
+               <label for="anio_implementacion">Año implementación</label>
+               <select class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
@@ -114,13 +129,14 @@
                 <option value="-">-</option>
               </select>
             </div>
+            <input type="hidden" name="cumplimiento" id="cumplimiento">
             <input type="hidden" name="control_id" id="control_id">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
+          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Registrar</button>
         </div>
       </div>
     </div>
@@ -164,7 +180,7 @@
       <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
       <div class="modal-footer">
         <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
+        <button type="button" class="btn btn-success upload-image registrar" id="actualizar" data-dismiss="modal">Actualizar</button>
       </div>
     </div>
     </form>
@@ -193,15 +209,16 @@
                         $('h4.modal-title').text('Indique las razones del no cumplimiento');
                         $('.nocumpleform').show();
                         $('.cumpleform').hide();
-                        //$('.modal-archivo').hide();
                         $('.registrar').show();
                     }else{
+                        $('#archivo').val('');
                         $('h4.modal-title').text('Selección de archivos');
                         $('.nocumpleform').hide();
                         $('.cumpleform').show();
-                        //$('.modal-archivo').show();
-                        $('.registrar').hide();
+                        //$('.registrar').hide();
                     }
+                    $('#registrar').attr('disabled', true);
+                    $('#cumplimiento').val($('#cumple_'+cid).val());
                     $('#modalcomentario').modal('show');
                 }
             },
@@ -233,10 +250,9 @@
             }
         });
     });
-    */
 
     //registrar comentario incumplimiento de control
-    $('#registrar').click(function(e) {
+    $('#registrarasd').click(function(e) {
         showPleaseWait();
         var cid = $("#control_id").val();
         $.ajax({
@@ -245,30 +261,33 @@
             data: { 
                 control_id: cid,
                 comentario: $("#comentario_incumplimiento").val(),
-                cumple: $('#cumple_'+cid).val(),
-                anio: $('#anio_'+cid).val()
+                cumple: $('#cumple_'+cid).val()
             },
             success: function(result) {
                 //alert('ok');
                 hidePleaseWait();
+                showResponse();
             },
             error: function(result) {
                 alert('error');
             }
         });
     });
+    */
 
     //archivos
     $(document).ready(function() {
+        
         var options = { 
             //beforeSubmit:  showRequest,
             success: showResponse,
             dataType: 'json' 
             }; 
-        $('body').delegate('#archivo','change', function(){
+        $('body').delegate('#registrar','click', function(){
             showPleaseWait();
-            $('#myform').ajaxForm(options).submit();        
+            $('#myform').ajaxForm(options).submit();
         });
+        
         var pleaseWait = $('#pleaseWaitDialog'); 
         showPleaseWait = function() {
             pleaseWait.modal('show');
@@ -276,8 +295,22 @@
         hidePleaseWait = function () {
             pleaseWait.modal('hide');
         };
-
     });
+
+    $('.datoscumplimiento').on("change", function(){
+        if($('#anio_implementacion').val()!=null && $('#archivo').val()!=''){
+            $('#registrar').removeAttr('disabled');
+        }
+    });
+
+    $('#comentario_incumplimiento').bind('input propertychange', function() {
+        if(!$.trim($("#comentario_incumplimiento").val())){
+            $('#registrar').attr('disabled', true);
+        }else{
+            $('#registrar').removeAttr('disabled');
+        }
+    });
+
     /*
     function showRequest(formData, jqForm, options) { 
         //$("#validation-errors").hide().empty();
@@ -286,6 +319,7 @@
     }
     */
     function showResponse(response, statusText, xhr, $form) {
+        //alert(response);
         if(response.success == false){
             var arr = response.errors;
             $.each(arr, function(index, value){
@@ -295,16 +329,21 @@
             });
             $("#validation-errors").show();
         }else{
-             hidePleaseWait();
-             $("#thanks").html(response.message);
+            $('#actualizado_'+response.control).text('');
+            $('#actualizado_'+response.control).append('<span class="glyphicon glyphicon-ok-sign text-success"></span>');
+            hidePleaseWait();
+            /*
+            $("#thanks").html(response.message);
              setTimeout(function() {
                 $('#thanks').html('');
                 $('#archivo').val('');
             },3000);
+            */
         }
     }
 
     $('.actualizar').click(function(e) {
+        showPleaseWait();
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $.ajax({
             type: 'GET',
@@ -318,6 +357,50 @@
                     var observaciones = data.comentario===null ? '' : data.comentario.observaciones_red;
                     $('#observaciones_expertos').val(observaciones);
                     $('#modalexpertos').modal('show');
+                }
+            },
+            error:function(errors){
+                console.log('errors'+errors);
+            }
+        });
+    });
+
+    $('.ver').click(function(e) {
+        var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
+        $.ajax({
+            type: 'GET',
+            url:  "<?=URL::to('controles/estado')?>",
+            data: 'control_id='+cid ,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success:function(data){
+                //Comentario no existe
+                if(data.success==true){
+                    var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
+                    $("#control_id").val(cid);
+                    $('h4.modal-title').text('Detalle');
+                    if($('#cumple_'+cid).val()=='no'){
+                        $('#comentario_incumplimiento').val(comentarios);
+                        $('.nocumpleform').show();
+                        $('.cumpleform').hide();
+                        //$('.registrar').show();
+                    }else{
+                        $('#archivo').val('');
+                        $('.nocumpleform').hide();
+                        $('.cumpleform').show();
+                        //$('.registrar').hide();
+                        var links='';
+                        for(x=0; x<data.archivos.length; x++){
+                            links= links + '<a href="#">'+data.archivos[x].filename+"</a></br>";
+                        }
+                        $('#links').append(links);
+                        $('#anio_implementacion').val(data.comentario.anio_implementacion);
+                        $('#anio_implementacion').attr('disabled',true);
+                        $('#archivo').hide();
+                    }
+                    $('#registrar').hide();
+                    $('#cumplimiento').val($('#cumple_'+cid).val());
+                    $('#modalcomentario').modal('show');
                 }
             },
             error:function(errors){

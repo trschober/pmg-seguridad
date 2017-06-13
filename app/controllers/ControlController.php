@@ -24,7 +24,7 @@ class ControlController extends BaseController{
 		if(Request::ajax()){
 			$control_id = Input::get('control_id');
 			$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
-			//$archivos = Files::where('institucion_id',1)->where('control_id',$control_id)->get();
+			$archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->get();
 			if($comentario===null){
 				return Response::json(array(
 					'success'=>true,
@@ -33,7 +33,8 @@ class ControlController extends BaseController{
 			}else{
 				return Response::json(array(
 					'success'=>true,
-				    'comentario'=>$comentario
+				    'comentario'=>$comentario,
+				    'archivos'=>$archivos
 				));
 			}
 		}
@@ -44,30 +45,41 @@ class ControlController extends BaseController{
 		$control = Control::find(Input::get('control_id'));
 		if($comentario===null)
 			$comentario = new Comentario;
-		if(Input::has('cumple'))
-			$comentario->cumple = Input::get('cumple');
+		if(Input::has('cumplimiento'))
+			$comentario->cumple = Input::get('cumplimiento');
 		if(Input::has('comentario'))
 			$comentario->observaciones_institucion = Input::get('comentario');
-		if(Input::has('anio'))
-			$comentario->anio_implementacion = Input::get('anio');
+		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
+		//echo $comentario->anio_implementacion;
 		$comentario->institucion_id = Auth::user()->institucion_id;
 		$comentario->control_id = Input::get('control_id');
 		if(Input::hasFile('archivo')){
 			$comentario->observaciones_institucion = null;
 			$comentario->cumple = 'si';
-			foreach(Input::file('archivo') as $file){
-				//generar carpetas con la estructura institucion/control/archivo
-				//cambiar el nombre del archivo
-				$file->move('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id,$file->getClientOriginalName());
+			foreach(Input::file('archivo') as $file){				
 				$archivo = new Archivo;
 				$archivo->institucion_id=Auth::user()->institucion_id;
 				$archivo->control_id=Input::get('control_id');
-				$archivo->filename=$file->getClientOriginalName();
+				$archivo_nombre = $file->getClientOriginalName();
+				$archivo_nombre = str_replace(" ","-",$archivo_nombre);
+				$no_permitidas= array ("á","é","í","ó","ú","Á","É","Í","Ó","Ú","ñ","À","Ã","Ì","Ò","Ù","Ã™","Ã ","Ã¨","Ã¬","Ã²","Ã¹","ç","Ç","Ã¢","ê","Ã®","Ã´","Ã»","Ã‚","ÃŠ","ÃŽ","Ã”","Ã›","ü","Ã¶","Ã–","Ã¯","Ã¤","«","Ò","Ã","Ã„","Ã‹");
+				$permitidas= array ("a","e","i","o","u","A","E","I","O","U","n","N","A","E","I","O","U","a","e","i","o","u","c","C","a","e","i","o","u","A","E","I","O","U","u","o","O","i","a","e","U","I","A","E");
+				$archivo_nombre = str_replace($no_permitidas, $permitidas ,$archivo_nombre);
+				$archivo_nombre = strtolower($archivo_nombre);
+				$archivo->filename=$archivo_nombre;
+				$file->move('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
 				$archivo->save();
+			}
+		}else{
+			DB::table('files')->where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->delete();
+			$files = glob('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
+			foreach($files as $file){
+			  if(is_file($file))
+			    unlink($file);
 			}
 		}
 		$comentario->save();
-		return Response::json(['success' => true,'message'=>'<div class="alert alert-success"><strong>Success!</strong> OK.</div>']);
+		return Response::json(['success' => true,'control'=>$control->id]);
 	}
 
 	public function cargaPlanilla(){
