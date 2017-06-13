@@ -38,7 +38,7 @@
             <th>Nº</th>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Año implementación</th>
+            <th>Año compromiso</th>
             <th>Cumple</th>
             <?php if(Auth::user()->perfil==='expertos'): ?>
             <th>Comentario Red</th>
@@ -51,31 +51,10 @@
                 <td><?=$control->id ?></td>
                 <td><?=$control->codigo ?></td>
                 <td><?=$control->nombre ?></td>
-                <td>
-                    <?php if(count($control->comentarios)>0):?>    
-                        <?php foreach ($control->comentarios as $comentario): ?>
-                        <select class="form-control implementacion" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
-                            <option value="" disabled selected> Seleccion opción </option>
-                            <option value="2017" <?=$comentario->anio_implementacion=='2017' ? 'selected' : '' ?>>2017</option>
-                            <option value="2016" <?=$comentario->anio_implementacion=='2016' ? 'selected' : '' ?>>2016</option>
-                            <option value="2015" <?=$comentario->anio_implementacion=='2015' ? 'selected' : '' ?>>2015</option>
-                            <option value="2014" <?=$comentario->anio_implementacion=='2014' ? 'selected' : '' ?>>2014</option>
-                            <option value="-" <?=$comentario->anio_implementacion=='-' ? 'selected' : '' ?>>-</option>
-                        </select>
-                        <? endforeach ?>
-                    <?php else: ?>
-                        <select class="form-control implementacion" name="anio_<?=$control->id?>" id="anio_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccione opción</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                            <option value="2015">2015</option>
-                            <option value="2014">2014</option>
-                            <option value="-">-</option>
-                        </select>
-                    <?php endif ?>
-                    <div class="cid">
-                        <input type="hidden" name="cidv" value="<?=$control->id ?>">
-                    </div>
+                <td><?=count($control->comentarios)>0 ? $control->comentarios[0]->anio_compromiso : '-';?> 
+                <div class="cid">
+                    <input type="hidden" name="cidv" value="<?=$control->id ?>">
+                </div>
                 </td>
                 <td>
                     <?php if(count($control->comentarios)>0):?>    
@@ -105,36 +84,49 @@
     </tbody>
 </table>
 
-<div class="modal fade" id="modalcomentario" tabindex="-1" role="dialog" aria-labelledby="modalcomentario">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalcomentario"></h4>
-      </div>
-      <div class="alert alert-info modal-archivo">
-        Se pueden agregar varios archivos a la vez.
-      </div>
-      <div id="thanks"></div>
-      <div class="modal-body">
-    <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="message-text" class="control-label">Observaciones:</label>
-            <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
-          </div>
-      </div>
-      <input class="form-control modal-archivo" type="file" name="archivo[]" id="archivo" multiple />
-      <input type="hidden" name="control_id" id="control_id">
-      <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
+<!-- Modal cumplimiento -->
+    <div class="modal fade" id="modalcomentario" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modalcomentario"></h4>
+        </div>
+        <div id="thanks"></div>
+        <div class="modal-body">
+          <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
+            <div class="form-group nocumpleform">
+              <label for="message-text" class="control-label">Observaciones:</label>
+              <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
+            </div>
+            <div class="form-group cumpleform">
+              <label for="archivo">Archivo</label>
+              <input class="form-control modal-archivo" type="file" name="archivo[]" id="archivo" multiple />
+              <p class="help-block">Se pueden agregar varios archivos a la vez..</p>
+            </div>
+            <div class="form-group cumpleform">
+               <select class="form-control" name="anio_implementacion" id="anio_implementacion">
+                <option value="" disabled selected>Seleccione opción</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+                <option value="-">-</option>
+              </select>
+            </div>
+            <input type="hidden" name="control_id" id="control_id">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-danger upload-image registrar" id="registrar" data-dismiss="modal">Registrar</button>
+        </div>
       </div>
     </div>
-    </form>
-  </div>
-</div>
+    </div>
 
+<!-- Modal loading -->
 <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -153,6 +145,7 @@
   </div>
 </div>
 
+<!-- Modal Red de expertos -->
 <div class="modal fade" id="modalexpertos" tabindex="-1" role="dialog" aria-labelledby="modalexpertos">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -198,13 +191,15 @@
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
                         $('h4.modal-title').text('Indique las razones del no cumplimiento');
-                        $('.form-group').show();
-                        $('.modal-archivo').hide();
+                        $('.nocumpleform').show();
+                        $('.cumpleform').hide();
+                        //$('.modal-archivo').hide();
                         $('.registrar').show();
                     }else{
                         $('h4.modal-title').text('Selección de archivos');
-                        $('.form-group').hide();
-                        $('.modal-archivo').show();
+                        $('.nocumpleform').hide();
+                        $('.cumpleform').show();
+                        //$('.modal-archivo').show();
                         $('.registrar').hide();
                     }
                     $('#modalcomentario').modal('show');
@@ -217,6 +212,7 @@
      });
 
     //actualizar año de implementación
+    /*
     $('.implementacion').change(function(){
         showPleaseWait();
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
@@ -237,6 +233,7 @@
             }
         });
     });
+    */
 
     //registrar comentario incumplimiento de control
     $('#registrar').click(function(e) {

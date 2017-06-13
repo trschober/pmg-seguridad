@@ -58,7 +58,7 @@ class ControlController extends BaseController{
 			foreach(Input::file('archivo') as $file){
 				//generar carpetas con la estructura institucion/control/archivo
 				//cambiar el nombre del archivo
-				$file->move('public/uploads/1/'.$control->id,$file->getClientOriginalName());
+				$file->move('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id,$file->getClientOriginalName());
 				$archivo = new Archivo;
 				$archivo->institucion_id=Auth::user()->institucion_id;
 				$archivo->control_id=Input::get('control_id');
@@ -105,7 +105,7 @@ class ControlController extends BaseController{
 						$comentario = new Comentario();
 						$comentario->institucion_id = $institucion->id;
 						$comentario->control_id = $control->id;
-						$comentario->anio_implementacion = $objWorksheet->getCellByColumnAndRow(4, $fila)->getValue();
+						$comentario->anio_compromiso = $objWorksheet->getCellByColumnAndRow(4, $fila)->getValue();
 						$comentario->cumple = null;
 						$comentario->save();
 					}else{
