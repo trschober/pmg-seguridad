@@ -216,6 +216,7 @@
                         $('.nocumpleform').hide();
                         $('.cumpleform').show();
                         $('#anio_implementacion').attr('disabled',false);
+                        $('#anio_implementacion').val('');
                         $('#archivo').show();
                         $('#links').hide();
                         $('#registrar').show();
