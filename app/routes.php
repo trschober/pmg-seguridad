@@ -31,4 +31,5 @@ Route::group(["before" => "auth"], function() {
 	Route::post('controles/actualizar', 'ControlController@actualizarControl');
 	Route::get('controles/carga', 'ControlController@cargaPlanilla');
 	Route::post('controles/upload', 'ControlController@uploadPlanilla');
+	Route::get('controles/download/{archivo}', 'ControlController@getFile');
 });

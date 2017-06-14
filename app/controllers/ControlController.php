@@ -47,8 +47,8 @@ class ControlController extends BaseController{
 			$comentario = new Comentario;
 		if(Input::has('cumplimiento'))
 			$comentario->cumple = Input::get('cumplimiento');
-		if(Input::has('comentario'))
-			$comentario->observaciones_institucion = Input::get('comentario');
+		if(Input::has('comentario_incumplimiento'))
+			$comentario->observaciones_institucion = Input::get('comentario_incumplimiento');
 		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
 		//echo $comentario->anio_implementacion;
 		$comentario->institucion_id = Auth::user()->institucion_id;
@@ -130,6 +130,13 @@ class ControlController extends BaseController{
 				Session::flash('error', 'Archivo invalido');
 				return Redirect::to('controles/carga');
 			}
+		}
+	}
+
+	public function getFile($archivo_id){
+		$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first();
+		if($archivo!=null){
+			return Response::download('public/uploads/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
 		}
 	}
 }

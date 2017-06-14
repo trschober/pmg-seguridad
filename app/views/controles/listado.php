@@ -78,16 +78,16 @@
                     </div>
                 </td>
                 <td>
-                    <span id="actualizado_<?=$control->id?>">
                     <?php
+                        $actualizado = '<a href="#" class="ver"><span class="label label-success">ver</span></a>';
                         if(count($control->comentarios)==0){
-                            $actualizado = '';
+                            $desplegar = 'style="display:none"';
                         }else{
-                            $actualizado = !is_null($control->comentarios[0]->cumple) ? '<a href="#" class="ver"><span class="label label-success">ver</span></a>' : '';
+                            //$actualizado = !is_null($control->comentarios[0]->cumple) ? '<a href="#" class="ver"><span class="label label-success">ver</span></a>' : '';
+                            $desplegar = !is_null($control->comentarios[0]->cumple) ? '' : 'style="display:none"';
                         }
-                        echo $actualizado;
                     ?>
-                    </span>
+                    <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
                 </td>
                 <?php if(Auth::user()->perfil==='expertos'): ?>
                 <td><button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
@@ -215,7 +215,10 @@
                         $('h4.modal-title').text('Selección de archivos');
                         $('.nocumpleform').hide();
                         $('.cumpleform').show();
-                        //$('.registrar').hide();
+                        $('#anio_implementacion').attr('disabled',false);
+                        $('#archivo').show();
+                        $('#links').hide();
+                        $('#registrar').show();
                     }
                     $('#registrar').attr('disabled', true);
                     $('#cumplimiento').val($('#cumple_'+cid).val());
@@ -329,8 +332,10 @@
             });
             $("#validation-errors").show();
         }else{
-            $('#actualizado_'+response.control).text('');
-            $('#actualizado_'+response.control).append('<span class="glyphicon glyphicon-ok-sign text-success"></span>');
+            //$('#actualizado_'+response.control).text('');
+            //$('#actualizado_'+response.control).append('<a href="#" class="ver"><span class="label label-success">ver</span></a>');
+            $('#actualizado_'+response.control).show();
+            //$('#actualizado_'+response.control).css('display', 'block');
             hidePleaseWait();
             /*
             $("#thanks").html(response.message);
@@ -381,17 +386,17 @@
                     $('h4.modal-title').text('Detalle');
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
+                        $('#comentario_incumplimiento').attr('disabled',true);
                         $('.nocumpleform').show();
                         $('.cumpleform').hide();
-                        //$('.registrar').show();
                     }else{
                         $('#archivo').val('');
                         $('.nocumpleform').hide();
                         $('.cumpleform').show();
-                        //$('.registrar').hide();
                         var links='';
+                        $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links= links + '<a href="#">'+data.archivos[x].filename+"</a></br>";
+                            links= links + '<a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+"</a></br>";
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
