@@ -12,7 +12,7 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface {
 	protected $table = 'usuarios';
 	protected $hidden = array('remember_token');
 
-	public function instituciones(){
+	public function institucion(){
         return $this->belongsTo('Institucion');
     }
 

@@ -38,8 +38,8 @@
             <th>Nº</th>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Año compromiso</th>
-            <th>Cumple</th>
+            <th>Año de formulación</th>
+            <th>Implementado</th>
             <th>Actualizado</th>
             <?php if(Auth::user()->perfil==='expertos'): ?>
             <th>Comentario Red</th>
@@ -79,7 +79,7 @@
                 </td>
                 <td>
                     <?php
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">ver</span></a>';
+                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Revisar</span></a>';
                         if(count($control->comentarios)==0){
                             $desplegar = 'style="display:none"';
                         }else{
@@ -97,8 +97,8 @@
     </tbody>
 </table>
 
-<!-- Modal cumplimiento -->
-    <div class="modal fade" id="modalcomentario" role="dialog">
+<!-- Modal cumplimiento NO -->
+<div class="modal fade" id="modalcomentario" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -109,7 +109,7 @@
         <div class="modal-body">
           <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
             <div class="form-group nocumpleform">
-              <label for="message-text" class="control-label">Observaciones:</label>
+              <label for="message-text" class="control-label">Justificaciones:</label>
               <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
@@ -140,7 +140,54 @@
         </div>
       </div>
     </div>
+</div>
+
+<!-- Modal cumplimiento SI -->
+<!--
+<div class="modal fade" id="modalcomentario" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modalcomentario"></h4>
+        </div>
+        <div id="thanks"></div>
+        <div class="modal-body">
+          <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
+            <div class="form-group nocumpleform">
+              <label for="message-text" class="control-label">Justificaciones:</label>
+              <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
+            </div>
+            <div class="form-group cumpleform">
+              <label for="archivo">Archivo</label>
+              <input class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
+              <p class="help-block">Se pueden agregar varios archivos a la vez</p>
+            </div>
+            <div id="links" class="form-group cumpleform"></div>
+            <div class="form-group cumpleform">
+               <label for="anio_implementacion">Año implementación</label>
+               <select class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
+                <option value="" disabled selected>Seleccione opción</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+                <option value="-">-</option>
+              </select>
+            </div>
+            <input type="hidden" name="cumplimiento" id="cumplimiento">
+            <input type="hidden" name="control_id" id="control_id">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Registrar</button>
+        </div>
+      </div>
     </div>
+</div>
+-->
 
 <!-- Modal loading -->
 <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -206,7 +253,7 @@
                     $("#control_id").val(cid);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
-                        $('h4.modal-title').text('Indique las razones del no cumplimiento');
+                        $('h4.modal-title').text('Indique las causas del no cumplimiento');
                         $('.nocumpleform').show();
                         $('.cumpleform').hide();
                         $('.registrar').show();
@@ -397,14 +444,14 @@
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links= links + '<a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+"</a></br>";
+                            links= links + '<div id="div_file_'+data.archivos[x].id+'" ><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+"</a> <a href='<?=URL::to('controles/download')?>' id='"+data.archivos[x].id+"'>(X)</a></div>";
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
                         $('#anio_implementacion').attr('disabled',true);
-                        $('#archivo').hide();
+                        //$('#archivo').hide();
                     }
-                    $('#registrar').hide();
+                    //$('#registrar').hide();
                     $('#cumplimiento').val($('#cumple_'+cid).val());
                     $('#modalcomentario').modal('show');
                 }

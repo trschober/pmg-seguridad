@@ -9,8 +9,9 @@
     <!-- Bootstrap -->
     <link href="<?= asset('css/bootstrap.min.css') ?>" rel="stylesheet" >
     <link href="<?= asset('css/admin.css') ?>" rel="stylesheet">
-    <script src="<?=URL::asset('js/jquery.min.js')?>"></script>
+    <script src="<?=URL::asset('js/jquery2.min.js')?>"></script>
     <script src="<?=URL::asset('js/bootstrap.min.js')?>"></script>
+    <script src="<?=URL::asset('js/jquery.countdown.min.js')?>"></script>
     <script src="<?=URL::asset('js/jquery.form.js')?>"></script>
     
 
@@ -42,7 +43,6 @@
         <?php if(Auth::check()):?>
         <ul class="nav navbar-nav" id="menu-superior">
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
-            <li><a href="<?=URL::to('/')?>">Retroalimentación</a></li>
         </ul>
         <?php endif?>
 
@@ -59,6 +59,12 @@
     </div>
     </div>
     </nav>
+    
+    <?php if(Auth::check()):?> 
+    <nav class="nav-perfil">
+        <div class="container print-hide"><strong><?=Auth::user()->institucion->servicio?></strong></div>
+    </nav>
+    <? endif ?>
     
     <main>
     <div class='container container-form'>

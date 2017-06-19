@@ -71,7 +71,10 @@ class ControlController extends BaseController{
 				$archivo->save();
 			}
 		}else{
-			DB::table('files')->where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->delete();
+			$files = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->get();
+			foreach ($files as $file) {
+				$file->delete();
+			}
 			$files = glob('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
 			foreach($files as $file){
 			  if(is_file($file))

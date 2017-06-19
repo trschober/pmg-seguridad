@@ -11,6 +11,11 @@ class Comentario extends Eloquent {
     public function controles(){
         return $this->belongsTo('Control');
     }
+
+    public function scopeActualizados($query){
+        return $query->whereIn('cumple', array('si','no'));
+
+    }
     
 
 }
