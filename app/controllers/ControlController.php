@@ -142,4 +142,22 @@ class ControlController extends BaseController{
 			return Response::download('public/uploads/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
 		}
 	}
+
+	public function deleteFile(){
+		$archivo = Archivo::where('id',Input::get('archivo_id'))->where('institucion_id',Auth::user()->institucion_id)->first();
+		if($archivo!=null){
+			$control_id = $archivo->control_id;
+			$archivo->delete();
+			$cantidad_archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->where('deleted_at',NULL)->count();
+			if($cantidad_archivos==0){
+				$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
+				$comentario->cumple=NULL;
+				$comentario->anio_implementacion=NULL;
+				$comentario->save();
+			}
+			return Response::json(['success' => true]);
+		}else{
+			return Response::json(['success' => false]);
+		}
+	}
 }

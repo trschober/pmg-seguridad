@@ -32,4 +32,5 @@ Route::group(["before" => "auth"], function() {
 	Route::get('controles/carga', 'ControlController@cargaPlanilla');
 	Route::post('controles/upload', 'ControlController@uploadPlanilla');
 	Route::get('controles/download/{archivo}', 'ControlController@getFile');
+	Route::get('controles/archivo/eliminar', 'ControlController@deleteFile');
 });

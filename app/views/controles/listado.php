@@ -328,7 +328,6 @@
 
     //archivos
     $(document).ready(function() {
-        
         var options = { 
             //beforeSubmit:  showRequest,
             success: showResponse,
@@ -418,6 +417,8 @@
         });
     });
 
+    
+
     $('.ver').click(function(e) {
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $.ajax({
@@ -444,7 +445,7 @@
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links= links + '<div id="div_file_'+data.archivos[x].id+'" ><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+"</a> <a href='<?=URL::to('controles/download')?>' id='"+data.archivos[x].id+"'>(X)</a></div>";
+                            links= links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" >(X)</a></div>';
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
@@ -461,5 +462,24 @@
             }
         });
     });
+
+    function eliminar_archivo(file){
+        $.ajax({
+            type: 'GET',
+            url:  "<?=URL::to('controles/archivo/eliminar')?>",
+            data: 'archivo_id='+file,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success:function(data){
+                if(data.success==true){
+                    $('#div_file_'+file).hide();
+                }
+            },
+            error:function(errors){
+                console.log('errors'+errors);
+            }
+        });
+    }
+        
 
 </script>
