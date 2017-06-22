@@ -7,6 +7,7 @@ class ControlController extends BaseController{
 			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
 		else
 			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o aprobador
+		
 		$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
 			    $query->where('institucion_id',$valor_institucion);
 			}))->paginate(10);
@@ -16,6 +17,7 @@ class ControlController extends BaseController{
 			Session::put('sesion_institucion',$valor_institucion);
 			$data['instituciones']=$instituciones;
 		}
+		$data['habilitado'] = $this->getHabilitacion();
 		$this->layout->title="Revisión de controles";
         $this->layout->content = View::make('controles/listado',$data);
 	}
@@ -50,7 +52,6 @@ class ControlController extends BaseController{
 		if(Input::has('comentario_incumplimiento'))
 			$comentario->observaciones_institucion = Input::get('comentario_incumplimiento');
 		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
-		//echo $comentario->anio_implementacion;
 		$comentario->institucion_id = Auth::user()->institucion_id;
 		$comentario->control_id = Input::get('control_id');
 		if(Input::hasFile('archivo')){
@@ -120,6 +121,7 @@ class ControlController extends BaseController{
 						$comentario = new Comentario();
 						$comentario->institucion_id = $institucion->id;
 						$comentario->control_id = $control->id;
+						$comentario->tipo_formulacion = $objWorksheet->getCellByColumnAndRow(2, $fila)->getValue();
 						$comentario->anio_compromiso = $objWorksheet->getCellByColumnAndRow(4, $fila)->getValue();
 						$comentario->cumple = null;
 						$comentario->save();
@@ -144,18 +146,23 @@ class ControlController extends BaseController{
 	}
 
 	public function deleteFile(){
-		$archivo = Archivo::where('id',Input::get('archivo_id'))->where('institucion_id',Auth::user()->institucion_id)->first();
-		if($archivo!=null){
-			$control_id = $archivo->control_id;
-			$archivo->delete();
-			$cantidad_archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->where('deleted_at',NULL)->count();
-			if($cantidad_archivos==0){
-				$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
-				$comentario->cumple=NULL;
-				$comentario->anio_implementacion=NULL;
-				$comentario->save();
+		$habilitado = $this->getHabilitacion();
+		if($habilitado){
+			$archivo = Archivo::where('id',Input::get('archivo_id'))->where('institucion_id',Auth::user()->institucion_id)->first();
+			if($archivo!=null){
+				$control_id = $archivo->control_id;
+				$archivo->delete();
+				$cantidad_archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->where('deleted_at',NULL)->count();
+				if($cantidad_archivos==0){
+					$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
+					$comentario->cumple=NULL;
+					$comentario->anio_implementacion=NULL;
+					$comentario->save();
+				}
+				return Response::json(['success' => true]);
+			}else{
+				return Response::json(['success' => false]);
 			}
-			return Response::json(['success' => true]);
 		}else{
 			return Response::json(['success' => false]);
 		}

@@ -23,7 +23,7 @@ Route::get('logout', 'ClaveUnicaController@logout');
 Route::group(["before" => "auth"], function() {
 	//Home
 	Route::get('bienvenida', 'HomeController@bienvenida');
-
+	
 	//Controles
 	Route::get('controles', 'ControlController@getIndex');
 	Route::post('controles', 'ControlController@getIndex');
@@ -33,4 +33,9 @@ Route::group(["before" => "auth"], function() {
 	Route::post('controles/upload', 'ControlController@uploadPlanilla');
 	Route::get('controles/download/{archivo}', 'ControlController@getFile');
 	Route::get('controles/archivo/eliminar', 'ControlController@deleteFile');
+
+	//Instituciones
+	Route::get('institucion/aprobar', 'InstitucionController@setAprobacion');
+	Route::post('institucion/rechazar', 'InstitucionController@setRechazo');
+	Route::get('institucion/cerrar', 'InstitucionController@setCierre');
 });

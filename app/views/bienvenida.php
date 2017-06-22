@@ -5,6 +5,9 @@
 <div id="home-container" class="row">
 	
 	<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
+	<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado='rechazado'): ?>
+		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones aprobador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
+	<?php endif;?>
 	<div class="alert alert-success" role="alert"><h2><strong>Controles actualizados</strong></h2><h3>El servicio tiene <?=$controles_actualizados?> controles actualizados de un total de <?=$total_controles?></h3></div>
 	<div class="progress">
 		<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <?=$porcentaje_actualizados?>%;"><?=$porcentaje_actualizados?>%</div>
@@ -42,11 +45,17 @@
 		<div class="col-md-3">
 			<div class="">
 				<h3>Acciones</h3>
-				<!--
-				<button type="button" class="btn btn-danger upload-image registrar" id="registrar">Rechazar</button><br>
-				<button type="button" class="btn btn-success upload-image registrar" id="registrar">Enviar a aprobador</button><br>
-				<button type="button" class="btn btn-success upload-image registrar" id="registrar">Enviar a red de expertos</button><br>
-				-->
+				<?php
+					if(Auth::user()->perfil=='reporte' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))):
+				?>
+				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" onclick="return confirm('Está seguro de enviar la información a aprobar?')">Enviar a aprobador</a>
+				<?php
+					elseif(Auth::user()->perfil=='aprobador' && in_array(Auth::user()->institucion->estado,array("enviado"))):
+				?>
+				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap">Rechazar</button>
+				<br><br>
+				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" onclick="return confirm('¿Está seguro de cerrar el proceso y enviar a Red de Expertos?')">Aprobar y cerrar Proceso</a>
+				<?php endif;?>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -57,6 +66,32 @@
 		</div>
 	</div>
 	</div>
+</div>
+
+<!-- Modal aprobador comentarios opcionales -->
+<div class="modal fade" id="modalaprobador" tabindex="-1" role="dialog" aria-labelledby="modalaprobador">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modalaprobador">Indique cuales son las razones del <strong>rechazo</strong> de la información</h4>
+      </div>
+      <div class="modal-body">
+    <form action="<?=URL::to('institucion/rechazar')?>" id="myform" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="message-text" class="control-label">Observaciones (opcional):</label>
+            <textarea cols="10" rows="5" style="resize:none" class="form-control" id="observaciones" name="observaciones"></textarea>
+          </div>
+      </div>
+      <input type="hidden" name="control_id" id="control_id">
+      <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
+        <input type="submit" class="btn btn-success upload-image" id="actualizar" value="Enviar">
+      </div>
+    </div>
+    </form>
+  </div>
 </div>
 
 <script type="text/javascript">

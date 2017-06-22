@@ -17,4 +17,15 @@ class BaseController extends Controller {
 		}
 	}
 
+	//Habilitación segun perfil
+	public function getHabilitacion(){
+		$habilitado = true;
+		if(Auth::user()->perfil=='reporte' && !in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))){
+			$habilitado = false;
+		}elseif(Auth::user()->perfil=='aprobador'){
+			$habilitado = false;
+		}
+		return $habilitado;
+	}
+
 }

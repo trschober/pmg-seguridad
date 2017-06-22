@@ -13,6 +13,11 @@
     </div>
 </div>
 
+<?php 
+    $disabled = $habilitado==true ? '' : 'disabled';
+    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+?>
+
 <?php if(Auth::user()->perfil==='expertos'): ?>
         <div class="form-group pull-right">
             <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
@@ -60,14 +65,14 @@
                 <td>
                     <?php if(count($control->comentarios)>0):?>    
                         <?php foreach ($control->comentarios as $comentario): ?>
-                        <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
+                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
                             <option value="" disabled selected>Seleccion opción</option>
                             <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
                             <option value="no" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
                         </select>
                         <? endforeach ?>
                     <?php else: ?>
-                        <select class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
+                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
                             <option value="" disabled selected>Seleccione opción</option>
                             <option value="si">Si</option>
                             <option value="no">No</option>
@@ -80,14 +85,18 @@
                 <td>
                     <?php
                         $actualizado = '<a href="#" class="ver"><span class="label label-success">Revisar</span></a>';
+                        $marca = '';
                         if(count($control->comentarios)==0){
                             $desplegar = 'style="display:none"';
+                            $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }else{
-                            //$actualizado = !is_null($control->comentarios[0]->cumple) ? '<a href="#" class="ver"><span class="label label-success">ver</span></a>' : '';
                             $desplegar = !is_null($control->comentarios[0]->cumple) ? '' : 'style="display:none"';
+                            if(is_null($control->comentarios[0]->cumple))
+                                $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }
                     ?>
                     <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
+                    <?=$marca?>
                 </td>
                 <?php if(Auth::user()->perfil==='expertos'): ?>
                 <td><button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
@@ -97,7 +106,7 @@
     </tbody>
 </table>
 
-<!-- Modal cumplimiento NO -->
+<!-- Modal cumplimiento -->
 <div class="modal fade" id="modalcomentario" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -110,17 +119,17 @@
           <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
             <div class="form-group nocumpleform">
               <label for="message-text" class="control-label">Justificaciones:</label>
-              <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
+              <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
               <label for="archivo">Archivo</label>
-              <input class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
+              <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
               <p class="help-block">Se pueden agregar varios archivos a la vez</p>
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
                <label for="anio_implementacion">Año implementación</label>
-               <select class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
+               <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
@@ -141,53 +150,6 @@
       </div>
     </div>
 </div>
-
-<!-- Modal cumplimiento SI -->
-<!--
-<div class="modal fade" id="modalcomentario" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="modalcomentario"></h4>
-        </div>
-        <div id="thanks"></div>
-        <div class="modal-body">
-          <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
-            <div class="form-group nocumpleform">
-              <label for="message-text" class="control-label">Justificaciones:</label>
-              <textarea cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
-            </div>
-            <div class="form-group cumpleform">
-              <label for="archivo">Archivo</label>
-              <input class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
-              <p class="help-block">Se pueden agregar varios archivos a la vez</p>
-            </div>
-            <div id="links" class="form-group cumpleform"></div>
-            <div class="form-group cumpleform">
-               <label for="anio_implementacion">Año implementación</label>
-               <select class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
-                <option value="" disabled selected>Seleccione opción</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-                <option value="2015">2015</option>
-                <option value="2014">2014</option>
-                <option value="-">-</option>
-              </select>
-            </div>
-            <input type="hidden" name="cumplimiento" id="cumplimiento">
-            <input type="hidden" name="control_id" id="control_id">
-            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Registrar</button>
-        </div>
-      </div>
-    </div>
-</div>
--->
 
 <!-- Modal loading -->
 <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -334,6 +296,7 @@
             dataType: 'json' 
             }; 
         $('body').delegate('#registrar','click', function(){
+            $('#marca_'+$('#control_id').val()).text('');
             showPleaseWait();
             $('#myform').ajaxForm(options).submit();
         });
@@ -435,7 +398,7 @@
                     $('h4.modal-title').text('Detalle');
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
-                        $('#comentario_incumplimiento').attr('disabled',true);
+                        //$('#comentario_incumplimiento').attr('disabled',true);
                         $('.nocumpleform').show();
                         $('.cumpleform').hide();
                     }else{
@@ -445,11 +408,11 @@
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links= links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" >(X)</a></div>';
+                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" >(X)</a></div>';
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
-                        $('#anio_implementacion').attr('disabled',true);
+                        //$('#anio_implementacion').attr('disabled',true);
                         //$('#archivo').hide();
                     }
                     //$('#registrar').hide();
