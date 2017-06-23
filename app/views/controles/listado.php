@@ -18,7 +18,7 @@
     $mostrar = $habilitado==true ? '' : 'style="display:none"';
 ?>
 
-<?php if(Auth::user()->perfil==='expertos'): ?>
+<?php if(Auth::user()->perfil==='experto'): ?>
         <div class="form-group pull-right">
             <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
             <label for="institucion">Instituciones</label>
@@ -98,8 +98,8 @@
                     <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
                     <?=$marca?>
                 </td>
-                <?php if(Auth::user()->perfil==='expertos'): ?>
-                <td><button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
+                <?php if(Auth::user()->perfil==='experto'): ?>
+                <td>  <button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
                 <?php endif; ?>
             </tr>
         <?php endforeach ?>
@@ -179,13 +179,13 @@
         <h4 class="modal-title" id="modalexpertos"></h4>
       </div>
       <div class="modal-body">
-    <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data">
+    <form action="<?=URL::to('controles/red')?>" id="myformexperto" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="message-text" class="control-label">Observaciones:</label>
             <textarea cols="10" rows="5" style="resize:none" class="form-control" id="observaciones_expertos" name="observaciones_expertos"></textarea>
           </div>
       </div>
-      <input type="hidden" name="control_id" id="control_id">
+      <input type="hidden" name="control_experto" id="control_experto">
       <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
       <div class="modal-footer">
         <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
@@ -290,15 +290,23 @@
 
     //archivos
     $(document).ready(function() {
+
         var options = { 
             //beforeSubmit:  showRequest,
             success: showResponse,
             dataType: 'json' 
             }; 
         $('body').delegate('#registrar','click', function(){
+            $('#registrar').attr('disabled', true);
             $('#marca_'+$('#control_id').val()).text('');
             showPleaseWait();
             $('#myform').ajaxForm(options).submit();
+        });
+
+        $('body').delegate('#actualizar','click', function(){
+            //$('#marca_'+$('#control_id').val()).text('');
+            showPleaseWait();
+            $('#myformexperto').ajaxForm(options).submit();
         });
         
         var pleaseWait = $('#pleaseWaitDialog'); 
@@ -358,7 +366,7 @@
     }
 
     $('.actualizar').click(function(e) {
-        showPleaseWait();
+        //showPleaseWait();
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $.ajax({
             type: 'GET',
@@ -369,6 +377,7 @@
             success:function(data){
                 //Comentario no existe
                 if(data.success==true){
+                    $("#control_experto").val(cid);
                     var observaciones = data.comentario===null ? '' : data.comentario.observaciones_red;
                     $('#observaciones_expertos').val(observaciones);
                     $('#modalexpertos').modal('show');

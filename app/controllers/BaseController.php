@@ -22,7 +22,7 @@ class BaseController extends Controller {
 		$habilitado = true;
 		if(Auth::user()->perfil=='reporte' && !in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))){
 			$habilitado = false;
-		}elseif(Auth::user()->perfil=='aprobador'){
+		}elseif(in_array(Auth::user()->perfil, array('aprobador','experto','evaluador'))){
 			$habilitado = false;
 		}
 		return $habilitado;

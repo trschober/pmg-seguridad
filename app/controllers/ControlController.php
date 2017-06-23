@@ -12,7 +12,7 @@ class ControlController extends BaseController{
 			    $query->where('institucion_id',$valor_institucion);
 			}))->paginate(10);
 		$data['controles']=$controles;
-		if(Auth::user()->perfil==='expertos'){
+		if(Auth::user()->perfil==='experto'){
 			$instituciones = Institucion::orderBy('servicio')->get();
 			Session::put('sesion_institucion',$valor_institucion);
 			$data['instituciones']=$instituciones;
@@ -165,6 +165,16 @@ class ControlController extends BaseController{
 			}
 		}else{
 			return Response::json(['success' => false]);
+		}
+	}
+
+	public function setComentarioRed(){
+		$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_experto'))->first();
+		if($comentario!=NULL){
+			if(Input::has('observaciones_expertos'))
+				$comentario->observaciones_red = Input::get('observaciones_expertos');
+			$comentario->save();
+			return Response::json(['success' => true]);
 		}
 	}
 }

@@ -4,6 +4,7 @@
 
 <div id="home-container" class="row">
 	
+	<?php if(Auth::user()->perfil!='experto'): ?>
 	<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
 	<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado=='rechazado'): ?>
 		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones aprobador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
@@ -12,11 +13,13 @@
 	<div class="progress">
 		<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <?=$porcentaje_actualizados?>%;"><?=$porcentaje_actualizados?>%</div>
 	</div>
+	<?php endif ?>
 	
 	<div class="well">
 		<h2>Sistema de Seguridad de la Información</h2>
 		<p>Estimad@s Encargad@s de Seguridad de la Información, les damos la bienvenida a la plataforma de reportabilidad.</p>
 	</div>
+
 
 	<div class="col-md-12">
 	<div class="row">
@@ -42,6 +45,7 @@
 				</table>
 			</div>
 		</div>
+		<?php if(Auth::user()->perfil!='experto'): ?>
 		<div class="col-md-3">
 			<div class="">
 				<h3>Acciones</h3>
@@ -64,6 +68,7 @@
 				
 			</div>
 		</div>
+		<?php endif ?>
 	</div>
 	</div>
 </div>
