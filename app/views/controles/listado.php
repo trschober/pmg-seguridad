@@ -128,7 +128,7 @@
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
-               <label for="anio_implementacion">Año implementación</label>
+               <label for="anio_implementacion">Año documentación</label>
                <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>

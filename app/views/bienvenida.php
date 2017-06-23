@@ -52,7 +52,7 @@
 				<?php
 					if(Auth::user()->perfil=='reporte' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))):
 				?>
-				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" onclick="return confirm('Está seguro de enviar la información a aprobar?')">Enviar a aprobador</a>
+				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" onclick="return confirm('Está seguro de enviar la información a aprobar?')">Enviar a validador</a>
 				<?php
 					elseif(Auth::user()->perfil=='aprobador' && in_array(Auth::user()->institucion->estado,array("enviado"))):
 				?>

@@ -23,6 +23,11 @@ class InstitucionController extends BaseController {
 		            }else{
 		                if(is_null($control->comentarios[0]->cumple))
 		                    $faltantes++;
+		                elseif($control->comentarios[0]->cumple=='si'){
+		                	$files = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control->id)->count();
+		                	if($files==0)
+		                		$faltantes++;
+		                }
 		            }
 				}
 				if($faltantes>0){
