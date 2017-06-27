@@ -43,6 +43,7 @@
         <?php if(Auth::check()):?>
         <ul class="nav navbar-nav" id="menu-superior">
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
+            <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
         </ul>
         <?php endif?>
 

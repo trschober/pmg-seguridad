@@ -62,13 +62,9 @@ class ControlController extends BaseController{
 				$archivo->institucion_id=Auth::user()->institucion_id;
 				$archivo->control_id=Input::get('control_id');
 				$archivo_nombre = $file->getClientOriginalName();
-				$archivo_nombre = str_replace(" ","-",$archivo_nombre);
-				$no_permitidas= array ("á","é","í","ó","ú","Á","É","Í","Ó","Ú","ñ","À","Ã","Ì","Ò","Ù","Ã™","Ã ","Ã¨","Ã¬","Ã²","Ã¹","ç","Ç","Ã¢","ê","Ã®","Ã´","Ã»","Ã‚","ÃŠ","ÃŽ","Ã”","Ã›","ü","Ã¶","Ã–","Ã¯","Ã¤","«","Ò","Ã","Ã„","Ã‹");
-				$permitidas= array ("a","e","i","o","u","A","E","I","O","U","n","N","A","E","I","O","U","a","e","i","o","u","c","C","a","e","i","o","u","A","E","I","O","U","u","o","O","i","a","e","U","I","A","E");
-				$archivo_nombre = str_replace($no_permitidas, $permitidas ,$archivo_nombre);
-				$archivo_nombre = strtolower($archivo_nombre);
+				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
 				$archivo->filename=$archivo_nombre;
-				$file->move('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
+				$file->move('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
 				$archivo->save();
 			}
 		}else{
@@ -76,7 +72,7 @@ class ControlController extends BaseController{
 			foreach ($files as $file) {
 				$file->delete();
 			}
-			$files = glob('public/uploads/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
+			$files = glob('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
 			foreach($files as $file){
 			  if(is_file($file))
 			    unlink($file);
@@ -141,7 +137,7 @@ class ControlController extends BaseController{
 	public function getFile($archivo_id){
 		$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first();
 		if($archivo!=null){
-			return Response::download('public/uploads/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+			return Response::download('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
 		}
 	}
 
