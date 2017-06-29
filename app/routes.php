@@ -47,4 +47,7 @@ Route::group(["before" => "auth"], function() {
 	Route::post('riesgos/agregar','RiesgoController@setFile');
 	Route::get('riesgos/eliminar/{riesgo_id}','RiesgoController@deleteFile');
 	Route::get('riesgos/download/{archivo}', 'RiesgoController@getFile');
+
+	//Gestión
+	Route::get('gestion/instituciones','InstitucionController@getInstituciones');
 });
