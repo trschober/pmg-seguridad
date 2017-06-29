@@ -6,7 +6,7 @@ class ControlController extends BaseController{
 		if(Input::has('institucion'))
 			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
 		else
-			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o aprobador
+			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
 		
 		$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
 			    $query->where('institucion_id',$valor_institucion);

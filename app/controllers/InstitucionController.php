@@ -92,7 +92,7 @@ class InstitucionController extends BaseController {
 		$institucion = Institucion::find(Auth::user()->institucion_id);
 		$institucion->estado = 'cerrado';
 		$institucion->save();
-		$numerador = \Helpers::getNumerador();
+		$nombre_archivo = $this->reporteCierre();
 
 		//envio de correo cierre proceso para usuarios de perfil ingreso y validador
 		$usuarios = Usuario::participantes()->where('institucion_id',Auth::user()->institucion_id)->get();
@@ -100,8 +100,9 @@ class InstitucionController extends BaseController {
 			$email = $usuario->correo;
 			$data = array('usuario' => $usuario);
 			if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-				\Mail::send('emails/cierre_proceso', $data, function($message) use ($email) {
+				\Mail::send('emails/cierre_proceso', $data, function($message) use ($nombre_archivo,$email) {
 			    	$message->subject('Aprobación SSI');
+			    	$message->attach($nombre_archivo);
 			    	$message->to($email);
 				});
 			}
@@ -109,90 +110,73 @@ class InstitucionController extends BaseController {
 		return Redirect::to('bienvenida');
 	}
 
-	protected function generarReporte(){
+	protected function reporteCierre(){
 		$objPHPExcel = new PHPExcel();
 		
-		/* Hoja1: Resumen Institución */	
+		/* Hoja1: Resumen servicio */	
 		$objPHPExcel->setActiveSheetIndex(0)
 			            ->setCellValue('A1', 'Ministerio')
-			            ->setCellValue('A2', 'Institución')
+			            ->setCellValue('A2', 'Servicio')
 			            ->setCellValue('A3', 'Numerador')
 			            ->setCellValue('A4', 'Denominador')
-			            ->setCellValue('A5', 'Tramites nivel 2')
-			            ->setCellValue('A6', 'Tramites nivel 3')
-			            ->setCellValue('A7', 'Tramites nivel 3 (máximo nivel de digitalización)')
-			            ->setCellValue('A8', 'Tramites nivel 4 (trámites digitalizados)')
-			            ->setCellValue('A9', 'Cantidad de trámites')
-			            ->setCellValue('A10', 'Porcentaje');
-		$catastro = DB::table('catastros')->where('institucion',$institucion)->first();
-		/*
-		$cantidad_tramites = DB::table('catastros')->where('institucion',$institucion)->count();
-		$cantidad_nivel_0 = DB::table('catastros')->where('edit_nivel_digitalizacion',0)->where('institucion',$institucion)->count();
-		$cantidad_nivel_1 = DB::table('catastros')->where('edit_nivel_digitalizacion',1)->where('institucion',$institucion)->count();
-        $cantidad_nivel_2 = DB::table('catastros')->where('edit_nivel_digitalizacion',2)->where('institucion',$institucion)->count();
-        $cantidad_nivel_3 = DB::table('catastros')->where('edit_nivel_digitalizacion',3)->where('maximo_nivel',0)->where('institucion',$institucion)->count();
-        $cantidad_nivel_3_max = DB::table('catastros')->where('edit_nivel_digitalizacion',3)->where('maximo_nivel',1)->where('institucion',$institucion)->count();
-        $cantidad_nivel_4 = DB::table('catastros')->where('edit_nivel_digitalizacion',4)->where('institucion',$institucion)->count();
-        */
-        $numerador = $cantidad_nivel_4 + $cantidad_nivel_3_max;
-		$porcentaje = round(($numerador * 100) / $cantidad_tramites,2) .'%';
-
-        $objPHPExcel->getActiveSheet()->setCellValue("B1",$catastro->ministerio);
-		$objPHPExcel->getActiveSheet()->setCellValue("B2",$institucion);
-		$objPHPExcel->getActiveSheet()->setCellValue("B3",$cantidad_nivel_0);
-		$objPHPExcel->getActiveSheet()->setCellValue("B4",$cantidad_nivel_1);
-		$objPHPExcel->getActiveSheet()->setCellValue("B5",$cantidad_nivel_2);
-		$objPHPExcel->getActiveSheet()->setCellValue("B6",$cantidad_nivel_3);
-		$objPHPExcel->getActiveSheet()->setCellValue("B7",$cantidad_nivel_3_max);
-		$objPHPExcel->getActiveSheet()->setCellValue("B8",$cantidad_nivel_4);
-		$objPHPExcel->getActiveSheet()->setCellValue("B9",$cantidad_tramites);
-		$objPHPExcel->getActiveSheet()->setCellValue("B10",$porcentaje);
+			            ->setCellValue('A5', 'Porcentaje');
+        $denominador = \Helpers::getDenominador();
+        $numerador = \Helpers::getNumerador();
+		$porcentaje = round(($numerador * 100) / $denominador,2) .'%';
+        $objPHPExcel->getActiveSheet()->setCellValue("B1",Auth::user()->institucion->ministerio);
+		$objPHPExcel->getActiveSheet()->setCellValue("B2",Auth::user()->institucion->servicio);
+		$objPHPExcel->getActiveSheet()->setCellValue("B3",$numerador);
+		$objPHPExcel->getActiveSheet()->setCellValue("B4",$denominador);
+		$objPHPExcel->getActiveSheet()->setCellValue("B5",$porcentaje);
 		$objPHPExcel->getActiveSheet()->setTitle("Presentación");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
 		/* Fin hoja1 */
 
-		/* Hoja2: Listado de trámites */
+		/* Hoja2: Listado de controles */
 		$objPHPExcel->createSheet();
 		$objPHPExcel->setActiveSheetIndex(1)
-		            ->setCellValue('A1', 'Ministerio')
-		            ->setCellValue('B1', 'Servicio')
-		            ->setCellValue('C1', 'Trámite')
-		            ->setCellValue('D1', 'Nivel Digitalización')
-		            ->setCellValue('E1', 'URL')
-		            ->setCellValue('F1', 'Descripción')
-		            ->setCellValue('G1', 'Observación servicio')
-		            ->setCellValue('H1', 'Cantidad capturas');
-
+		            ->setCellValue('A1', 'ID')
+		            ->setCellValue('B1', 'Código')
+		            ->setCellValue('C1', 'Nombre')
+		            ->setCellValue('D1', 'Año Formulación')
+		            ->setCellValue('E1', 'Implementado')
+		            ->setCellValue('F1', 'Año Documentación')
+		            ->setCellValue('G1', 'Justificación');
 		$rowNumber = 2;
-		$catastros = DB::table('catastros')->where('institucion',$institucion)->get();
-		foreach ($catastros as $c){
-			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$c->ministerio);
-			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$c->institucion);
-			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$c->nombre);
-			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$c->edit_nivel_digitalizacion);
-			if(is_null($c->edit_url) or $c->edit_url == "" ){
-				$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$c->url);
-			}
-			else{
-				$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$c->edit_url);
-			}
-			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$c->edit_descripcion);
-			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$c->observacion_validacion);
-			$cantidad_capturas = DB::table('capturas')->where('catastro_id',$c->id_catastro)->count();
-			$objPHPExcel->getActiveSheet()->setCellValue("H".$rowNumber,$cantidad_capturas);
+		$controles = Control::with(array('comentarios' => function($query){
+				    $query->where('institucion_id',Auth::user()->institucion_id);
+			}))->get();
+		foreach ($controles as $control){
+			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->id);
+			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->codigo);
+			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->nombre);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->anio_compromiso);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->cumple);
+			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$control->comentarios[0]->anio_implementacion);
+			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$control->comentarios[0]->observaciones_institucion);
 			$rowNumber++;
 		}
-		$objPHPExcel->getActiveSheet()->setTitle("Trámites");
+		$objPHPExcel->getActiveSheet()->setTitle("Controles");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
 		/* Fin hoja2 */
 
 		/* Guardar excel en disco */
+		$nombre_archivo = 'public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls';
+		$carpeta_reportes = 'public/uploads/reportes';
+		if(!is_dir($carpeta_reportes))
+			mkdir($carpeta_reportes);
+	    	
 		$objPHPExcel->setActiveSheetIndex(0);
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-		$objWriter->save('uploads/validacion_pmg-'.$institucion_id.'.xls');
-		$nombre_archivo = 'uploads/validacion_pmg-'.$institucion_id.'.xls';
+		
+		$objWriter->save($nombre_archivo);
+		return $nombre_archivo;
+	}
+
+	public function getReporteCierre(){
+		return Response::download('public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls');
 	}
 
 }

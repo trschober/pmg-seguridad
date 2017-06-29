@@ -19,22 +19,22 @@
 ?>
 
 <?php if(Auth::user()->perfil==='experto'): ?>
-        <div class="form-group pull-right">
-            <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
-            <label for="institucion">Instituciones</label>
-            <select id="institucion" name="institucion">
-                <option value="" disabled selected>Seleccione opción</option>
-                <?php foreach($instituciones as $i): ?>
-                   <?php if($i->id == Session::get('sesion_institucion')): ?>
-                    <option value="<?=$i->id?>" selected><?=$i->servicio?></option>
-                   <?php else: ?>
-                    <option value="<?=$i->id?>"><?=$i->servicio?></option>
-                    <?php endif ?>
-                <?php endforeach ?>
-            </select>
-            <input type="submit" value="Actualizar" class="btn btn-success" />
-            </form>
-        </div>
+    <div class="form-group pull-right">
+        <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
+        <label for="institucion">Instituciones</label>
+        <select id="institucion" name="institucion">
+            <option value="" disabled selected>Seleccione opción</option>
+            <?php foreach($instituciones as $i): ?>
+               <?php if($i->id == Session::get('sesion_institucion')): ?>
+                <option value="<?=$i->id?>" selected><?=$i->servicio?></option>
+               <?php else: ?>
+                <option value="<?=$i->id?>"><?=$i->servicio?></option>
+                <?php endif ?>
+            <?php endforeach ?>
+        </select>
+        <input type="submit" value="Actualizar" class="btn btn-success" />
+        </form>
+    </div>
 <?php endif ?>
 
 <table id="controles" class="table table-striped table-hover table-condensed">
@@ -45,9 +45,9 @@
             <th>Nombre</th>
             <th>Año de formulación</th>
             <th>Implementado</th>
-            <th>Actualizado</th>
-            <?php if(Auth::user()->perfil==='expertos'): ?>
-            <th>Comentario Red</th>
+            <th>Acciones</th>
+            <?php if(Auth::user()->perfil==='experto'): ?>
+            <th>Actualizado Red</th>
             <?php endif; ?>
         </tr>
     </thead>
@@ -97,10 +97,18 @@
                     ?>
                     <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
                     <?=$marca?>
+                    <?php if(Auth::user()->perfil==='experto'): ?>
+                        <a href="#" class="actualizar"  data-dismiss="modal"><span class="label label-info">Actualizar</span></a>
+                    <?php endif; ?>
                 </td>
                 <?php if(Auth::user()->perfil==='experto'): ?>
-                <td>  <button type="button" class="btn btn-info actualizar" data-dismiss="modal">Actualizar</button></td>
-                <?php endif; ?>
+                <?php
+                    $red_expertos = '';
+                    $desplegar = is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '';
+                    $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
+                ?>
+                <td><?=$red_expertos ?></td>
+                <?php endif ?>
             </tr>
         <?php endforeach ?>
     </tbody>
@@ -305,6 +313,7 @@
 
         $('body').delegate('#actualizar','click', function(){
             //$('#marca_'+$('#control_id').val()).text('');
+            $('#actualizado_experto_'+$('#control_experto').val()).show();
             showPleaseWait();
             $('#myformexperto').ajaxForm(options).submit();
         });

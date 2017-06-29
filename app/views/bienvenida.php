@@ -65,7 +65,11 @@
 		<div class="col-md-3">
 			<div class="">
 				<h3>Descarga</h3>
-				
+				<?php
+					if(Auth::user()->institucion->estado=='cerrado'):
+				?>
+				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Informe de cierre</a>
+				<?php endif;?>
 			</div>
 		</div>
 		<?php endif ?>

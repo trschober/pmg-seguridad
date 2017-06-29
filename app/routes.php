@@ -39,9 +39,12 @@ Route::group(["before" => "auth"], function() {
 	Route::get('institucion/aprobar', 'InstitucionController@setAprobacion');
 	Route::post('institucion/rechazar', 'InstitucionController@setRechazo');
 	Route::get('institucion/cerrar', 'InstitucionController@setCierre');
+	Route::get('institucion/informe-cierre', 'InstitucionController@getReporteCierre');
 
 	//Riesgos
 	Route::get('riesgos','RiesgoController@index');
+	Route::post('riesgos','RiesgoController@index');
 	Route::post('riesgos/agregar','RiesgoController@setFile');
 	Route::get('riesgos/eliminar/{riesgo_id}','RiesgoController@deleteFile');
+	Route::get('riesgos/download/{archivo}', 'RiesgoController@getFile');
 });
