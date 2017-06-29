@@ -14,6 +14,7 @@ class RiesgoController extends BaseController {
 			$data['instituciones']=$instituciones;
 		}
 		$data['riesgos'] = Riesgo::where('institucion_id',$valor_institucion)->get();
+		$data['habilitado'] = $this->getHabilitacion();
 		$this->layout->title= "Análisis de riesgos";
     	$this->layout->content = View::make('riesgos/inicio',$data);
 	}

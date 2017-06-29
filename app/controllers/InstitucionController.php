@@ -170,7 +170,6 @@ class InstitucionController extends BaseController {
 	    	
 		$objPHPExcel->setActiveSheetIndex(0);
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-		
 		$objWriter->save($nombre_archivo);
 		return $nombre_archivo;
 	}

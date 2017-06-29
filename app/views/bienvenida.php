@@ -4,7 +4,7 @@
 
 <div id="home-container" class="row">
 	
-	<?php if(Auth::user()->perfil!='experto'): ?>
+	<?php if(Auth::user()->perfil!='experto' && Auth::user()->institucion->estado!='cerrado'): ?>
 	<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
 	<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado=='rechazado'): ?>
 		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones aprobador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
@@ -52,13 +52,13 @@
 				<?php
 					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))):
 				?>
-				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" onclick="return confirm('Está seguro de enviar la información a aprobar?')">Enviar a validador</a>
+				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" id="validar" name="validar">Enviar a validador</a>
 				<?php
 					elseif(Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado"))):
 				?>
-				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap">Rechazar</button>
+				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap" id="rechazar" name="rechazar">Rechazar</button>
 				<br><br>
-				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" onclick="return confirm('¿Está seguro de cerrar el proceso y enviar a Red de Expertos?')">Aprobar y cerrar Proceso</a>
+				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" id="cerrar" name="cerrar">Aprobar y cerrar Proceso</a>
 				<?php endif;?>
 			</div>
 		</div>
@@ -96,14 +96,63 @@
       <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
       <div class="modal-footer">
         <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-        <input type="submit" class="btn btn-success upload-image" id="actualizar" value="Enviar">
+        <input type="submit" class="btn btn-success upload-image" value="Enviar" id="devolver" name="devolver">
       </div>
     </div>
     </form>
   </div>
 </div>
 
+<!-- Modal loading -->
+<div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h1>Procesando...</h1>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+            <span class="sr-only">40% Complete (success)</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
+
+$(document).ready(function() {
+    var pleaseWait = $('#pleaseWaitDialog'); 
+    showPleaseWait = function() {
+        pleaseWait.modal('show');
+    };
+    hidePleaseWait = function () {
+        pleaseWait.modal('hide');
+    };
+});
+
+$('#validar').click(function() {
+	if(confirm('¿Está seguro de enviar la información a aprobar?')){
+		showPleaseWait();
+		$(this).attr('disabled',true);
+	}else{
+		return false;
+	}
+});
+
+$('#cerrar').click(function() {
+	if(confirm('¿Está seguro de cerrar el proceso y enviar a Red de Expertos?')){
+		showPleaseWait();
+		$('#rechazar').attr('disabled',true);
+		$(this).attr('disabled',true);
+	}else{
+		return false;
+	}
+});
+
 
 $('#clock').countdown('<?=$fecha_termino?>', function(event) {
   var $this = $(this).html(event.strftime('<strong>Quedan '

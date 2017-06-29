@@ -7,8 +7,8 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
-            <p>A continuación, se presenta el listado de trámites correspondientes a su servicio, los cuales se identifican en el catastro de trámites del año 2016.</p>
-            <p>Para cada trámite registrado usted deberá hacer click en el botón “Actualizar”, donde podrá modificar  el nombre, nivel de digitalización, URL, descripción, y clave única. Además, de ser necesario, usted podrá dejar sus observaciones para cada trámite.</p>
+            <p></p>
+            <p></p>
         </div>
     </div>
 </div>
@@ -249,53 +249,6 @@
         });
      });
 
-    //actualizar año de implementación
-    /*
-    $('.implementacion').change(function(){
-        showPleaseWait();
-        var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
-        var anio = $(this).val();
-        $.ajax({
-            type: "POST",
-            url: "<?=URL::to('controles/actualizar')?>",
-            data: { 
-                control_id: cid,
-                cumple: $('#cumple_'+cid).val(),
-                anio: $('#anio_'+cid).val()
-            },
-            success: function(result) {
-                hidePleaseWait();
-            },
-            error: function(result) {
-                alert('error');
-            }
-        });
-    });
-
-    //registrar comentario incumplimiento de control
-    $('#registrarasd').click(function(e) {
-        showPleaseWait();
-        var cid = $("#control_id").val();
-        $.ajax({
-            type: "POST",
-            url: "<?=URL::to('controles/actualizar')?>",
-            data: { 
-                control_id: cid,
-                comentario: $("#comentario_incumplimiento").val(),
-                cumple: $('#cumple_'+cid).val()
-            },
-            success: function(result) {
-                //alert('ok');
-                hidePleaseWait();
-                showResponse();
-            },
-            error: function(result) {
-                alert('error');
-            }
-        });
-    });
-    */
-
     //archivos
     $(document).ready(function() {
 
@@ -341,13 +294,6 @@
         }
     });
 
-    /*
-    function showRequest(formData, jqForm, options) { 
-        //$("#validation-errors").hide().empty();
-        //$("#output").css('display','none');
-        return true; 
-    }
-    */
     function showResponse(response, statusText, xhr, $form) {
         //alert(response);
         if(response.success == false){
@@ -460,7 +406,6 @@
                 console.log('errors'+errors);
             }
         });
-    }
-        
+    }     
 
 </script>

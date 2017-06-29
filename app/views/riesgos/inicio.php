@@ -7,11 +7,16 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
-            <p>A continuación, se presenta el listado de trámites correspondientes a su servicio, los cuales se identifican en el catastro de trámites del año 2016.</p>
-            <p>Para cada trámite registrado usted deberá hacer click en el botón “Actualizar”, donde podrá modificar  el nombre, nivel de digitalización, URL, descripción, y clave única. Además, de ser necesario, usted podrá dejar sus observaciones para cada trámite.</p>
+            <p></p>
+            <p></p>
         </div>
     </div>
 </div>
+
+<?php 
+    $disabled = $habilitado==true ? '' : 'disabled';
+    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+?>
 
 <?php if(Auth::user()->perfil==='experto'): ?>
     <div class="form-group pull-right">
@@ -35,14 +40,13 @@
 <?php if(Auth::user()->perfil!='experto'): ?>
 <form action="<?=URL::to('riesgos/agregar')?>" method="POST" enctype="multipart/form-data">
   <?php echo $errors->first('email'); ?>
-  <div class="form-group">
+  <div <?=$mostrar?> class="form-group">
     <label for="archivo">Archivo</label>
-    <input type="file" id="archivo" name="archivo">
+    <input <?=$disabled?> type="file" id="archivo" name="archivo">
   </div>
-  <button type="submit" class="btn btn-success" disabled id="agregar" name="agregar">Agregar</button>
+  <button <?=$mostrar?> <?=$disabled?> type="submit" class="btn btn-success" disabled id="agregar" name="agregar">Agregar</button>
 </form>
 <?php endif ?>
-
 
 <table id="controles" class="table table-striped table-hover table-condensed">
 	<caption>Listado de archivos</caption>
@@ -59,7 +63,7 @@
     		<td><?=$riesgo->filename?></td>
     		<td>
             <?php if(Auth::user()->perfil!='experto'): ?>
-            <a href="<?=URL::to('riesgos/eliminar/'.$riesgo->id)?>" class="eliminar" onclick="return confirm('¿Est&aacute; seguro que desea eliminar el archivo?')"><span class="label label-danger">Eliminar</span></a>
+            <a <?=$mostrar?> href="<?= $habilitado ? URL::to('riesgos/eliminar/'.$riesgo->id) : '#' ?>" class="eliminar" onclick="return confirm('¿Est&aacute; seguro que desea eliminar el archivo?')"><span class="label label-danger">Eliminar</span></a>
             <?php endif ?>
             <a href="<?=URL::to('riesgos/download/'.$riesgo->id)?>" class="descargar"><span class="label label-info">Descargar</span></a>
             </td>
