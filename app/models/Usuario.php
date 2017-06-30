@@ -18,6 +18,6 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface {
 
     public function scopeParticipantes($query){
         return $query->whereIn('perfil', array('ingreso','validador'));
-    } 
+    }
 
 }

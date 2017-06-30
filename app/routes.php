@@ -49,5 +49,10 @@ Route::group(["before" => "auth"], function() {
 	Route::get('riesgos/download/{archivo}', 'RiesgoController@getFile');
 
 	//Gestión
-	Route::get('gestion/instituciones','InstitucionController@getInstituciones');
+	Route::get('gestion/instituciones','GestionController@getInstituciones');
+	Route::get('gestion/instituciones/actualizar','GestionController@updateInstitucion');
+	Route::get('gestion/usuarios','GestionController@getUsuarios');
+	Route::post('gestion/usuarios','GestionController@getUsuarios');
+	Route::get('gestion/usuarios/detalle','GestionController@getUsuarioDetalle');
+	Route::post('gestion/usuarios/actualizar','GestionController@updateUsuario');
 });

@@ -57,6 +57,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Gesti&oacute;n</a>
                         <ul class="dropdown-menu">
                             <li><a href="<?=URL::to('gestion/instituciones')?>">Instituciones</a></li>
+                            <li><a href="<?=URL::to('gestion/usuarios')?>">Usuarios</a></li>
                         </ul>
                     </li>
                     <?php endif; ?>

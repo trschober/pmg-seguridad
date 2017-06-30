@@ -177,11 +177,4 @@ class InstitucionController extends BaseController {
 	public function getReporteCierre(){
 		return Response::download('public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls');
 	}
-
-	public function getInstituciones(){
-		$data['instituciones'] = Institucion::all();
-		$this->layout->title="Instituciones";
-        $this->layout->content = View::make('gestion/instituciones',$data);
-	}
-
 }

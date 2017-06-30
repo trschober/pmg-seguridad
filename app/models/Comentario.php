@@ -14,8 +14,5 @@ class Comentario extends Eloquent {
 
     public function scopeActualizados($query){
         return $query->whereIn('cumple', array('si','no'));
-
     }
-    
-
 }

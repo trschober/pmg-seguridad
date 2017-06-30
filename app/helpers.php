@@ -29,4 +29,8 @@ class Helpers{
 		}
 		return $cumplidos;
 	}
+
+	public static function getListadoInstituciones(){
+		return Institucion::all();
+	}
 }
