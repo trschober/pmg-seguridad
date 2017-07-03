@@ -104,11 +104,11 @@
                 <?php if(Auth::user()->perfil==='experto'): ?>
                 <?php
                     $red_expertos = '';
-                    $desplegar = is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '';
+                    $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
                     $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
                 ?>
                 <td><?=$red_expertos ?></td>
-                <?php endif ?>
+                <?php endif; ?>
             </tr>
         <?php endforeach ?>
     </tbody>

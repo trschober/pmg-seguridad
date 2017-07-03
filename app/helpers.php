@@ -31,6 +31,6 @@ class Helpers{
 	}
 
 	public static function getListadoInstituciones(){
-		return Institucion::all();
+		return Institucion::orderBy('servicio')->get();
 	}
 }

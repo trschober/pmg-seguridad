@@ -33,7 +33,7 @@
             <?php endforeach ?>
         </select>
         <input type="submit" value="Actualizar" class="btn btn-success" />
-        <input type="button" class="btn btn-info" value="Nuevo" id="nuevo" name="nuevo" />
+        <a href="<?=URL::to('gestion/usuarios/editar')?>" class="btn btn-info" value="Nuevo" id="nuevo" name="nuevo">Nuevo</a>
         </form>
     </div>
 <?php endif ?>
@@ -55,7 +55,7 @@
             <td><?=$usuario->institucion->servicio ?></td>
             <td><?=$usuario->perfil ?></td>
             <td><div class="cid"><input type="hidden" name="cidv" value="<?=$usuario->id ?>"></div></td>
-            <td><a href="#" class="ver"><span class="label label-info">Actualizar</span></a></td> 
+            <td><a href="<?=URL::to('gestion/usuarios/editar/'.$usuario->id)?>" class="ver"><span class="label label-info">Editar</span></a></td> 
         </tr>
     	<?php endforeach ?>
     </tbody>
@@ -146,151 +146,3 @@
       </div>
     </div>
 </div>
-
-<script type="text/javascript">
-
-	$(document).ready(function(){
-        var pleaseWait = $('#pleaseWaitDialog'); 
-        showPleaseWait = function() {
-            pleaseWait.modal('show');
-        };
-        hidePleaseWait = function () {
-            pleaseWait.modal('hide');
-        };
-    });
-	
-	$('.cumple').change(function(){
-		showPleaseWait();
-        var id = $(this).parents('tr').find('.cid input[type="hidden"]').val();
-        var estado = $(this).val();
-        $.ajax({
-            type: 'GET',
-            url:  "<?=URL::to('gestion/instituciones/actualizar')?>",
-            data: 'institucion_id='+id+'&estado='+estado,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success:function(data){
-                if(data.success==true){
-                    hidePleaseWait();
-                }else{
-                	hidePleaseWait();
-                }
-            },
-            error:function(errors){
-                console.log('errors'+errors);
-            }
-        });
-    });
-
-    $('.ver').click(function(e) {
-        var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
-        $.ajax({
-            type: 'GET',
-            url:  "<?=URL::to('gestion/usuarios/detalle')?>",
-            data: 'usuario_id='+cid ,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success:function(data){
-                if(data.success==true){
-                    $("#institucion_id").val(cid);
-                    $('h4.modal-title').text('Detalle');
-                    $('#rut').val(data.usuario.rut);
-                    $('#nombres').val(data.usuario.nombres);
-                    $('#apellidos').val(data.usuario.apellidos);
-                    $('#correo').val(data.usuario.correo);
-                    $('#institucion_usuario').val(data.usuario.institucion_id);
-                    $('#perfil').val(data.usuario.perfil);
-                    $('#actualizar').val('Actualizar');
-                    $('#modalcomentario').modal('show');
-                }
-            },
-            error:function(errors){
-                console.log('errors'+errors);
-            }
-        });
-    });
-
-    $('#nuevo').click(function(e) {
-        $('#nombres').val('');
-        $('#apellidos').val('');
-        $('#correo').val('');
-        $('#institucion_usuario').val('');
-        $('#perfil').val('');
-        $('#actualizar').removeAttr('disabled');
-        $('#modalcomentario').modal('show');
-    });
-
-    /*
-    $('.validar').on("change", function(){
-        console.log('a');
-        if($('#rut').val()!='' && $('#nombres').val()!='' && $('#apellidos').val()!='' && $('#correo').val()!=''){
-            $('#actualizar').removeAttr('disabled');
-        }
-    });
-    */
-    
-    $(document).on('submit', '#myform', function(event){
-        var info = $('.avatar_alert');
-        //event.preventDefault();
-        var data = { rut: $("#rut").val(),nombres: $("#nombres").val() };
-        console.log(data);
-        return false;
-        $.ajax({
-            url: "/dashboard/avatar",
-            type: "POST",
-            data: data,
-        }).done(function(response) {
-                info.hide().find('ul').empty();
-            if(response.errors)
-            {
-                $.each(response.errors, function(index, error){
-                    info.find('ul').append(error);
-                });
-                info.slideDown();
-            }
-            else if(response.success){
-              window.location.href = "/dashboard";
-            }
-        });
-    });
-    
-
-    /*
-    $('#actualizar').click(function(e) {
-        //showPleaseWait();
-        var data = { rut: $("#rut").val(),nombres: $("#nombres").val() }
-        console.log(data);
-        return false;
-        $.ajax({
-            type: 'GET',
-            url:  "<?=URL::to('controles/estado')?>",
-            data: 'control_id='+cid ,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success:function(data){
-                //Comentario no existe
-                if(data.success==true){
-                    $("#control_experto").val(cid);
-                    var observaciones = data.comentario===null ? '' : data.comentario.observaciones_red;
-                    $('#observaciones_expertos').val(observaciones);
-                    $('#modalexpertos').modal('show');
-                }
-            },
-            error:function(errors){
-                console.log('errors'+errors);
-            }
-        });
-    });
-    */
-
-    /*
-    $('#comentario_incumplimiento').bind('input propertychange', function() {
-        if(!$.trim($("#comentario_incumplimiento").val())){
-            $('#actualizar').attr('disabled', true);
-        }else{
-            $('#actualizar').removeAttr('disabled');
-        }
-    });
-    */
-
-</script>

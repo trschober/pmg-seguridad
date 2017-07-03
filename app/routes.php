@@ -53,6 +53,6 @@ Route::group(["before" => "auth"], function() {
 	Route::get('gestion/instituciones/actualizar','GestionController@updateInstitucion');
 	Route::get('gestion/usuarios','GestionController@getUsuarios');
 	Route::post('gestion/usuarios','GestionController@getUsuarios');
-	Route::get('gestion/usuarios/detalle','GestionController@getUsuarioDetalle');
+	Route::get('gestion/usuarios/editar/{usuario_id?}','GestionController@getUsuarioDetalle');
 	Route::post('gestion/usuarios/actualizar','GestionController@updateUsuario');
 });

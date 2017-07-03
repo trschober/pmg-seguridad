@@ -30,14 +30,38 @@ class GestionController extends BaseController {
         $this->layout->content = View::make('gestion/usuarios',$data);
 	}
 
-	public function getUsuarioDetalle(){
-		$usuario = Usuario::where('id',Input::get('usuario_id'))->first();
-		if($usuario!=null){
-			return Response::json(['success' => true,'usuario'=>$usuario]);
-		}
+	public function getUsuarioDetalle($usuario_id = NULL){
+		$usuario = Usuario::where('id',$usuario_id)->first();
+		$data['usuario'] = $usuario!=null ? $usuario : new Usuario();
+		$data['instituciones'] = \Helpers::getListadoInstituciones();
+		$this->layout->title="Usuarios";
+        $this->layout->content = View::make('gestion/editar_usuario',$data);
 	}
 
 	public function updateUsuario(){
-		
+		$reglas =  array(
+            'rut'  => 'required','min:8',
+            'nombres' => 'required',
+            'apellidos' => 'required',
+            'correo' => 'required|email',
+            'perfil' => 'required',
+            'institucion' => 'required'
+        );
+        $respuesta = Validator::make(Input::all(),$reglas);
+        if ($respuesta->fails()) {
+			return Redirect::to('gestion/usuarios/editar')->withErrors($respuesta)->withInput();
+		}else{
+			$usuario = new Usuario();
+			$rut = str_replace(".", "", Input::get('rut'));
+    	 	$rut = trim($rut);
+    	 	$usuario->rut = $rut;
+    	 	$usuario->nombres = Input::get('nombres');
+    	 	$usuario->apellidos = Input::get('apellidos');
+    	 	$usuario->correo = Input::get('correo');
+    	 	$usuario->perfil = Input::get('perfil');
+    	 	$usuario->institucion_id = Input::get('institucion_usuario');
+    	 	$usuario->save();
+    	 	return Redirect::to('gestion/usuarios');
+		}
 	}
 }

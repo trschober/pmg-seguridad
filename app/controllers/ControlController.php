@@ -13,9 +13,8 @@ class ControlController extends BaseController{
 			}))->paginate(10);
 		$data['controles']=$controles;
 		if(Auth::user()->perfil==='experto'){
-			$instituciones = Institucion::orderBy('servicio')->get();
 			Session::put('sesion_institucion',$valor_institucion);
-			$data['instituciones']=$instituciones;
+			$data['instituciones'] = \Helpers::getListadoInstituciones();
 		}
 		$data['habilitado'] = $this->getHabilitacion();
 		$this->layout->title="Revisión de controles";
@@ -25,8 +24,13 @@ class ControlController extends BaseController{
 	public function getEstado(){
 		if(Request::ajax()){
 			$control_id = Input::get('control_id');
-			$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
-			$archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->get();
+			if(Input::has('institucion'))
+				$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
+			else
+				$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
+
+			$comentario = Comentario::where('institucion_id',$valor_institucion)->where('control_id',$control_id)->first();
+			$archivos = Archivo::where('institucion_id',$valor_institucion)->where('control_id',$control_id)->get();
 			if($comentario===null){
 				return Response::json(array(
 					'success'=>true,
@@ -165,7 +169,11 @@ class ControlController extends BaseController{
 	}
 
 	public function setComentarioRed(){
-		$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_experto'))->first();
+		if(Input::has('institucion'))
+			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
+		else
+			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
+		$comentario = Comentario::where('institucion_id',$valor_institucion)->where('control_id',Input::get('control_experto'))->first();
 		if($comentario!=NULL){
 			if(Input::has('observaciones_expertos'))
 				$comentario->observaciones_red = Input::get('observaciones_expertos');
