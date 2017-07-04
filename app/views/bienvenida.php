@@ -50,7 +50,7 @@
 			<div class="">
 				<h3>Acciones</h3>
 				<?php
-					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))):
+					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado")) && $habilitado):
 				?>
 				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" id="validar" name="validar">Enviar a validador</a>
 				<?php
@@ -153,10 +153,11 @@ $('#cerrar').click(function() {
 	}
 });
 
-
-$('#clock').countdown('<?=$fecha_termino?>', function(event) {
+var fechaTermino = new Date('<?=$fecha_termino?>');
+$('#clock').countdown(fechaTermino, function(event) {
   var $this = $(this).html(event.strftime('<strong>Quedan '
-    + '<span>%d</span> días '
+  	+ '<span>%w</span> semana(s) '
+    + '<span>%d</span> día(s) '
     + '<span>%H</span> horas '
     + '<span>%M</span> minutos '
     + 'para cerrar el hito de avance</strong>'));
