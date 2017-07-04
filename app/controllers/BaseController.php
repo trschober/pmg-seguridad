@@ -24,11 +24,11 @@ class BaseController extends Controller {
 		$fecha_inicio  = Carbon::createFromFormat('d-m-Y H:i:s', $fechas[0]->valor .' 00:00:00')->toDateTimeString();
 		$fecha_termino = Carbon::createFromFormat('d-m-Y H:i:s', $fechas[1]->valor .' 23:59:59')->toDateTimeString();
 		$hoy = Carbon::today();
-		//echo $hoy>=$fecha_inicio && $hoy<=$fecha_termino ? 'ok' : 'nok';
-		if(Auth::user()->perfil=='ingreso' && $hoy<$fecha_inicio && $fecha_termino>$hoy){
+		if(Auth::user()->perfil=='ingreso' && $hoy<$fecha_inicio){
 			$habilitado = false;
-		}
-		elseif(Auth::user()->perfil=='ingreso' && !in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))  ){
+		}elseif(Auth::user()->perfil=='ingreso' && $hoy>$fecha_termino){
+			$habilitado = false;
+		}elseif(Auth::user()->perfil=='ingreso' && !in_array(Auth::user()->institucion->estado,array("ingresado","rechazado"))  ){
 			$habilitado = false;
 		}elseif(in_array(Auth::user()->perfil, array('validador','experto','evaluador'))){
 			$habilitado = false;
