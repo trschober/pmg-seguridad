@@ -7,8 +7,8 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
-            <p></p>
-            <p></p>
+            <p>En esta sección los Servicios deberán agregar el instrumento o metodología utilizada para realizar el análisis de riesgo institucional. Como por ejemplo, el instrumento publicado en DIPRES
+            (<a href="http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx" target="_blank">http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx</a>) presentado como medio de verificación en el año 2015, con las respectivas actualizaciones al año 2017.</p>
         </div>
     </div>
 </div>

@@ -3,21 +3,6 @@
   <li class="active">Usuarios</li>
 </ol>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-info">
-            <h3>Instrucciones</h3>
-            <p>Esta sección permite ver el estado de las instituciones y poder actualizarlas en caso de ser necesario. Los estados son los siguientes:</p>
-            <p>
-            	<strong>Ingresado</strong>: En revisión de perfil ingreso. <br> 
-            	<strong>Enviado</strong>: En revisión de perfil validador. <br>
-            	<strong>Rechazado</strong>: En revisión de perfil ingreso por rechazo de perfil validador. <br>
-            	<strong>Cerrado</strong>: Enviado a la red de expertos. <br>
-            </p>
-        </div>
-    </div>
-</div>
-
 <?php if(Auth::user()->perfil==='experto'): ?>
     <div class="form-group pull-right">
         <form action="<?=URL::to('gestion/usuarios')?>" id="myform" method="POST" enctype="multipart/form-data">

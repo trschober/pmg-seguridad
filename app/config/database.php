@@ -55,6 +55,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => getenv('db_host'),
+			'port'      => getenv('db_port'),
 			'database'  => getenv('db_database'),
 			'username'  => getenv('db_username'),
 			'password'  => getenv('db_password'),

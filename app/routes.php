@@ -55,4 +55,14 @@ Route::group(["before" => "auth"], function() {
 	Route::post('gestion/usuarios','GestionController@getUsuarios');
 	Route::get('gestion/usuarios/editar/{usuario_id?}','GestionController@getUsuarioDetalle');
 	Route::post('gestion/usuarios/actualizar','GestionController@updateUsuario');
+
+	//Documentos
+	Route::get('documentos','DocumentoController@index');
+	Route::get('documentos/agregar','DocumentoController@formDocumento');
+	Route::post('documentos/upload','DocumentoController@uploadDocumento');
+	Route::get('documentos/eliminar/{documento_id}','DocumentoController@deleteFile');
+	Route::get('documentos/download/{documento_id}', 'DocumentoController@getFile');
+
+	//Retroalimentación
+	Route::get('retroalimentacion','RetroalimentacionController@index');
 });

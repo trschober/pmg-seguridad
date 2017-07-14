@@ -7,8 +7,21 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
-            <p></p>
-            <p></p>
+            <p>En esta sección deberán indicar si el control se encuentra implementado o no implementado.<br>
+               En el caso de escoger la opción Sí, el Servicio deberá:
+            </p>
+            <p>
+                <ul>
+                    <li>Indicar el año de documentación del control, es decir, el año en que se creó y oficializó el primer documento (política o procedimiento).</li>
+                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación al año 2017 y operación en el año 2017).</li>
+                </ul>
+            </p>
+            <p>En el caso de escoger la opción No, el Servicio deberá:
+                <ul>
+                    <li>Indicar las razones de dicho incumplimiento señalando las causas, sean externas o internas a la gestión del Servicio.</li>
+                </ul>
+            </p>
+            <p>Lo anterior, debe ser realizado para los 114 controles de la NCh-ISO 27001 vigente.</p>
         </div>
     </div>
 </div>

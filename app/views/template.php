@@ -42,8 +42,10 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <?php if(Auth::check()):?>
         <ul class="nav navbar-nav" id="menu-superior">
+            <li><a href="<?=URL::to('documentos')?>">Documentos</a></li>
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
             <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
+            <li><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
         </ul>
         <?php endif?>
 
