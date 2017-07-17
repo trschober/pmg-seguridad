@@ -12,7 +12,14 @@
 */
 
 //Home
-Route::get('/', 'HomeController@index');
+Route::get('/', function(){
+	if(\Auth::check()){
+		return \Redirect::to('bienvenida');
+	}else{
+		$accion = URL::action('HomeController@index');
+        return \Redirect::to($accion);
+	}
+});
 
 //Claveunica
 Route::post('claveunica/autenticar', 'ClaveUnicaController@autenticar');
@@ -65,4 +72,8 @@ Route::group(["before" => "auth"], function() {
 
 	//Retroalimentación
 	Route::get('retroalimentacion','RetroalimentacionController@index');
+	Route::post('retroalimentacion','RetroalimentacionController@index');
+	Route::post('retroalimentacion/observaciones','RetroalimentacionController@setObservacionesRed');
+	Route::get('retroalimentacion/reporte','RetroalimentacionController@setReporteRed');
+	Route::get('retroalimentacion/resultado','RetroalimentacionController@getReporteRed');
 });

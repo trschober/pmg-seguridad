@@ -128,7 +128,7 @@ class InstitucionController extends BaseController {
 		$objPHPExcel->getActiveSheet()->setCellValue("B3",$numerador);
 		$objPHPExcel->getActiveSheet()->setCellValue("B4",$denominador);
 		$objPHPExcel->getActiveSheet()->setCellValue("B5",$porcentaje);
-		$objPHPExcel->getActiveSheet()->setTitle("Presentación");
+		$objPHPExcel->getActiveSheet()->setTitle("Resumen");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
 		/* Fin hoja1 */
@@ -161,6 +161,21 @@ class InstitucionController extends BaseController {
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
 		/* Fin hoja2 */
+
+		/* Hoja3: Análisis de riesgos */
+		$objPHPExcel->createSheet();
+		$objPHPExcel->setActiveSheetIndex(2)
+		            ->setCellValue('A1', 'Archivos');
+		$rowNumber = 2;
+		$riesgos = Riesgo::where('institucion_id',Auth::user()->institucion_id)->get();
+		foreach ($riesgos as $riesgo){
+			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$riesgo->filename);
+			$rowNumber++;
+		}
+		$objPHPExcel->getActiveSheet()->setTitle("Análisis de Riesgo");
+		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
+		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
+		/* Fin hoja3 */
 
 		/* Guardar excel en disco */
 		$nombre_archivo = 'public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls';

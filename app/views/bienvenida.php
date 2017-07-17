@@ -70,6 +70,7 @@
 				?>
 				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Informe de cierre</a>
 				<?php endif;?>
+				<a href="<?=URL::to('retroalimentacion/resultado')?>" class="btn btn-success">Informe Red de Expertos</a>
 			</div>
 		</div>
 		<?php endif ?>

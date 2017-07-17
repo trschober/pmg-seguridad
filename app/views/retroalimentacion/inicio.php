@@ -5,7 +5,7 @@
 
 <?php if(Auth::user()->perfil==='experto'): ?>
     <div class="form-group pull-right">
-        <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
+        <form action="<?=URL::to('retroalimentacion')?>" method="POST" enctype="multipart/form-data">
         <label for="institucion">Instituciones</label>
         <select id="institucion" name="institucion">
             <option value="" disabled selected>Seleccione opción</option>
@@ -25,15 +25,16 @@
 
 <div class="form-group">
 <form action="<?=URL::to('retroalimentacion/observaciones')?>" method="POST" enctype="multipart/form-data">
-    <div class="form-group">
+      <div class="form-group">
         <label for="message-text" class="control-label">Observaciones:</label>
-        <textarea cols="20" rows="20" style="resize:none" class="form-control" id="observacion_red" name="observacion_red"></textarea>
+        <textarea cols="20" rows="20" style="resize:none" class="form-control" id="observacion_red" name="observacion_red"><?=$institucion->observaciones_red?></textarea>
       </div>
   </div>
   <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
   <?php if(Auth::user()->perfil==='experto'): ?>
   <div class="modal-footer">
-    <button type="button" class="btn btn-success upload-image registrar" id="actualizar" data-dismiss="modal">Agregar observación</button>
+    <input type="submit" class="btn btn-success upload-image registrar" id="actualizar" value="Agregar observación"/>
+    <a href="<?=URL::to('retroalimentacion/reporte')?>" class="btn btn-info">Generar Informe Red de Expertos</a>
   </div>
   <?php endif ?>
 </div>
