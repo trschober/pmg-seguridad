@@ -16,11 +16,10 @@ Route::get('/', function(){
 	if(\Auth::check()){
 		return \Redirect::to('bienvenida');
 	}else{
-		$accion = URL::action('HomeController@index');
-        return \Redirect::to($accion);
+        return \Redirect::to('portada');
 	}
 });
-
+Route::get('portada', 'HomeController@index');
 //Claveunica
 Route::post('claveunica/autenticar', 'ClaveUnicaController@autenticar');
 Route::get('claveunica/validar', 'ClaveUnicaController@validar');
