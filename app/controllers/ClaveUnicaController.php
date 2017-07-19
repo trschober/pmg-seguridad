@@ -47,6 +47,9 @@
 		}
 
 		public function validar(){
+			$error = \Input::get('error');
+			if ($error) return Redirect::to('portada');
+			
 			$flow = new Basic($this->authConfig);
 	        $token = $flow->getAccessToken($_GET['code']);
 	        $infoPersonal = $flow->getUserInfo($token);
