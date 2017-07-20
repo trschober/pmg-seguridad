@@ -105,10 +105,10 @@
                   <div class="col-xs-3">
                       <h3>Enlaces</h3>
                       <ul>
-                          <li><a href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></li>
+                          <li><a href="https://www.csirt.gob.cl" target="_blank">Sitio Red de Expertos PMG-MEI SSI</a></li>
                       </ul>
                       <ul>
-                          <li><a href="https://www.csirt.gob.cl" target="_blank">Ministerio del Interior y Seguridad Pública</a></li>
+                          <li><a href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></li>
                       </ul>
                   </div>
                   <div class="col-xs-3">
