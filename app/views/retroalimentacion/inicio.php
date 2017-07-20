@@ -20,7 +20,7 @@
         <input type="submit" value="Actualizar" class="btn btn-info" />
         </form>
     </div>
-<?php endif ?>
+
 <br><br>
 
 <div class="form-group">
@@ -40,3 +40,6 @@
 </div>
 </form>
 </div>
+<?php else: ?>
+<div class="alert alert-info" role="alert">Aquí se mostrarán las observaciones de la Red de expertos.</div>
+<?php endif ?>

@@ -6,7 +6,7 @@
 <form action="<?=URL::to('gestion/usuarios/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
     <!-- Rut -->
     <div class="form-group">
-        <label for="rut">Rut</label>
+        <label for="rut">Rut(sin puntos y con guión)</label>
         <input type="text" class="form-control validar" id="rut" name="rut" placeholder="Rut" value="<?=$usuario->rut ?>">
     </div>
      <?php if($errors->has('rut')): ?>
@@ -58,9 +58,9 @@
         <select class="form-control validar" name="perfil" id="perfil">
             <option value="" disabled selected>Seleccione opción</option>
             <option value="ingreso" <?=isset($usuario) && $usuario->perfil=='ingreso' ? 'selected':''?>>ingreso</option>
-            <option value="validador" <?=isset($usuario) && $usuario->perfil='validador' ? 'selected':''?>>validador</option>
-            <option value="experto" <?=isset($usuario) && $usuario->perfil='experto' ? 'selected':''?>>>experto</option>
-            <option value="evaluador" <?=isset($usuario) && $usuario->perfil='evaluador' ? 'selected':''?>>>evaluador</option>
+            <option value="validador" <?=isset($usuario) && $usuario->perfil=='validador' ? 'selected':''?>>validador</option>
+            <option value="experto" <?=isset($usuario) && $usuario->perfil=='experto' ? 'selected':''?>>experto</option>
+            <option value="evaluador" <?=isset($usuario) && $usuario->perfil=='evaluador' ? 'selected':''?>>evaluador</option>
         </select>
     </div>
     <?php if($errors->has('perfil')): ?>
