@@ -93,16 +93,25 @@
         <div class="area2">
             <div class="container">
                 <div class="row">
-                  <div class="col-xs-3">
+                  <div class="col-xs-2">
                       <a class="main-logo" href="http://www.minsegpres.gob.cl" target="_blank"><img src="<?=asset('img/logo.png')?>" alt="Ministerio Secretaría General de la Presidencia"></a>
                   </div>
-                  <div class="col-xs-5">
+                  <div class="col-xs-2">
+                      <a class="main-logo" href="http://www.interior.gob.cl" target="_blank"><img src="<?=asset('img/logo-interior.png')?>" alt="Ministerio del Interior y Seguridad Pública"></a>
+                  </div>
+                  <div class="col-xs-2">
+                      <a class="main-logo" href="http://www.subtel.gob.cl" target="_blank"><img src="<?=asset('img/logo-subtel.png')?>" alt="Ministerio de Transportes y Telecomunicacione"></a>
+                  </div>
+                  <div class="col-xs-3">
                       <h3>Enlaces</h3>
                       <ul>
                           <li><a href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></li>
                       </ul>
+                      <ul>
+                          <li><a href="https://www.csirt.gob.cl" target="_blank">Ministerio del Interior y Seguridad Pública</a></li>
+                      </ul>
                   </div>
-                  <div class="col-xs-4">
+                  <div class="col-xs-3">
                       <div class="politicas">
                           <a href="#">Politicas de Privacidad</a> | <a href="">Visualizadores y Plugins</a> | <a href="#">CC</a>
                       </div>

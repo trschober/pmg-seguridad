@@ -35,12 +35,12 @@
 				        </tr>
 				    </thead>
 				    <tbody>
-				    	<tr><td>Hernán Espinoza</td><td><a href="mailto:hespinoza@interior.gob.cl">hespinoza@interior.gob.cl</a></td></tr>
-				    	<tr><td>Luis Carrasco</td><td><a href="mailto:lcarrasco@interior.gob.cl">lcarrasco@interior.gob.cl</a></td></tr>
-				    	<tr><td>Juan Pablo Meier</td><td><a href="mailto:fmeier@interior.gob.cl">fmeier@interior.gob.cl</a></td></tr>
-				    	<tr><td>Nicole Merino</td><td><a href="mailto:nmerino@minsegpres.gob.cl">nmerino@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Sebastián Beeche</td><td><a href="mailto:sebastian.beeche@subtel.gob.cl">sebastian.beeche@subtel.gob.cl</a></td></tr>
-				    	<tr><td>Rodrigo Pérez</td><td><a href="mailto:rperez@subtel.gob.cl">rperez@subtel.gob.cl</a></td></tr>
+				    	<tr><td>Hernán Espinoza</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
+				    	<tr><td>Luis Carrasco</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
+				    	<tr><td>Juan Pablo Meier</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
+				    	<tr><td>Nicole Merino</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
+				    	<tr><td>Sebastián Beeche</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
+				    	<tr><td>Rodrigo Pérez</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
 				    </tbody>
 				</table>
 			</div>
