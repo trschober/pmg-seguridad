@@ -19,7 +19,7 @@ class CreateFiles extends Migration {
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
 			$table->integer('control_id')->unsigned();
 			$table->foreign('control_id')->references('id')->on('controles')->onDelete('cascade');
-			$table->string('filename', 64);
+			$table->string('filename',512);
 			$table->timestamps();
 		});
 
