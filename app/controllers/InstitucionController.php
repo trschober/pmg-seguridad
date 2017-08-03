@@ -111,81 +111,57 @@ class InstitucionController extends BaseController {
 	}
 
 	protected function reporteCierre(){
-		$objPHPExcel = new PHPExcel();
-		
-		/* Hoja1: Resumen servicio */	
-		$objPHPExcel->setActiveSheetIndex(0)
-			            ->setCellValue('A1', 'Ministerio')
-			            ->setCellValue('A2', 'Servicio')
-			            ->setCellValue('A3', 'Numerador')
-			            ->setCellValue('A4', 'Denominador')
-			            ->setCellValue('A5', 'Porcentaje');
-        $denominador = \Helpers::getDenominador();
+
+		$denominador = \Helpers::getDenominador();
         $numerador = \Helpers::getNumerador();
 		$porcentaje = round(($numerador * 100) / $denominador,2) .'%';
-        $objPHPExcel->getActiveSheet()->setCellValue("B1",Auth::user()->institucion->ministerio);
-		$objPHPExcel->getActiveSheet()->setCellValue("B2",Auth::user()->institucion->servicio);
-		$objPHPExcel->getActiveSheet()->setCellValue("B3",$numerador);
-		$objPHPExcel->getActiveSheet()->setCellValue("B4",$denominador);
-		$objPHPExcel->getActiveSheet()->setCellValue("B5",$porcentaje);
-		$objPHPExcel->getActiveSheet()->setTitle("Resumen");
-		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
-		/* Fin hoja1 */
 
-		/* Hoja2: Listado de controles */
-		$objPHPExcel->createSheet();
-		$objPHPExcel->setActiveSheetIndex(1)
-		            ->setCellValue('A1', 'ID')
-		            ->setCellValue('B1', 'Código')
-		            ->setCellValue('C1', 'Nombre')
-		            ->setCellValue('D1', 'Año Formulación')
-		            ->setCellValue('E1', 'Implementado')
-		            ->setCellValue('F1', 'Año Documentación')
-		            ->setCellValue('G1', 'Justificación');
-		$rowNumber = 2;
-		$controles = Control::with(array('comentarios' => function($query){
-				    $query->where('institucion_id',Auth::user()->institucion_id);
-			}))->get();
-		foreach ($controles as $control){
-			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->id);
-			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->codigo);
-			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->nombre);
-			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->anio_compromiso);
-			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->cumple);
-			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$control->comentarios[0]->anio_implementacion);
-			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$control->comentarios[0]->observaciones_institucion);
-			$rowNumber++;
-		}
-		$objPHPExcel->getActiveSheet()->setTitle("Controles");
-		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
-		/* Fin hoja2 */
-
-		/* Hoja3: Análisis de riesgos */
-		$objPHPExcel->createSheet();
-		$objPHPExcel->setActiveSheetIndex(2)
-		            ->setCellValue('A1', 'Archivos');
-		$rowNumber = 2;
-		$riesgos = Riesgo::where('institucion_id',Auth::user()->institucion_id)->get();
-		foreach ($riesgos as $riesgo){
-			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$riesgo->filename);
-			$rowNumber++;
-		}
-		$objPHPExcel->getActiveSheet()->setTitle("Análisis de Riesgo");
-		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
-		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
-		/* Fin hoja3 */
-
-		/* Guardar excel en disco */
-		$nombre_archivo = 'public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls';
-		$carpeta_reportes = 'public/uploads/reportes';
-		if(!is_dir($carpeta_reportes))
-			mkdir($carpeta_reportes);
-	    	
-		$objPHPExcel->setActiveSheetIndex(0);
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-		$objWriter->save($nombre_archivo);
+		/* Creación del PDF */
+		$fpdf = new Fpdf();
+		$fpdf->AddPage();
+		$fpdf->SetFont('Arial','',12);
+		// Presentación
+		$image1 = public_path().'/img/logo-segpres.png';
+		$image2 = public_path().'/img/logo-interior.png';
+		$image3 = public_path().'/img/logo-subtel.png';
+		$fpdf->SetXY(0, 0);
+	    $fpdf->Cell(0,10,$fpdf->Image($image1, 50, 5, 33.78),0,0,'C');
+	    $fpdf->SetXY(0, 0);
+	    $fpdf->Cell(0,10,$fpdf->Image($image2, 90, 5, 33.78),0,0,'C');
+	    $fpdf->SetXY(0, 0);
+	    $fpdf->Cell(0,10,$fpdf->Image($image3, 130, 5, 33.78),0,0,'C');
+	    $fpdf->SetXY(10, 50);
+	    $fpdf->SetFont('Arial','B',12);
+	    $fpdf->Cell(0,10,"Certificado Red de Expertos SSI",0,0,'C');
+	    $fpdf->SetFont('Arial','',12);
+	   	$fpdf->SetXY(10, 70);
+	    $fpdf->Cell(0,10,utf8_decode("Con fecha ".date("d-m-Y").", el Servicio ".Auth::user()->institucion->servicio),0,0,'L');
+	   	$fpdf->SetXY(10, 75);
+	    $fpdf->Cell(0,10,utf8_decode("ha informado a la presente Red de Expertos, la siguiente medición del"),0,0,'L');
+	    $fpdf->SetXY(10, 80);
+	    $fpdf->Cell(0,10,utf8_decode("Indicador de Seguridad de la Información:"),0,0,'L');
+		$fpdf->SetXY(10, 90);
+		$fpdf->Cell(0,10,utf8_decode("(Nº de controles de seguridad de la Norma NCh-ISO 27001 implementados"),0,0,'C');
+		$fpdf->SetXY(10, 95);
+		$fpdf->Cell(0,10,utf8_decode("para mitigar riesgos de seguridad de la información al año 2017/"),0,0,'C');
+		$fpdf->SetXY(10, 100);
+		$fpdf->Cell(0,10,utf8_decode("N° total de controles establecidos en la Norma NCh-ISO 27001"),0,0,'C');
+		$fpdf->SetXY(10, 105);
+		$fpdf->Cell(0,10,utf8_decode("para mitigar riesgos de seguridad de la información)*100"),0,0,'C');
+		$fpdf->SetFont('Arial','B',12);
+		$fpdf->SetXY(10, 120);
+		$fpdf->Cell(0,10,utf8_decode("Medición del Servicio ".Auth::user()->institucion->servicio." :"),0,0,'L');
+		$fpdf->SetFont('Arial','B',12);
+		$fpdf->SetXY(10, 135);
+		$fpdf->Cell(0,10,utf8_decode("Numerador: ".$numerador),0,0,'L');
+		$fpdf->SetXY(10, 145);
+		$fpdf->Cell(0,10,utf8_decode("Denominador: ".$denominador),0,0,'L');
+		$fpdf->SetXY(10, 155);
+		$fpdf->Cell(0,10,utf8_decode("Porcentaje(resultado): ".$porcentaje),0,0,'L');
+	    if(!is_dir("public/uploads/cierre/"))
+			mkdir("public/uploads/cierre");
+		$nombre_archivo = "public/uploads/cierre/certificado-cierre-".Auth::user()->institucion->id.".pdf";
+		$fpdf->Output($nombre_archivo,'F');
 		return $nombre_archivo;
 	}
 

@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Anouar\\Fpdf\\Facades\\Fpdf' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/Facades/Fpdf.php',
+    'Anouar\\Fpdf\\Fpdf' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php',
+    'Anouar\\Fpdf\\FpdfServiceProvider' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/FpdfServiceProvider.php',
     'Archivo' => $baseDir . '/app/models/Archivo.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
@@ -1269,6 +1272,7 @@ return array(
     'Psr\\Log\\NullLogger' => $vendorDir . '/psr/log/Psr/Log/NullLogger.php',
     'Psr\\Log\\Test\\DummyTest' => $vendorDir . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
     'Psr\\Log\\Test\\LoggerInterfaceTest' => $vendorDir . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+    'RetroalimentacionController' => $baseDir . '/app/controllers/RetroalimentacionController.php',
     'Riesgo' => $baseDir . '/app/models/Riesgo.php',
     'RiesgoController' => $baseDir . '/app/controllers/RiesgoController.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',

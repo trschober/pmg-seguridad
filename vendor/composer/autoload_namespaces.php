@@ -21,4 +21,5 @@ return array(
     'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'ClassPreloader' => array($vendorDir . '/classpreloader/classpreloader/src'),
     'Boris' => array($vendorDir . '/d11wtq/boris/lib'),
+    'Anouar\\Fpdf' => array($vendorDir . '/anouar/fpdf/src'),
 );

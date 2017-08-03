@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"phpoffice/phpexcel": "1.8.0",
-		"ivan-novakov/php-openid-connect-client": "dev-master"
+		"ivan-novakov/php-openid-connect-client": "dev-master",
+		"anouar/fpdf": "1.0.1"
 	},
 	"autoload": {
 		"classmap": [

@@ -14,7 +14,7 @@ class CreateRiesgos extends Migration {
 	{
 		Schema::create('riesgos', function($table) {
 			$table->increments('id');
-			$table->string('filename',128);
+			$table->string('filename',512);
 			$table->integer('institucion_id')->unsigned();
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
 			$table->timestamps();

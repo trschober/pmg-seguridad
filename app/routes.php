@@ -61,6 +61,7 @@ Route::group(["before" => "auth"], function() {
 	Route::post('gestion/usuarios','GestionController@getUsuarios');
 	Route::get('gestion/usuarios/editar/{usuario_id?}','GestionController@getUsuarioDetalle');
 	Route::post('gestion/usuarios/actualizar','GestionController@updateUsuario');
+	Route::get('gestion/usuarios/eliminar/{usuario_id?}','GestionController@deleteUsuario');
 
 	//Documentos
 	Route::get('documentos','DocumentoController@index');

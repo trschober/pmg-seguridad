@@ -24,6 +24,10 @@
             <th>Nº</th>
             <th>Servicio</th>
             <th>Estado</th>
+            <th>Controles actualizados</th>
+            <th>Porcentaje actualizados</th>
+            <th>Implementado</th>
+            <th>No Implementado</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +47,10 @@
                 <option value="cerrado" <?=$institucion->estado==='cerrado' ? 'selected' : '' ?>>Cerrado</option>
             </select>
             </td>
+            <td><?=$institucion->cumple ?></td>
+            <td><?= number_format(($institucion->cumple*100)/$total_controles,1, '.','') ?>%</td>
+            <td><?=$institucion->implementado ?></td>
+            <td><?=$institucion->no_implementado ?></td>
         </tr>
     	<?php endforeach ?>
     </tbody>

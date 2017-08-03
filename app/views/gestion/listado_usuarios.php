@@ -44,7 +44,8 @@
             <td><?=$usuario->institucion->servicio ?></td>
             <td><?=$usuario->perfil ?></td>
             <td><div class="cid"><input type="hidden" name="cidv" value="<?=$usuario->id ?>"></div></td>
-            <td><a href="<?=URL::to('gestion/usuarios/editar/'.$usuario->id)?>" class="ver"><span class="label label-info">Editar</span></a></td> 
+            <td><a href="<?=URL::to('gestion/usuarios/editar/'.$usuario->id)?>" class="ver"><span class="label label-info">Editar</span></a></td>
+            <td><a href="<?=URL::to('gestion/usuarios/eliminar/'.$usuario->id)?>" class="ver" onclick="return confirm('¿Est&aacute; seguro que desea eliminar el usuario?')"><span class="label label-danger">Eliminar</span></a></td> 
         </tr>
     	<?php endforeach ?>
     </tbody>

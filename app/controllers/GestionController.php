@@ -3,8 +3,18 @@
 class GestionController extends BaseController {
 
 	public function getInstituciones(){
-		$data['instituciones'] = \Helpers::getListadoInstituciones();
 		$this->layout->title="Instituciones";
+		$data['total_controles'] = Control::all()->count();
+		$data['instituciones'] = DB::table('comentarios')
+			->select(DB::raw('instituciones.id as id,
+									  instituciones.servicio as servicio,
+									  instituciones.estado as estado,
+	        						  sum(case when cumple="si" or cumple="no" then 1 else 0 end) as cumple,
+	        						  sum(case when cumple="si" then 1 else 0 end) as implementado,
+	        						  sum(case when cumple="no" then 1 else 0 end) as no_implementado'))
+            ->join('instituciones','instituciones.id','=','comentarios.institucion_id')
+            ->groupBy('instituciones.id')
+            ->get();
         $this->layout->content = View::make('gestion/instituciones',$data);
 	}
 
@@ -65,6 +75,18 @@ class GestionController extends BaseController {
     	 	$usuario->save();
     	 	Session::flash('usuario_ok','Usuario generado exitósamente');
     	 	return Redirect::to('gestion/usuarios');
+		}
+	}
+
+	public function deleteUsuario($usuario_id = NULL){
+		if(Auth::user()->perfil==='experto'){
+			$usuario = Usuario::where('id',$usuario_id)->first();
+			if($usuario!=null){
+				$usuario->delete();
+			}
+			return Redirect::to('gestion/usuarios');
+		}else{
+			return Redirect::to('bienvenida');
 		}
 	}
 }

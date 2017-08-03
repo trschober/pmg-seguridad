@@ -31,22 +31,22 @@ class RetroalimentacionController extends BaseController {
 		
 		/* Hoja1: Resumen servicio */	
 		$objPHPExcel->setActiveSheetIndex(0)
-			            ->setCellValue('A1', 'Ministerio')
-			            ->setCellValue('A2', 'Servicio')
-			            ->setCellValue('A3', 'Numerador')
-			            ->setCellValue('A4', 'Denominador')
-			            ->setCellValue('A5', 'Porcentaje')
-			            ->setCellValue('A6', 'Observación General');
+			            ->setCellValue('A1', 'Numerador')
+			            ->setCellValue('A2', 'Denominador')
+			            ->setCellValue('A3', 'Porcentaje')
+			            ->setCellValue('A5', 'Observación General');
         $denominador = \Helpers::getDenominador();
         $numerador = \Helpers::getNumerador(true);
 		$porcentaje = round(($numerador * 100) / $denominador,2) .'%';
-        $objPHPExcel->getActiveSheet()->setCellValue("B1",$institucion->ministerio);
-		$objPHPExcel->getActiveSheet()->setCellValue("B2",$institucion->servicio);
-		$objPHPExcel->getActiveSheet()->setCellValue("B3",$numerador);
-		$objPHPExcel->getActiveSheet()->setCellValue("B4",$denominador);
-		$objPHPExcel->getActiveSheet()->setCellValue("B5",$porcentaje);
-		$objPHPExcel->getActiveSheet()->setCellValue("B6",$institucion->observaciones_red);
-		$objPHPExcel->getActiveSheet()->setTitle("Presentación");
+		$objPHPExcel->getActiveSheet()->setCellValue("B1","N° de controles de seguridad de la Norma NCh-ISO 27001 implementados al año t");
+		$objPHPExcel->getActiveSheet()->setCellValue("B2","N° de controles  establecidos en la Norma NCh-ISO 27001");
+		$objPHPExcel->getActiveSheet()->setCellValue("B3",$porcentaje);
+		$objPHPExcel->getActiveSheet()->setCellValue("B5",$institucion->observaciones_red);
+        $objPHPExcel->getActiveSheet()->setCellValue("C1",$numerador);
+		$objPHPExcel->getActiveSheet()->setCellValue("C2",$denominador);
+		$objPHPExcel->getActiveSheet()->setCellValue("C3",$porcentaje);
+		$objPHPExcel->getActiveSheet()->setCellValue("C5",$institucion->observaciones_red);
+		$objPHPExcel->getActiveSheet()->setTitle("Resumen");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
 		/* Fin hoja1 */
@@ -54,28 +54,29 @@ class RetroalimentacionController extends BaseController {
 		/* Hoja2: Listado de controles */
 		$objPHPExcel->createSheet();
 		$objPHPExcel->setActiveSheetIndex(1)
-		            ->setCellValue('A1', 'ID')
-		            ->setCellValue('B1', 'Código')
-		            ->setCellValue('C1', 'Nombre')
-		            ->setCellValue('D1', 'Año Formulación')
-		            ->setCellValue('E1', 'Implementado')
-		            ->setCellValue('F1', 'Año Documentación')
-		            ->setCellValue('G1', 'Justificación')
-		            ->setCellValue('H1', 'Observaciones de la Red');
+		            ->setCellValue('A1', 'Código')
+		            ->setCellValue('B1', 'Nombre')
+		            ->setCellValue('C1', 'Año de formulación')
+		            ->setCellValue('D1', 'Implementado')
+		            ->setCellValue('E1', 'Año de implementación')
+		            ->setCellValue('F1', 'Justificación')
+		            ->setCellValue('G1', 'Observaciones de la Red');
 		$rowNumber = 2;
 		$controles = Control::with(array('comentarios' => function($query){
 				    $query->where('institucion_id',Session::get('sesion_institucion'));
 			}))->get();
+
 		foreach ($controles as $control){
-			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->id);
-			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->codigo);
-			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->nombre);
-			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->anio_compromiso);
-			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->cumple);
-			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$control->comentarios[0]->anio_implementacion);
-			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$control->comentarios[0]->observaciones_institucion);
-			$objPHPExcel->getActiveSheet()->setCellValue("H".$rowNumber,$control->comentarios[0]->observaciones_red);
-			$rowNumber++;
+			if(count($control->comentarios)>0){
+				$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->codigo);
+				$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->nombre);
+				$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->comentarios[0]->anio_compromiso);
+				$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->cumple);
+				$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->anio_implementacion);
+				$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$control->comentarios[0]->observaciones_institucion);
+				$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$control->comentarios[0]->observaciones_red);
+				$rowNumber++;
+			}
 		}
 		$objPHPExcel->getActiveSheet()->setTitle("Controles");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
@@ -85,9 +86,11 @@ class RetroalimentacionController extends BaseController {
 		/* Hoja3: Análisis de riesgos */
 		$objPHPExcel->createSheet();
 		$objPHPExcel->setActiveSheetIndex(2)
-		            ->setCellValue('A1', 'Archivos');
+		            ->setCellValue('A1', 'Archivos adjuntos');
 		$rowNumber = 2;
 		$riesgos = Riesgo::where('institucion_id',Session::get('sesion_institucion'))->get();
+		$tiene_riesgos = count($riesgos) ? 'si' : 'no';
+		$objPHPExcel->getActiveSheet()->setCellValue("B1",$tiene_riesgos);
 		foreach ($riesgos as $riesgo){
 			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$riesgo->filename);
 			$rowNumber++;
@@ -95,17 +98,21 @@ class RetroalimentacionController extends BaseController {
 		$objPHPExcel->getActiveSheet()->setTitle("Análisis de Riesgo");
 		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
-		/* Fin hoja3 */	
+		/* Fin hoja3 */
+
+
 
 		/* Guardar excel en disco */
 		$nombre_archivo = 'public/uploads/reportes/reporte-red-'.Session::get('sesion_institucion').'.xls';
 		$carpeta_reportes = 'public/uploads/reportes';
 		if(!is_dir($carpeta_reportes))
 			mkdir($carpeta_reportes);
-	    	
+	    
+
 		$objPHPExcel->setActiveSheetIndex(0);
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save($nombre_archivo);
+
 		return Redirect::to('retroalimentacion');
 	}
 
