@@ -76,11 +76,6 @@ class ControlController extends BaseController{
 			foreach ($files as $file) {
 				$file->delete();
 			}
-			$files = glob(public_path().'/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
-			foreach($files as $file){
-			  if(is_file($file))
-			    unlink($file);
-			}
 		}
 		$comentario->save();
 		return Response::json(['success' => true,'control'=>$control->id]);
@@ -100,7 +95,7 @@ class ControlController extends BaseController{
 		}
 		else {
 			if (Input::file('excel')->isValid()) {
-				$destinationPath = 'public/uploads';
+				$destinationPath = public_path().'/uploads';
 				$extension = Input::file('excel')->getClientOriginalExtension();
 				$name = Input::file('excel')->getClientOriginalName();
 				$fileName = $name;

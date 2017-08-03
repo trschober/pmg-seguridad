@@ -30,7 +30,7 @@ class DocumentoController extends BaseController {
 				$extension = Input::file('archivo')->getClientOriginalExtension();
 				$archivo_nombre = Input::file('archivo')->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				Input::file('archivo')->move(public_path().'/uploads/documentos',$archivo_nombre);
+				Input::file('archivo')->move(public_path().'/uploads/documentos/',$archivo_nombre);
 				$documento->filename = $archivo_nombre;
 				$documento->save();
 				return Redirect::to('documentos');
