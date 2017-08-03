@@ -68,7 +68,7 @@ class ControlController extends BaseController{
 				$archivo_nombre = $file->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
 				$archivo->filename=$archivo_nombre;
-				$file->move('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
+				$file->move(public_path().'/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
 				$archivo->save();
 			}
 		}else{
@@ -76,7 +76,7 @@ class ControlController extends BaseController{
 			foreach ($files as $file) {
 				$file->delete();
 			}
-			$files = glob('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
+			$files = glob(public_path().'/uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id.'/*');
 			foreach($files as $file){
 			  if(is_file($file))
 			    unlink($file);
@@ -141,7 +141,7 @@ class ControlController extends BaseController{
 	public function getFile($archivo_id){
 		$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first();
 		if($archivo!=null){
-			return Response::download('public/uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+			return Response::download(public_path().'/uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
 		}
 	}
 
