@@ -30,7 +30,7 @@ class DocumentoController extends BaseController {
 				$extension = Input::file('archivo')->getClientOriginalExtension();
 				$archivo_nombre = Input::file('archivo')->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				Input::file('archivo')->move(public_path().'/uploads/documentos/',$archivo_nombre);
+				Input::file('archivo')->move('uploads/documentos/',$archivo_nombre);
 				$documento->filename = $archivo_nombre;
 				$documento->save();
 				return Redirect::to('documentos');
@@ -45,7 +45,7 @@ class DocumentoController extends BaseController {
 			$documento = Documento::where('id',$riesgo_id)->first();
 			if($documento!=null){
 				$documento->delete();
-				unlink(public_path().'/uploads/documentos/'.$documento->filename);
+				unlink('uploads/documentos/'.$documento->filename);
 			}
 			return Redirect::to('documentos');
 		}else{
@@ -56,6 +56,6 @@ class DocumentoController extends BaseController {
 	public function getFile($archivo){
 		$documento = Documento::where('id',$archivo)->first();
 		if($documento!=null)
-			return Response::download(public_path().'/uploads/documentos/'.$documento->filename);
+			return Response::download('uploads/documentos/'.$documento->filename);
 	}
 }

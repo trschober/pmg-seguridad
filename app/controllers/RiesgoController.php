@@ -25,7 +25,7 @@ class RiesgoController extends BaseController {
 		$extension = Input::file('archivo')->getClientOriginalExtension();
 		$archivo_nombre = Input::file('archivo')->getClientOriginalName();
 		$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-		Input::file('archivo')->move(public_path().'/uploads/riesgos/'.Auth::user()->institucion_id,$archivo_nombre);
+		Input::file('archivo')->move('uploads/riesgos/'.Auth::user()->institucion_id,$archivo_nombre);
 		$riesgo->filename = $archivo_nombre;
 		$riesgo->save();
 		return Redirect::to('riesgos');
@@ -35,7 +35,7 @@ class RiesgoController extends BaseController {
 		$riesgo = Riesgo::where('institucion_id',Auth::user()->institucion_id)->where('id',$riesgo_id)->first();
 		if($riesgo!=null){
 			$riesgo->delete();
-			unlink(public_path().'/uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
+			unlink('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
 		}
 		return Redirect::to('riesgos');
 	}
@@ -43,6 +43,6 @@ class RiesgoController extends BaseController {
 	public function getFile($archivo){
 		$riesgo = Riesgo::where('institucion_id',Auth::user()->institucion_id)->where('id',$archivo)->first();
 		if($riesgo!=null)
-			return Response::download(public_path().'/uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
+			return Response::download('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
 	}
 }

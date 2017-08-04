@@ -36,8 +36,8 @@ Route::group(["before" => "auth"], function() {
 	Route::get('controles/estado', 'ControlController@getEstado');
 	Route::post('controles/actualizar', 'ControlController@actualizarControl');
 	Route::post('controles/red', 'ControlController@setComentarioRed');
-	Route::get('controles/carga', 'ControlController@cargaPlanilla');
-	Route::post('controles/upload', 'ControlController@uploadPlanilla');
+	//Route::get('controles/carga', 'ControlController@cargaPlanilla');
+	//Route::post('controles/upload', 'ControlController@uploadPlanilla');
 	Route::get('controles/download/{archivo}', 'ControlController@getFile');
 	Route::get('controles/archivo/eliminar', 'ControlController@deleteFile');
 

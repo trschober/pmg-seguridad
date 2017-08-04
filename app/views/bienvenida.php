@@ -7,7 +7,7 @@
 	<?php if(Auth::user()->perfil!='experto' && Auth::user()->institucion->estado!='cerrado'): ?>
 	<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
 	<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado=='rechazado'): ?>
-		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones aprobador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
+		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones validador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
 	<?php endif;?>
 	<div class="alert alert-success" role="alert"><h2><strong>Controles actualizados</strong></h2><h3>El servicio tiene <?=$controles_actualizados?> controles actualizados de un total de <?=$total_controles?></h3></div>
 	<div class="progress">

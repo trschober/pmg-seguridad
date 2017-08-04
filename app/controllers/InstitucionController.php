@@ -158,14 +158,14 @@ class InstitucionController extends BaseController {
 		$fpdf->Cell(0,10,utf8_decode("Denominador: ".$denominador),0,0,'L');
 		$fpdf->SetXY(10, 155);
 		$fpdf->Cell(0,10,utf8_decode("Porcentaje(resultado): ".$porcentaje),0,0,'L');
-	    if(!is_dir("public/uploads/cierre/"))
-			mkdir("public/uploads/cierre");
-		$nombre_archivo = "public/uploads/cierre/certificado-cierre-".Auth::user()->institucion->id.".pdf";
+	    if(!is_dir("uploads/cierre"))
+			mkdir("uploads/cierre");
+		$nombre_archivo = "uploads/cierre/certificado-cierre-".Auth::user()->institucion->id.".pdf";
 		$fpdf->Output($nombre_archivo,'F');
 		return $nombre_archivo;
 	}
 
 	public function getReporteCierre(){
-		return Response::download('public/uploads/reportes/ssi-reporte-'.Auth::user()->institucion_id.'.xls');
+		return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'.pdf');
 	}
 }
