@@ -134,9 +134,16 @@ class ControlController extends BaseController{
 	}
 
 	public function getFile($archivo_id){
-		$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first();
-		if($archivo!=null){
-			return Response::download('uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+		if(Auth::user()->perfil!='experto'){
+			$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first();
+			if($archivo!=null){
+				return Response::download('uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+			}
+		}else{
+			$archivo = Archivo::where('id',$archivo_id)->where('institucion_id',Session::get('sesion_institucion'))->first();
+			if($archivo!=null){
+				return Response::download('uploads/controles/'.Session::get('sesion_institucion').'/'.$archivo->control_id.'/'.$archivo->filename);
+			}
 		}
 	}
 
