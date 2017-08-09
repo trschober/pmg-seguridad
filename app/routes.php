@@ -56,6 +56,7 @@ Route::group(["before" => "auth"], function() {
 
 	//Gestión
 	Route::get('gestion/instituciones','GestionController@getInstituciones');
+	Route::get('gestion/instituciones/exportar','GestionController@institucionesExportar');
 	Route::get('gestion/instituciones/actualizar','GestionController@updateInstitucion');
 	Route::get('gestion/usuarios','GestionController@getUsuarios');
 	Route::post('gestion/usuarios','GestionController@getUsuarios');

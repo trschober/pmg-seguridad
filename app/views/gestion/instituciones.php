@@ -18,6 +18,12 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="text-right">
+        <a class='btn btn-success' href="<?=URL::to('gestion/instituciones/exportar')?>">Exportar</a>
+    </div>
+</div>
+
 <table id="instituciones" class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
@@ -28,6 +34,7 @@
             <th>Porcentaje actualizados</th>
             <th>Implementado</th>
             <th>No Implementado</th>
+            <th>Análisis de riesgo</th>
         </tr>
     </thead>
     <tbody>
@@ -51,6 +58,7 @@
             <td><?= number_format(($institucion->cumple*100)/$total_controles,1, '.','') ?>%</td>
             <td><?=$institucion->implementado ?></td>
             <td><?=$institucion->no_implementado ?></td>
+            <td><?=$institucion->cantidad_archivos_riesgo==0? 'No' : 'Si' ?></td>
         </tr>
     	<?php endforeach ?>
     </tbody>
