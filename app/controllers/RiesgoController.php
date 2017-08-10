@@ -41,8 +41,14 @@ class RiesgoController extends BaseController {
 	}
 
 	public function getFile($archivo){
-		$riesgo = Riesgo::where('institucion_id',Auth::user()->institucion_id)->where('id',$archivo)->first();
-		if($riesgo!=null)
-			return Response::download('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
+		if(Auth::user()->perfil!='experto'){
+			$riesgo = Riesgo::where('institucion_id',Auth::user()->institucion_id)->where('id',$archivo)->first();
+			if($riesgo!=null)
+				return Response::download('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
+		}else{
+			$riesgo = Riesgo::where('institucion_id',Session::get('sesion_institucion'))->where('id',$archivo)->first();
+			if($riesgo!=null)
+				return Response::download('uploads/riesgos/'.Session::get('sesion_institucion').'/'.$riesgo->filename);
+		}
 	}
 }
