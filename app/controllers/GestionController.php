@@ -12,9 +12,8 @@ class GestionController extends BaseController {
 	        						  sum(case when cumple="si" or cumple="no" then 1 else 0 end) as cumple,
 	        						  sum(case when cumple="si" then 1 else 0 end) as implementado,
 	        						  sum(case when cumple="no" then 1 else 0 end) as no_implementado,
-	        						  count(riesgos.id) as cantidad_archivos_riesgo'))
+	        						  (select count(riesgos.id) from riesgos where riesgos.institucion_id = instituciones.id) as cantidad_archivos_riesgo'))
             ->join('instituciones','instituciones.id','=','comentarios.institucion_id')
-            ->leftJoin('riesgos','instituciones.id','=','riesgos.institucion_id')
             ->groupBy('instituciones.id')
             ->get();
         $this->layout->content = View::make('gestion/instituciones',$data);
@@ -101,9 +100,8 @@ class GestionController extends BaseController {
 	        						  sum(case when cumple="si" or cumple="no" then 1 else 0 end) as cumple,
 	        						  sum(case when cumple="si" then 1 else 0 end) as implementado,
 	        						  sum(case when cumple="no" then 1 else 0 end) as no_implementado,
-	        						  count(riesgos.id) as cantidad_archivos_riesgo'))
+	        						  (select count(riesgos.id) from riesgos where riesgos.institucion_id = instituciones.id) as cantidad_archivos_riesgo'))
             ->join('instituciones','instituciones.id','=','comentarios.institucion_id')
-            ->leftJoin('riesgos','instituciones.id','=','riesgos.institucion_id')
             ->groupBy('instituciones.id')
             ->get();
         $rowNumber = 2;
