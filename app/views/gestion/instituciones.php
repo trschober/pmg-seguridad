@@ -20,6 +20,7 @@
 
 <div class="row">
     <div class="text-right">
+        <a class='btn btn-success' href="<?=URL::to('gestion/detalle/exportar')?>">Exportar Detalle</a>
         <a class='btn btn-success' href="<?=URL::to('gestion/instituciones/exportar')?>">Exportar</a>
     </div>
 </div>

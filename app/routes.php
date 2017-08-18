@@ -63,6 +63,7 @@ Route::group(["before" => "auth"], function() {
 	Route::get('gestion/usuarios/editar/{usuario_id?}','GestionController@getUsuarioDetalle');
 	Route::post('gestion/usuarios/actualizar','GestionController@updateUsuario');
 	Route::get('gestion/usuarios/eliminar/{usuario_id?}','GestionController@deleteUsuario');
+	Route::get('gestion/detalle/exportar','GestionController@detalleInstitucionesExportar');
 
 	//Documentos
 	Route::get('documentos','DocumentoController@index');

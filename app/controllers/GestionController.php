@@ -142,4 +142,58 @@ class GestionController extends BaseController {
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 	}
+
+	public function detalleInstitucionesExportar(){
+		$objPHPExcel = new PHPExcel();
+		$listado = DB::table('comentarios')
+			->select(DB::raw('  instituciones.id as institucion_id,
+								instituciones.ministerio as ministerio,
+								instituciones.servicio as servicio,
+	        						  controles.id as control_id,
+	        						  controles.nombre as control_nombre,
+	        						  comentarios.cumple as cumple,
+	        						  comentarios.anio_implementacion as anio_implementacion,
+	        						  comentarios.observaciones_institucion as observaciones_institucion'))
+            ->join('instituciones','instituciones.id','=','comentarios.institucion_id')
+            ->join('controles','controles.id','=','comentarios.control_id')
+            ->orderBy('instituciones.id','ASC')
+            ->orderBy('controles.id','ASC')
+            ->get();
+        $rowNumber = 2;
+		$objPHPExcel->setActiveSheetIndex(0)
+						->setCellValue('A1', 'Ministerio')
+			            ->setCellValue('B1', 'Servicio')
+			            ->setCellValue('C1', 'Control ID')
+			            ->setCellValue('D1', 'Control')
+			            ->setCellValue('E1', 'Implementado')
+			            ->setCellValue('F1', 'Año Implementación')
+			            ->setCellValue('G1', 'Justificación');
+		foreach ($listado as $reg){
+			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$reg->ministerio);
+			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$reg->servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->control_id);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->control_nombre);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->cumple);
+			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->anio_implementacion);
+			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$reg->observaciones_institucion);
+			$rowNumber++;
+		}
+		$objPHPExcel->setActiveSheetIndex(0);
+		// Redirect output to a client’s web browser (Excel5)
+		$hoy = date("Y-m-d H:i:s");
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="detalle-instituciones-'.date("d-m-Y",strtotime($hoy)).'.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+
+		// If you're serving to IE over SSL, then the following may be needed
+		//header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+	}
 }
