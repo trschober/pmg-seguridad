@@ -1,4 +1,6 @@
 <?php
+ini_set('max_execution_time', 300);
+ini_set('memory_limit', '512M');
 
 class GestionController extends BaseController {
 
@@ -150,6 +152,7 @@ class GestionController extends BaseController {
 								instituciones.ministerio as ministerio,
 								instituciones.servicio as servicio,
 	        						  controles.id as control_id,
+	        						  controles.codigo as control_codigo,
 	        						  controles.nombre as control_nombre,
 	        						  comentarios.cumple as cumple,
 	        						  comentarios.anio_implementacion as anio_implementacion,
@@ -164,18 +167,20 @@ class GestionController extends BaseController {
 						->setCellValue('A1', 'Ministerio')
 			            ->setCellValue('B1', 'Servicio')
 			            ->setCellValue('C1', 'Control ID')
-			            ->setCellValue('D1', 'Control')
-			            ->setCellValue('E1', 'Implementado')
-			            ->setCellValue('F1', 'Año Implementación')
-			            ->setCellValue('G1', 'Justificación');
+			            ->setCellValue('D1', 'Control Código')
+			            ->setCellValue('E1', 'Control')
+			            ->setCellValue('F1', 'Implementado')
+			            ->setCellValue('G1', 'Año Implementación')
+			            ->setCellValue('H1', 'Justificación');
 		foreach ($listado as $reg){
 			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$reg->ministerio);
 			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$reg->servicio);
 			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->control_id);
-			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->control_nombre);
-			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->cumple);
-			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->anio_implementacion);
-			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$reg->observaciones_institucion);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->control_codigo);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->control_nombre);
+			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->cumple);
+			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$reg->anio_implementacion);
+			$objPHPExcel->getActiveSheet()->setCellValue("H".$rowNumber,$reg->observaciones_institucion);
 			$rowNumber++;
 		}
 		$objPHPExcel->setActiveSheetIndex(0);

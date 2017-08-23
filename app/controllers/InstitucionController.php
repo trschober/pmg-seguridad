@@ -110,7 +110,7 @@ class InstitucionController extends BaseController {
 		return Redirect::to('bienvenida');
 	}
 
-	protected function reporteCierre(){
+	public function reporteCierre(){
 
 		$denominador = \Helpers::getDenominador();
         $numerador = \Helpers::getNumerador();

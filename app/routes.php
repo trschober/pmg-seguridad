@@ -46,6 +46,7 @@ Route::group(["before" => "auth"], function() {
 	Route::post('institucion/rechazar', 'InstitucionController@setRechazo');
 	Route::get('institucion/cerrar', 'InstitucionController@setCierre');
 	Route::get('institucion/informe-cierre', 'InstitucionController@getReporteCierre');
+	Route::get('institucion/reporte', 'InstitucionController@reporteCierre');
 
 	//Riesgos
 	Route::get('riesgos','RiesgoController@index');
