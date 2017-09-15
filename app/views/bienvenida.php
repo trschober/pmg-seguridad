@@ -68,9 +68,14 @@
 				<?php
 					if(Auth::user()->institucion->estado=='cerrado'):
 				?>
-				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Informe de cierre</a>
+				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Informe de cierre</a><br/><br/>
 				<?php endif;?>
-				<!--<a href="<?=URL::to('retroalimentacion/resultado')?>" class="btn btn-success">Informe Red de Expertos</a>-->
+				<?php
+					if(file_exists('uploads/reportes/reporte-red-'.Auth::user()->institucion_id.'.xls')):
+				?>
+					<a href="<?=URL::to('retroalimentacion/resultado')?>" class="btn btn-success">Reporte red de expertos</a>
+				<?php endif;?>
+				
 			</div>
 		</div>
 		<?php endif ?>

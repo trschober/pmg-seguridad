@@ -22,6 +22,7 @@ class RetroalimentacionController extends BaseController {
 		$institucion = Institucion::find(Session::get('sesion_institucion'));
 		$institucion->observaciones_red = Input::get('observacion_red');
 		$institucion->save();
+		Session::flash('success', 'Observaciones han sido actualizadas');
 		return Redirect::to('retroalimentacion');
 	}
 
@@ -40,7 +41,6 @@ class RetroalimentacionController extends BaseController {
 		$porcentaje = round(($numerador * 100) / $denominador,2) .'%';
 		$objPHPExcel->getActiveSheet()->setCellValue("B1","N° de controles de seguridad de la Norma NCh-ISO 27001 implementados al año t");
 		$objPHPExcel->getActiveSheet()->setCellValue("B2","N° de controles  establecidos en la Norma NCh-ISO 27001");
-		$objPHPExcel->getActiveSheet()->setCellValue("B3",$porcentaje);
 		$objPHPExcel->getActiveSheet()->setCellValue("B5",$institucion->observaciones_red);
         $objPHPExcel->getActiveSheet()->setCellValue("C1",$numerador);
 		$objPHPExcel->getActiveSheet()->setCellValue("C2",$denominador);
@@ -103,8 +103,8 @@ class RetroalimentacionController extends BaseController {
 
 
 		/* Guardar excel en disco */
-		$nombre_archivo = 'public/uploads/reportes/reporte-red-'.Session::get('sesion_institucion').'.xls';
-		$carpeta_reportes = 'public/uploads/reportes';
+		$nombre_archivo = 'uploads/reportes/reporte-red-'.Session::get('sesion_institucion').'.xls';
+		$carpeta_reportes = 'uploads/reportes';
 		if(!is_dir($carpeta_reportes))
 			mkdir($carpeta_reportes);
 	    
@@ -112,11 +112,11 @@ class RetroalimentacionController extends BaseController {
 		$objPHPExcel->setActiveSheetIndex(0);
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save($nombre_archivo);
-
+		Session::flash('success', 'Reporte generado exitósamente');
 		return Redirect::to('retroalimentacion');
 	}
 
 	public function getReporteRed(){
-		return Response::download('public/uploads/reportes/reporte-red-'.Auth::user()->institucion_id.'.xls');
+		return Response::download('uploads/reportes/reporte-red-'.Auth::user()->institucion_id.'.xls');
 	}
 }
