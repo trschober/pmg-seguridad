@@ -201,4 +201,19 @@ class GestionController extends BaseController {
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 	}
+
+	public function exportarInformes(){
+		if(file_exists('uploads/reportes/informes.zip')){
+			unlink('uploads/reportes/informes.zip');
+		}
+		$instituciones = Institucion::all();
+		$archivos = array();
+		foreach ($instituciones as $ins) {
+			if(file_exists('uploads/reportes/reporte-red-'.$ins->id.'.xls')){
+				array_push($archivos,'uploads/reportes/reporte-red-'.$ins->id.'.xls');
+			}
+		}
+		$result = \Helpers::create_zip($archivos,'uploads/reportes/informes.zip');
+		return Response::download('uploads/reportes/informes.zip');
+	}
 }
