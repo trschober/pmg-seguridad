@@ -27,7 +27,7 @@
 </div>
 
 <?php 
-    $disabled = $habilitado==true ? '' : 'disabled';
+    $disabled = $habilitado==true ? 'disabled' : 'disabled';
     $mostrar = $habilitado==true ? '' : 'style="display:none"';
 ?>
 
