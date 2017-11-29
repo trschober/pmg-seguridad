@@ -12,4 +12,8 @@ class Control extends Eloquent {
         return $this->hasMany('Comentario');
     }
 
+    public function comentario_historial(){
+    	return $this->hasMany('ComentarioHistorial');	
+    }
+
 }

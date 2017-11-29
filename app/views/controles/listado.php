@@ -26,9 +26,14 @@
     </div>
 </div>
 
-<?php 
-    $disabled = $habilitado==true ? 'disabled' : 'disabled';
-    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+<?php
+    if(Session::has('sesion_historial')){
+        $disabled = '';
+        $mostrar = '';
+    }else{
+        $disabled = $habilitado==true ? '' : 'disabled';
+        $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    }
 ?>
 
 <?php if(Auth::user()->perfil==='experto'): ?>
