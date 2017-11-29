@@ -63,7 +63,7 @@
 	        		$usuario->save();
 	        	}
 	        	Auth::login($usuario);
-	        	return Redirect::to(URL::to('bienvenida'));	
+	        	return Redirect::to(URL::to('historial'));	
 	        }else{
 	        	return Redirect::to(URL::to('/'));
 	        }

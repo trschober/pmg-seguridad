@@ -19,8 +19,8 @@ class CreateArchivosHistorial extends Migration {
 			$table->integer('control_id')->unsigned();
 			$table->foreign('control_id')->references('id')->on('controles')->onDelete('cascade');
 			$table->string('filename',512);
-			$table->integer('anio')->nullable();
-			$table->integer('ejercicio')->nullable();
+			$table->integer('historial_id')->unsigned()->nullable();
+			$table->foreign('historial_id')->references('id')->on('historial_ejercicios')->onDelete('cascade');
 			$table->timestamps();
 			$table->softDeletes();
 		});

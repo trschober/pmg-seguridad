@@ -17,8 +17,8 @@ class CreateRiesgosHistorial extends Migration {
 			$table->string('filename',512);
 			$table->integer('institucion_id')->unsigned();
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
-			$table->integer('anio')->nullable();
-			$table->integer('ejercicio')->nullable();
+			$table->integer('historial_id')->unsigned()->nullable();
+			$table->foreign('historial_id')->references('id')->on('historial_ejercicios')->onDelete('cascade');
 			$table->timestamps();
 		});
 	}

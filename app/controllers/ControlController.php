@@ -8,9 +8,19 @@ class ControlController extends BaseController{
 		else
 			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
 		
-		$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
+		if(Session::has('sesion_historial')){
+			$sesion_historial = Session::get('sesion_historial');
+			$controles = Control::with(array('comentario_historial' => function($query) use($valor_institucion,$sesion_historial){
+			    $query->where('institucion_id',$valor_institucion)->where('historial_id',$sesion_historial);
+			}))->paginate(10);
+		}else{
+			$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
 			    $query->where('institucion_id',$valor_institucion);
 			}))->paginate(10);
+		}
+		print_r($controles[2]->comentarios[2]);
+		exit;
+		
 		$data['controles']=$controles;
 		if(Auth::user()->perfil==='experto'){
 			Session::put('sesion_institucion',$valor_institucion);

@@ -17,8 +17,8 @@ class CreateRetroalimentacionHistorial extends Migration {
 			$table->integer('institucion_id')->unsigned();
 			$table->foreign('institucion_id')->references('id')->on('instituciones')->onDelete('cascade');
 			$table->text('observaciones_red')->nullable();
-			$table->integer('anio')->nullable();
-			$table->integer('ejercicio')->nullable();
+			$table->integer('historial_id')->unsigned()->nullable();
+			$table->foreign('historial_id')->references('id')->on('historial_ejercicios')->onDelete('cascade');
 			$table->timestamps();
 		});
 	}

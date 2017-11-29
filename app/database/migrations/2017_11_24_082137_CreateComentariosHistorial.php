@@ -24,8 +24,8 @@ class CreateComentariosHistorial extends Migration {
 			$table->text('observaciones_institucion')->nullable();
 			$table->text('observaciones_red')->nullable();
 			$table->string('tipo_formulacion',64)->nullable();
-			$table->integer('anio')->nullable();
-			$table->integer('ejercicio')->nullable();
+			$table->integer('historial_id')->unsigned()->nullable();
+			$table->foreign('historial_id')->references('id')->on('historial_ejercicios')->onDelete('cascade');
 			$table->timestamps();
 		});
 	}

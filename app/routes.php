@@ -14,7 +14,7 @@
 //Home
 Route::get('/', function(){
 	if(\Auth::check()){
-		return \Redirect::to('bienvenida');
+		return \Redirect::to('historial');
 	}else{
         return \Redirect::to('portada');
 	}
@@ -29,6 +29,10 @@ Route::get('logout', 'ClaveUnicaController@logout');
 Route::group(["before" => "auth"], function() {
 	//Home
 	Route::get('bienvenida', 'HomeController@bienvenida');
+
+	//Historial
+	Route::get('historial', 'HistorialController@index');
+	Route::post('historial', 'HistorialController@elegirEjercicio');
 	
 	//Controles
 	Route::get('controles', 'ControlController@getIndex');
