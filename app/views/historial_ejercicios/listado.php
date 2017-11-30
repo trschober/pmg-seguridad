@@ -1,6 +1,7 @@
 <ol class="breadcrumb">
   <li><a href="/">Seguridad de la Información</a></li>
-  <li class="active">Revisi&oacute;n Controles</li>
+  <li><a href="historial">Historial</a></li>
+  <li class="active"><?=$historial->anio.'-'.$historial->tipo ?></li>
 </ol>
 
 <div class="row">
@@ -27,8 +28,13 @@
 </div>
 
 <?php
-    $disabled = $habilitado==true ? '' : 'disabled';
-    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    if(Session::has('sesion_historial')){
+        $disabled = 'disabled';
+        $mostrar = '';
+    }else{
+        $disabled = $habilitado==true ? '' : 'disabled';
+        $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    }
 ?>
 
 <?php if(Auth::user()->perfil==='experto'): ?>
@@ -70,14 +76,15 @@
                 <td><?=$control->id ?></td>
                 <td><?=$control->codigo ?></td>
                 <td><?=$control->nombre ?></td>
-                <td><?=count($control->comentarios)>0 ? $control->comentarios[0]->anio_compromiso : '-';?> 
+                <td><?=count($control->comentario_historial)>0 ? $control->comentario_historial[0]->anio_compromiso : '-';?> 
                 <div class="cid">
                     <input type="hidden" name="cidv" value="<?=$control->id ?>">
                 </div>
                 </td>
                 <td>
-                    <?php if(count($control->comentarios)>0):?>    
-                        <?php foreach ($control->comentarios as $comentario): ?>
+                    
+                    <?php if(count($control->comentario_historial)>0):?>    
+                        <?php foreach ($control->comentario_historial as $comentario): ?>
                         <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
                             <option value="" disabled selected>Seleccion opción</option>
                             <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
@@ -99,12 +106,12 @@
                     <?php
                         $actualizado = '<a href="#" class="ver"><span class="label label-success">Revisar</span></a>';
                         $marca = '';
-                        if(count($control->comentarios)==0){
+                        if(count($control->comentario_historial)==0){
                             $desplegar = 'style="display:none"';
                             $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }else{
-                            $desplegar = !is_null($control->comentarios[0]->cumple) ? '' : 'style="display:none"';
-                            if(is_null($control->comentarios[0]->cumple))
+                            $desplegar = !is_null($control->comentario_historial[0]->cumple) ? '' : 'style="display:none"';
+                            if(is_null($control->comentario_historial[0]->cumple))
                                 $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }
                     ?>
@@ -117,7 +124,7 @@
                 <?php if(Auth::user()->perfil==='experto'): ?>
                 <?php
                     $red_expertos = '';
-                    $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
+                    $desplegar = count($control->comentario_historial)==0 ? 'style="display:none"' : (is_null($control->comentario_historial[0]->observaciones_red) ? 'style="display:none"' : '');
                     $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
                 ?>
                 <td><?=$red_expertos ?></td>

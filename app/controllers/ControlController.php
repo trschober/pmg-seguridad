@@ -18,9 +18,7 @@ class ControlController extends BaseController{
 			    $query->where('institucion_id',$valor_institucion);
 			}))->paginate(10);
 		}
-		print_r($controles[2]->comentarios[2]);
-		exit;
-		
+		$data['historial'] = HistorialEjercicio::find(Session::get('sesion_historial'));
 		$data['controles']=$controles;
 		if(Auth::user()->perfil==='experto'){
 			Session::put('sesion_institucion',$valor_institucion);
@@ -28,7 +26,7 @@ class ControlController extends BaseController{
 		}
 		$data['habilitado'] = $this->getHabilitacion();
 		$this->layout->title="Revisión de controles";
-        $this->layout->content = View::make('controles/listado',$data);
+        $this->layout->content = Session::has('sesion_historial') ? View::make('historial_ejercicios/listado',$data) : View::make('controles/listado',$data);
 	}
 
 	public function getEstado(){
