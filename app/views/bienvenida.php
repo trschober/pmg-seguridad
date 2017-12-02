@@ -39,7 +39,8 @@
 				    	<tr><td>Luis Carrasco</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
 				    	<tr><td>Juan Pablo Meier</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
 				    	<tr><td>Nicole Merino</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Sebastián Beeche</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
+				    	<tr><td>Tomás Riveros</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
+				    	<tr><td>Macarena Calderón</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
 				    	<tr><td>Rodrigo Pérez</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
 				    </tbody>
 				</table>
@@ -150,7 +151,7 @@ $('#validar').click(function() {
 });
 
 $('#cerrar').click(function() {
-	if(confirm('¿Está seguro de cerrar el proceso y enviar a Red de Expertos?')){
+	if(confirm('¿Está seguro de cerrar el proceso e informar a la Red?')){
 		showPleaseWait();
 		$('#rechazar').attr('disabled',true);
 		$(this).attr('disabled',true);
