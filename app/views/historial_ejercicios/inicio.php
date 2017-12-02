@@ -8,7 +8,7 @@
     <select id="historial" name="historial">
         <option value="" disabled selected>Seleccione opción</option>
         <?php foreach($historial_ejercicios as $h): ?>
-           <option value="<?=$h->id?>"><?=$h->anio.'-'.$h->tipo?> <?= $h->en_curso? '(En curso)' : '' ?></option>
+           <option value="<?=$h->id?>"><?=$h->anio.'-'.$h->tipo?> <?= $h->activo? '(Activo)' : '' ?></option>
         <?php endforeach ?>
     </select>
     <input type="submit" value="Actualizar" class="btn btn-success" />
