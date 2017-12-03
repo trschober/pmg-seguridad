@@ -1,3 +1,7 @@
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el historial <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
+
 <ol class="breadcrumb">
   <li><a href="/">Seguridad de la Información</a></li>
   <li class="active">Revisi&oacute;n Controles</li>
@@ -12,8 +16,8 @@
             </p>
             <p>
                 <ul>
-                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2017, y registros de operación en el año 2017).</li>
-                    <li>Agregar descripción de los medios de verificación, es decir detalle de los documentos adjuntos, y cómo éstos dan cuenta de la implementación del control.</li>
+                    <li>Indicar el año de documentación del control, es decir, el año en que se creó y oficializó el primer documento (política o procedimiento).</li>
+                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación al año 2017 y operación en el año 2017).</li>
                 </ul>
             </p>
             <p>En el caso de escoger la opción No, el Servicio deberá:
@@ -27,11 +31,16 @@
 </div>
 
 <?php
-    $disabled = $habilitado==true ? '' : 'disabled';
-    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    if(Session::has('sesion_historial')){
+        $disabled = 'disabled';
+        $mostrar = '';
+    }else{
+        $disabled = $habilitado==true ? '' : 'disabled';
+        $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    }
 ?>
 
-<?php if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'): ?>
+<?php if(Auth::user()->perfil==='experto'): ?>
     <div class="form-group pull-right">
         <form action="<?=URL::to('controles')?>" id="myform" method="POST" enctype="multipart/form-data">
         <label for="institucion">Instituciones</label>
@@ -70,14 +79,15 @@
                 <td><?=$control->id ?></td>
                 <td><?=$control->codigo ?></td>
                 <td><?=$control->nombre ?></td>
-                <td><?=count($control->comentarios)>0 ? $control->comentarios[0]->anio_compromiso : '-';?> 
+                <td><?=count($control->comentario_historial)>0 ? $control->comentario_historial[0]->anio_compromiso : '-';?> 
                 <div class="cid">
                     <input type="hidden" name="cidv" value="<?=$control->id ?>">
                 </div>
                 </td>
                 <td>
-                    <?php if(count($control->comentarios)>0):?>    
-                        <?php foreach ($control->comentarios as $comentario): ?>
+                    
+                    <?php if(count($control->comentario_historial)>0):?>    
+                        <?php foreach ($control->comentario_historial as $comentario): ?>
                         <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
                             <option value="" disabled selected>Seleccion opción</option>
                             <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
@@ -99,25 +109,22 @@
                     <?php
                         $actualizado = '<a href="#" class="ver"><span class="label label-success">Cargar evidencia</span></a>';
                         $marca = '';
-                        if(count($control->comentarios)==0){
+                        if(count($control->comentario_historial)==0){
                             $desplegar = 'style="display:none"';
                             $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }else{
-                            $desplegar = !is_null($control->comentarios[0]->cumple) ? '' : 'style="display:none"';
-                            if(is_null($control->comentarios[0]->cumple))
+                            $desplegar = !is_null($control->comentario_historial[0]->cumple) ? '' : 'style="display:none"';
+                            if(is_null($control->comentario_historial[0]->cumple))
                                 $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }
                     ?>
                     <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
                     <?=$marca?>
-                    <?php if(Auth::user()->perfil==='experto'): ?>
-                        <a href="#" class="actualizar"  data-dismiss="modal"><span class="label label-info">Actualizar</span></a>
-                    <?php endif; ?>
                 </td>
                 <?php if(Auth::user()->perfil==='experto'): ?>
                 <?php
                     $red_expertos = '';
-                    $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
+                    $desplegar = count($control->comentario_historial)==0 ? 'style="display:none"' : (is_null($control->comentario_historial[0]->observaciones_red) ? 'style="display:none"' : '');
                     $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
                 ?>
                 <td><?=$red_expertos ?></td>
@@ -149,7 +156,7 @@
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
-               <label for="anio_implementacion">Año de 1° implementación</label>
+               <label for="anio_implementacion">Año documentación</label>
                <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>
@@ -169,7 +176,7 @@
               </select>
             </div>
             <div class="form-group cumpleform">
-              <label for="message-text" class="control-label datoscumplimiento">Descripción de los medios de verificación:</label>
+              <label for="message-text" class="control-label">Descripción de los medios de verificación:</label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="des_medios_ver" name="des_medios_ver"></textarea>
             </div>
             <input type="hidden" name="cumplimiento" id="cumplimiento">
@@ -322,14 +329,6 @@
         }
     });
 
-    $('#des_medios_ver').bind('input propertychange', function() {
-        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
-            $('#registrar').removeAttr('disabled');
-        }else{
-            $('#registrar').attr('disabled', true);
-        }
-    });
-
     function showResponse(response, statusText, xhr, $form) {
         //alert(response);
         if(response.success == false){
@@ -380,6 +379,8 @@
         });
     });
 
+    
+
     $('.ver').click(function(e) {
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $.ajax({
@@ -392,7 +393,6 @@
                 //Comentario no existe
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
-                    var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medio_verificacion;
                     $("#control_id").val(cid);
                     $('h4.modal-title').text('Detalle control '+data.control.codigo);
                     if($('#cumple_'+cid).val()=='no'){
@@ -411,7 +411,6 @@
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
-                        $('#des_medios_ver').val(descr_medios_ver);
                         //$('#anio_implementacion').attr('disabled',true);
                         //$('#archivo').hide();
                     }

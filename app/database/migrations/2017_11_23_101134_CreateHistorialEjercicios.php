@@ -16,7 +16,7 @@ class CreateHistorialEjercicios extends Migration {
 			$table->increments('id');
 			$table->integer('anio')->nullable();
 			$table->enum('tipo', array('ejercicio','evaluacion'))->nullable();
-			$table->boolean('en_curso')->nullable();
+			$table->boolean('activo')->nullable();
 		});
 	}
 
