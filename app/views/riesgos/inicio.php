@@ -18,7 +18,7 @@
     $mostrar = $habilitado==true ? '' : 'style="display:none"';
 ?>
 
-<?php if(Auth::user()->perfil==='experto'): ?>
+<?php if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'): ?>
     <div class="form-group pull-right">
         <form action="<?=URL::to('riesgos')?>" id="myform" method="POST" enctype="multipart/form-data">
         <label for="institucion">Instituciones</label>

@@ -19,7 +19,7 @@ class ControlController extends BaseController{
 			}))->paginate(25);
 		}
 		$data['controles']=$controles;
-		if(Auth::user()->perfil==='experto'){
+		if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'){
 			Session::put('sesion_institucion',$valor_institucion);
 			$data['instituciones'] = \Helpers::getListadoInstituciones();
 		}
@@ -132,7 +132,7 @@ class ControlController extends BaseController{
 	}
 
 	public function getFile($archivo_id){
-		if(Auth::user()->perfil!='experto'){
+		if(in_array(Auth::user()->perfil,array('ingreso','validador'))){
 			$archivo = Session::has('activo') ? Archivo::where('id',$archivo_id)->where('institucion_id',Auth::user()->institucion_id)->first() : ArchivoHistorial::where('id',$archivo_id)->where('historial_id',Session::get('historial_id'))->where('institucion_id',Auth::user()->institucion_id)->first();
 			if($archivo!=null){
 				return Response::download('uploads/controles/'.Auth::user()->institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);

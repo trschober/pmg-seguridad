@@ -8,7 +8,8 @@ class HomeController extends BaseController {
 	}
 
 	public function bienvenida(){
-		if(Session::has('activo')){
+		$perfiles_bienvenida = array('ingreso','validador');
+		if(Session::has('activo') && in_array(Auth::user()->perfil,$perfiles_bienvenida)){
 			$fechas = Configuracion::fechas()->get();
 			$fecha_termino = date('Y/m/d', strtotime($fechas[1]->valor));
 			$fecha_inicio  = Carbon::createFromFormat('d-m-Y H:i:s', $fechas[0]->valor .' 00:00:00')->toDateTimeString();

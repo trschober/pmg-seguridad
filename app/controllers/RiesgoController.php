@@ -8,7 +8,7 @@ class RiesgoController extends BaseController {
 		else
 			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
 
-		if(Auth::user()->perfil==='experto'){
+		if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'){
 			$instituciones = Institucion::orderBy('servicio')->get();
 			Session::put('sesion_institucion',$valor_institucion);
 			$data['instituciones']=$instituciones;
@@ -54,7 +54,7 @@ class RiesgoController extends BaseController {
 	}
 
 	public function getFile($archivo){
-		if(Auth::user()->perfil!='experto'){
+		if(in_array(Auth::user()->perfil,array('ingreso','validador'))){
 			$riesgo = Session::has('activo') ? Riesgo::where('institucion_id',Auth::user()->institucion_id)->where('id',$archivo)->first() : RiesgoHistorial::where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('id',$archivo)->first();
 			if($riesgo!=null)
 				return Response::download('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
