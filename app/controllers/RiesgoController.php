@@ -47,7 +47,8 @@ class RiesgoController extends BaseController {
 		if($riesgo!=null){
 			$riesgo->delete();
 			$riesgoh = RiesgoHistorial::where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('filename',$riesgo->filename)->first();
-			$riesgoh->delete();
+			if($riesgoh!=null)
+				$riesgoh->delete();
 			unlink('uploads/riesgos/'.Auth::user()->institucion_id.'/'.$riesgo->filename);
 		}
 		return Redirect::to('riesgos');
