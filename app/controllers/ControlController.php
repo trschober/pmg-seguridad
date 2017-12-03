@@ -86,6 +86,7 @@ class ControlController extends BaseController{
 				$archivo->save();
 			}
 		}else{
+			$comentario->desc_medio_verificacion = NULL;
 			$files = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->get();
 			foreach ($files as $file) {
 				$file->delete();
@@ -121,6 +122,7 @@ class ControlController extends BaseController{
 				$archivo->save();
 			}
 		}else{
+			$comentario_historial->desc_medio_verificacion = NULL;
 			$files = ArchivoHistorial::where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('control_id',Input::get('control_id'))->get();
 			foreach ($files as $file) {
 				$file->delete();
@@ -157,6 +159,7 @@ class ControlController extends BaseController{
 					$comentario = Comentario::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->first();
 					$comentario->cumple=NULL;
 					$comentario->anio_implementacion=NULL;
+					$comentario->desc_medio_verificacion=NULL;
 					$comentario->save();
 				}
 
@@ -170,6 +173,7 @@ class ControlController extends BaseController{
 						$comentario = ComentarioHistorial::where('institucion_id',Auth::user()->institucion_id)->where('control_id',$control_id)->where('historial_id',Session::get('historial_id'))->first();
 						$comentario->cumple=NULL;
 						$comentario->anio_implementacion=NULL;
+						$comentario->desc_medio_verificacion=NULL;
 						$comentario->save();
 					}					
 				}
