@@ -71,9 +71,8 @@ class ControlController extends BaseController{
 		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
 		$comentario->institucion_id = Auth::user()->institucion_id;
 		$comentario->control_id = Input::get('control_id');
-		if(Input::hasFile('archivo')){
+		if(Input::hasFile('archivo') && $comentario->cumple=='si'){
 			$comentario->observaciones_institucion = null;
-			$comentario->cumple = 'si';
 			$comentario->desc_medio_verificacion = Input::get('des_medios_ver');
 			foreach(Input::file('archivo') as $file){				
 				$archivo = new Archivo;
@@ -108,9 +107,8 @@ class ControlController extends BaseController{
 		$comentario_historial->control_id = Input::get('control_id');
 		$comentario_historial->historial_id = Session::get('historial_id');
 		$comentario_historial->desc_medio_verificacion = Input::get('des_medios_ver');
-		if(Input::hasFile('archivo')){
+		if(Input::hasFile('archivo') && $comentario->cumple=='si'){
 			$comentario_historial->observaciones_institucion = null;
-			$comentario_historial->cumple = 'si';
 			foreach(Input::file('archivo') as $file){				
 				$archivo = new ArchivoHistorial;
 				$archivo->institucion_id=Auth::user()->institucion_id;

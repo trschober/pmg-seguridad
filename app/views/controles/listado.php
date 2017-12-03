@@ -169,7 +169,7 @@
               </select>
             </div>
             <div class="form-group cumpleform">
-              <label for="message-text" class="control-label">Descripción de los medios de verificación:</label>
+              <label for="message-text" class="control-label datoscumplimiento">Descripción de los medios de verificación:</label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="des_medios_ver" name="des_medios_ver"></textarea>
             </div>
             <input type="hidden" name="cumplimiento" id="cumplimiento">
@@ -322,6 +322,14 @@
         }
     });
 
+    $('#des_medios_ver').bind('input propertychange', function() {
+        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
+            $('#registrar').removeAttr('disabled');
+        }else{
+            $('#registrar').attr('disabled', true);
+        }
+    });
+
     function showResponse(response, statusText, xhr, $form) {
         //alert(response);
         if(response.success == false){
@@ -371,8 +379,6 @@
             }
         });
     });
-
-    
 
     $('.ver').click(function(e) {
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
