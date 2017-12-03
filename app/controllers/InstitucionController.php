@@ -137,7 +137,7 @@ class InstitucionController extends BaseController {
 	   	$fpdf->SetXY(10, 70);
 	    $fpdf->Cell(0,10,utf8_decode("Con fecha ".date("d-m-Y").", el Servicio ".Auth::user()->institucion->servicio),0,0,'L');
 	   	$fpdf->SetXY(10, 75);
-	    $fpdf->Cell(0,10,utf8_decode("ha informado a la presente Red de Expertos, la siguiente medición del"),0,0,'L');
+	    $fpdf->Cell(0,10,utf8_decode("ha informado a la presente Red de Expertos, a través de la Plataforma dispuesta por SEGPRES, la siguiente medición del"),0,0,'L');
 	    $fpdf->SetXY(10, 80);
 	    $fpdf->Cell(0,10,utf8_decode("Indicador de Seguridad de la Información:"),0,0,'L');
 		$fpdf->SetXY(10, 90);
@@ -148,15 +148,21 @@ class InstitucionController extends BaseController {
 		$fpdf->Cell(0,10,utf8_decode("N° total de controles establecidos en la Norma NCh-ISO 27001"),0,0,'C');
 		$fpdf->SetXY(10, 105);
 		$fpdf->Cell(0,10,utf8_decode("para mitigar riesgos de seguridad de la información)*100"),0,0,'C');
-		$fpdf->SetFont('Arial','B',12);
+		$fpdf->SetXY(10, 115);
+		$fpdf->Cell(0,10,utf8_decode("Por medio del presente documento, se certifica que el servicio ha ingresado"),0,0,'L');
 		$fpdf->SetXY(10, 120);
+		$fpdf->Cell(0,10,utf8_decode("correctamente la información a la Plataforma ssi.digital.gob.cl, en el marco de la"),0,0,'L');
+		$fpdf->SetXY(10, 125);
+		$fpdf->Cell(0,10,utf8_decode("validación del indicador de SSI para el periodo 2017."),0,0,'L');
+		$fpdf->SetFont('Arial','B',12);
+		$fpdf->SetXY(10, 140);
 		$fpdf->Cell(0,10,utf8_decode("Medición del Servicio ".Auth::user()->institucion->servicio." :"),0,0,'L');
 		$fpdf->SetFont('Arial','B',12);
-		$fpdf->SetXY(10, 135);
-		$fpdf->Cell(0,10,utf8_decode("Numerador: ".$numerador),0,0,'L');
-		$fpdf->SetXY(10, 145);
-		$fpdf->Cell(0,10,utf8_decode("Denominador: ".$denominador),0,0,'L');
 		$fpdf->SetXY(10, 155);
+		$fpdf->Cell(0,10,utf8_decode("Numerador: ".$numerador),0,0,'L');
+		$fpdf->SetXY(10, 165);
+		$fpdf->Cell(0,10,utf8_decode("Denominador: ".$denominador),0,0,'L');
+		$fpdf->SetXY(10, 175);
 		$fpdf->Cell(0,10,utf8_decode("Porcentaje(resultado): ".$porcentaje),0,0,'L');
 	    if(!is_dir("uploads/cierre"))
 			mkdir("uploads/cierre");
