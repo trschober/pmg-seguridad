@@ -69,7 +69,8 @@
 				<?php
 					if(Auth::user()->institucion->estado=='cerrado'):
 				?>
-				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Informe de cierre</a><br/><br/>
+				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Certificado Red de Expertos SSI</a><br/><br/>
+				<a href="<?=URL::to('institucion/informe-cumplimiento')?>" class="btn btn-success">Informe de cumplimiento</a><br/><br/>
 				<?php endif;?>
 				<?php
 					if(file_exists('uploads/reportes/reporte-red-'.Auth::user()->institucion_id.'.xls')):
