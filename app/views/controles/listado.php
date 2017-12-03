@@ -12,8 +12,8 @@
             </p>
             <p>
                 <ul>
-                    <li>Indicar el año de documentación del control, es decir, el año en que se creó y oficializó el primer documento (política o procedimiento).</li>
-                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación al año 2017 y operación en el año 2017).</li>
+                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2017, y registros de operación en el año 2017).</li>
+                    <li>Agregar descripción de los medios de verificación, es decir detalle de los documentos adjuntos, y cómo éstos dan cuenta de la implementación del control.</li>
                 </ul>
             </p>
             <p>En el caso de escoger la opción No, el Servicio deberá:
@@ -97,7 +97,7 @@
                 </td>
                 <td>
                     <?php
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Revisar</span></a>';
+                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Cargar evidencia</span></a>';
                         $marca = '';
                         if(count($control->comentarios)==0){
                             $desplegar = 'style="display:none"';
@@ -149,7 +149,7 @@
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
-               <label for="anio_implementacion">Año documentación</label>
+               <label for="anio_implementacion">Año de 1° implementación</label>
                <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>
@@ -167,6 +167,10 @@
                 <option value="2005">2005</option>
                 <option value="-">-</option>
               </select>
+            </div>
+            <div class="form-group cumpleform">
+              <label for="message-text" class="control-label">Descripción de los medios de verificación:</label>
+              <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="des_medios_ver" name="des_medios_ver"></textarea>
             </div>
             <input type="hidden" name="cumplimiento" id="cumplimiento">
             <input type="hidden" name="control_id" id="control_id">
@@ -242,6 +246,7 @@
                 //Comentario no existe
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
+                    var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medios_verificacion;
                     $("#control_id").val(cid);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
@@ -258,6 +263,7 @@
                         $('#anio_implementacion').val('');
                         $('#archivo').show();
                         $('#links').hide();
+                        $('#des_medios_ver').val(descr_medios_ver);
                         $('#registrar').show();
                     }
                     $('#registrar').attr('disabled', true);
@@ -303,7 +309,7 @@
     });
 
     $('.datoscumplimiento').on("change", function(){
-        if($('#anio_implementacion').val()!=null && $('#archivo').val()!=''){
+        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
             $('#registrar').removeAttr('disabled');
         }
     });
@@ -380,8 +386,9 @@
                 //Comentario no existe
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
+                    var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medio_verificacion;
                     $("#control_id").val(cid);
-                    $('h4.modal-title').text('Detalle');
+                    $('h4.modal-title').text('Detalle control '+data.control.codigo);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
                         //$('#comentario_incumplimiento').attr('disabled',true);
@@ -398,6 +405,7 @@
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
+                        $('#des_medios_ver').val(descr_medios_ver);
                         //$('#anio_implementacion').attr('disabled',true);
                         //$('#archivo').hide();
                     }

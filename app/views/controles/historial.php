@@ -107,7 +107,7 @@
                 </td>
                 <td>
                     <?php
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Revisar</span></a>';
+                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Cargar evidencia</span></a>';
                         $marca = '';
                         if(count($control->comentario_historial)==0){
                             $desplegar = 'style="display:none"';
@@ -174,6 +174,10 @@
                 <option value="2005">2005</option>
                 <option value="-">-</option>
               </select>
+            </div>
+            <div class="form-group cumpleform">
+              <label for="message-text" class="control-label">Descripción de los medios de verificación:</label>
+              <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="des_medios_ver" name="des_medios_ver"></textarea>
             </div>
             <input type="hidden" name="cumplimiento" id="cumplimiento">
             <input type="hidden" name="control_id" id="control_id">
@@ -249,6 +253,7 @@
                 //Comentario no existe
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
+                    var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medios_verificacion;
                     $("#control_id").val(cid);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
@@ -265,6 +270,7 @@
                         $('#anio_implementacion').val('');
                         $('#archivo').show();
                         $('#links').hide();
+                        $('#des_medios_ver').val(descr_medios_ver);
                         $('#registrar').show();
                     }
                     $('#registrar').attr('disabled', true);
@@ -310,7 +316,7 @@
     });
 
     $('.datoscumplimiento').on("change", function(){
-        if($('#anio_implementacion').val()!=null && $('#archivo').val()!=''){
+        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
             $('#registrar').removeAttr('disabled');
         }
     });
@@ -388,7 +394,7 @@
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
                     $("#control_id").val(cid);
-                    $('h4.modal-title').text('Detalle');
+                    $('h4.modal-title').text('Detalle control '+data.control.codigo);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
                         //$('#comentario_incumplimiento').attr('disabled',true);

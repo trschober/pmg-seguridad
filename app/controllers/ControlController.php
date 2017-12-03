@@ -11,12 +11,12 @@ class ControlController extends BaseController{
 		if(Session::has('activo')){
 			$controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
 		    	$query->where('institucion_id',$valor_institucion);
-			}))->paginate(10);
+			}))->paginate(25);
 		}else{
 			$historial_id = Session::get('historial_id');
 			$controles = Control::with(array('comentario_historial' => function($query) use($valor_institucion,$historial_id){
 			    $query->where('institucion_id',$valor_institucion)->where('historial_id',$historial_id);
-			}))->paginate(10);
+			}))->paginate(25);
 		}
 		$data['controles']=$controles;
 		if(Auth::user()->perfil==='experto'){
@@ -42,6 +42,7 @@ class ControlController extends BaseController{
 				$comentario = ComentarioHistorial::where('institucion_id',$valor_institucion)->where('historial_id',Session::get('historial_id'))->where('control_id',$control_id)->first();
 				$archivos = ArchivoHistorial::where('institucion_id',$valor_institucion)->where('historial_id',Session::get('historial_id'))->where('control_id',$control_id)->get();
 			}
+			$control = Control::find($control_id);
 			if($comentario===null){
 				return Response::json(array(
 					'success'=>true,
@@ -51,7 +52,8 @@ class ControlController extends BaseController{
 				return Response::json(array(
 					'success'=>true,
 				    'comentario'=>$comentario,
-				    'archivos'=>$archivos
+				    'archivos'=>$archivos,
+				    'control'=>$control,
 				));
 			}
 		}
@@ -72,6 +74,7 @@ class ControlController extends BaseController{
 		if(Input::hasFile('archivo')){
 			$comentario->observaciones_institucion = null;
 			$comentario->cumple = 'si';
+			$comentario->desc_medio_verificacion = Input::get('des_medios_ver');
 			foreach(Input::file('archivo') as $file){				
 				$archivo = new Archivo;
 				$archivo->institucion_id=Auth::user()->institucion_id;
@@ -104,6 +107,7 @@ class ControlController extends BaseController{
 		$comentario_historial->institucion_id = Auth::user()->institucion_id;
 		$comentario_historial->control_id = Input::get('control_id');
 		$comentario_historial->historial_id = Session::get('historial_id');
+		$comentario_historial->desc_medio_verificacion = Input::get('des_medios_ver');
 		if(Input::hasFile('archivo')){
 			$comentario_historial->observaciones_institucion = null;
 			$comentario_historial->cumple = 'si';
@@ -159,7 +163,7 @@ class ControlController extends BaseController{
 				}
 
 				//Historial
-				$archivo = ArchivoHistorial::where('control_id',$control_id)->where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->first();
+				$archivo = ArchivoHistorial::where('control_id',$control_id)->where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('filename',$archivo->filename)->first();
 				if($archivo!=null){
 					$control_id = $archivo->control_id;
 					$archivo->delete();
