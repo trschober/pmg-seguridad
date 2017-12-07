@@ -56,7 +56,6 @@
             <th>Nº</th>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Año de formulación</th>
             <th>Implementado</th>
             <th>Acciones</th>
             <?php if(Auth::user()->perfil==='experto'): ?>
@@ -70,7 +69,6 @@
                 <td><?=$control->id ?></td>
                 <td><?=$control->codigo ?></td>
                 <td><?=$control->nombre ?></td>
-                <td><?=count($control->comentarios)>0 ? $control->comentarios[0]->anio_compromiso : '-';?> 
                 <div class="cid">
                     <input type="hidden" name="cidv" value="<?=$control->id ?>">
                 </div>
