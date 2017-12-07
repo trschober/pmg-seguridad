@@ -169,7 +169,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Registrar</button>
+          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Guardar</button>
         </div>
       </div>
     </div>

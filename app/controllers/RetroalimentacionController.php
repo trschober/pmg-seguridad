@@ -3,6 +3,10 @@
 class RetroalimentacionController extends BaseController {
 	
 	public function index(){
+
+		if(Session::has('activo'))
+			return \Redirect::to('controles');
+
 		if(Input::has('institucion'))
 			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
 		else

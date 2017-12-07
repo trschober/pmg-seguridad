@@ -44,8 +44,8 @@
         <ul class="nav navbar-nav" id="menu-superior">
             <li><a href="<?=URL::to('documentos')?>">Documentos</a></li>
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
+            <?php if(!Session::has('activo')): ?>
             <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
-            <?php if(Auth::user()->perfil!='evaluador'): ?>
             <li><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
             <?php endif; ?>
         </ul>
