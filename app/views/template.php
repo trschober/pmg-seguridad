@@ -66,7 +66,7 @@
                     </li>
                     <?php endif; ?>
                     <?php if(Auth::user()->perfil!='evaluador'): ?>
-                    <li><a href="<?=URL::to('historial')?>">Cambio de ejercicio</a></li>
+                    <li><a href="<?=URL::to('historial')?>">Cambiar Proceso</a></li>
                     <?php endif; ?>
                     <li><a href="<?=URL::to('logout')?>">Cerrar sesión</a></li>
                 </ul>
