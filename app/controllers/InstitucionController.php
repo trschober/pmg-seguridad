@@ -158,7 +158,7 @@ class InstitucionController extends BaseController {
 		$fpdf->SetXY(10, 120);
 		$fpdf->Cell(0,10,utf8_decode("correctamente la información a la Plataforma ssi.digital.gob.cl, en el marco de la"),0,0,'L');
 		$fpdf->SetXY(10, 125);
-		$fpdf->Cell(0,10,utf8_decode("validación del indicador de SSI para el periodo 2017."),0,0,'L');
+		$fpdf->Cell(0,10,utf8_decode("evaluación del indicador de SSI para el periodo 2017."),0,0,'L');
 		$fpdf->SetFont('Arial','B',12);
 		$fpdf->SetXY(10, 140);
 		$fpdf->Cell(0,10,utf8_decode("Medición del Servicio ".Auth::user()->institucion->servicio." :"),0,0,'L');
