@@ -97,7 +97,8 @@
                 </td>
                 <td>
                     <?php
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">Cargar evidencia</span></a>';
+                        $texto = Auth::user()->perfil==='ingreso' ? 'Cargar Evidencia' : 'Revisar';
+                        $actualizado = '<a href="#" class="ver"><span class="label label-success">'.$texto.'</span></a>';
                         $marca = '';
                         if(count($control->comentarios)==0){
                             $desplegar = 'style="display:none"';
