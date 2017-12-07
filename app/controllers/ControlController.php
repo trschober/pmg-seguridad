@@ -80,7 +80,7 @@ class ControlController extends BaseController{
 				$archivo->control_id=Input::get('control_id');
 				$archivo_nombre = $file->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.$archivo_nombre;
+				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.'-'.$archivo_nombre;
 				$archivo->filename=$archivo_nombre;
 				$file->move('uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
 				$archivo->save();
@@ -116,7 +116,7 @@ class ControlController extends BaseController{
 				$archivo->control_id=Input::get('control_id');
 				$archivo_nombre = $file->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.$archivo_nombre;
+				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.'-'.$archivo_nombre;
 				$archivo->filename=$archivo_nombre;
 				$archivo->historial_id = Session::get('historial_id');
 				$archivo->save();

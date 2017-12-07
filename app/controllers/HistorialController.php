@@ -17,7 +17,7 @@ class HistorialController extends BaseController {
 	public function elegirEjercicio(){
 		$historial = HistorialEjercicio::find(Input::get('historial'));
 		Session::put('historial_id',$historial->id);
-		Session::put('sesion_historial',$historial->anio.'-'.$historial->tipo);
+		Session::put('sesion_historial',strtoupper($historial->anio.'-'.$historial->tipo));
 		if($historial->activo)
 			Session::put('activo',$historial->activo);
 		else
