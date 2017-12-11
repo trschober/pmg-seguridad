@@ -3,6 +3,10 @@
 class RetroalimentacionController extends BaseController {
 	
 	public function index(){
+
+		if(Session::has('activo'))
+			return \Redirect::to('controles');
+
 		if(Input::has('institucion'))
 			$valor_institucion = Input::get('institucion'); //experto al cambiar de institución
 		else
@@ -13,15 +17,26 @@ class RetroalimentacionController extends BaseController {
 			Session::put('sesion_institucion',$valor_institucion);
 			$data['instituciones']=$instituciones;
 		}
-		$data['institucion'] = Institucion::find($valor_institucion);
+		$data['institucion'] = Session::has('activo') ? Institucion::find($valor_institucion) : InstitucionHistorial::where('id',$valor_institucion)->where('historial_id',Session::get('historial_id'))->first();
 		$this->layout->title="Retroalimentación";
-        $this->layout->content = View::make('retroalimentacion/inicio',$data);
+        $this->layout->content = Session::has('activo') ? View::make('retroalimentacion/inicio',$data) : View::make('retroalimentacion/historial',$data);
 	}
 
 	public function setObservacionesRed(){
 		$institucion = Institucion::find(Session::get('sesion_institucion'));
 		$institucion->observaciones_red = Input::get('observacion_red');
 		$institucion->save();
+
+		//Historial
+		$institucion = InstitucionHistorial::where('institucion_id',Session::get('sesion_institucion'))->where('historial_id',Session::get('historial_id'))->first();
+		if($institucion===null){
+			$institucion = new InstitucionHistorial;
+			$institucion->institucion_id = Session::get('sesion_institucion');
+			$institucion->historial_id = Session::get('historial_id');
+		}
+		$institucion->observaciones_red = Input::get('observacion_red');
+		$institucion->save();
+
 		Session::flash('success', 'Observaciones han sido actualizadas');
 		return Redirect::to('retroalimentacion');
 	}

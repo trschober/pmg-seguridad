@@ -1,3 +1,7 @@
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el historial <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
+
 <ol class="breadcrumb">
   <li><a href="/">Seguridad de la Información</a></li>
   <li class="active">Análisis de riesgo</li>
@@ -14,11 +18,11 @@
 </div>
 
 <?php 
-    $disabled = $habilitado==true ? '' : 'disabled';
-    $mostrar = $habilitado==true ? '' : 'style="display:none"';
+    $disabled = 'disabled';
+    $mostrar = 'style="display:none"';
 ?>
 
-<?php if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'): ?>
+<?php if(Auth::user()->perfil==='experto'): ?>
     <div class="form-group pull-right">
         <form action="<?=URL::to('riesgos')?>" id="myform" method="POST" enctype="multipart/form-data">
         <label for="institucion">Instituciones</label>
@@ -37,17 +41,6 @@
     </div>
 <?php endif ?>
 
-<?php if(Auth::user()->perfil!='experto'): ?>
-<form action="<?=URL::to('riesgos/agregar')?>" method="POST" enctype="multipart/form-data">
-  <?php echo $errors->first('email'); ?>
-  <div <?=$mostrar?> class="form-group">
-    <label for="archivo">Archivo</label>
-    <input <?=$disabled?> type="file" id="archivo" name="archivo">
-  </div>
-  <button <?=$mostrar?> <?=$disabled?> type="submit" class="btn btn-success" disabled id="agregar" name="agregar">Agregar</button>
-</form>
-<?php endif ?>
-
 <table id="controles" class="table table-striped table-hover table-condensed">
 	<caption>Listado de archivos</caption>
     <thead>
@@ -62,9 +55,6 @@
     	<tr>
     		<td><?=$riesgo->filename?></td>
     		<td>
-            <?php if(Auth::user()->perfil!='experto'): ?>
-            <a <?=$mostrar?> href="<?= $habilitado ? URL::to('riesgos/eliminar/'.$riesgo->id) : '#' ?>" class="eliminar" onclick="return confirm('¿Est&aacute; seguro que desea eliminar el archivo?')"><span class="label label-danger">Eliminar</span></a>
-            <?php endif ?>
             <a href="<?=URL::to('riesgos/download/'.$riesgo->id)?>" class="descargar"><span class="label label-info">Descargar</span></a>
             </td>
     	</tr>

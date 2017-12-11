@@ -44,15 +44,17 @@
         <ul class="nav navbar-nav" id="menu-superior">
             <li><a href="<?=URL::to('documentos')?>">Documentos</a></li>
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
+            <?php if(!Session::has('activo')): ?>
             <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
             <li><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
+            <?php endif; ?>
         </ul>
         <?php endif?>
 
         <ul class="nav navbar-nav navbar-right">
             <?php if(Auth::check()):?>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true"><?=Auth::user()->nombres." ".Auth::user()->apellidos?><span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true"><?=Auth::user()->nombres." ".Auth::user()->apellidos.'('.Auth::user()->perfil.')'?><span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <?php if(Auth::user()->perfil==='experto'): ?>
                     <li class="menu-item dropdown dropdown-submenu">
@@ -63,6 +65,9 @@
                         </ul>
                     </li>
                     <?php endif; ?>
+                    <?php if(Auth::user()->perfil!='evaluador'): ?>
+                    <li><a href="<?=URL::to('historial')?>">Cambiar Proceso</a></li>
+                    <?php endif; ?>
                     <li><a href="<?=URL::to('logout')?>">Cerrar sesión</a></li>
                 </ul>
             </li>
@@ -72,7 +77,7 @@
     </div>
     </nav>
     
-    <?php if(Auth::check()):?> 
+    <?php if(Auth::check() && in_array(Auth::user()->perfil,array('ingreso','validador'))):?> 
     <nav class="nav-perfil">
         <div class="container print-hide"><strong><?=Auth::user()->institucion->servicio?></strong></div>
     </nav>
@@ -110,11 +115,6 @@
                       <ul>
                           <li><a href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></li>
                       </ul>
-                  </div>
-                  <div class="col-xs-3">
-                      <div class="politicas">
-                          <a href="#">Politicas de Privacidad</a> | <a href="">Visualizadores y Plugins</a> | <a href="#">CC</a>
-                      </div>
                   </div>
                 </div>
             </div>
