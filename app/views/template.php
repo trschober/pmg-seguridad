@@ -116,11 +116,6 @@
                           <li><a href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></li>
                       </ul>
                   </div>
-                  <div class="col-xs-3">
-                      <div class="politicas">
-                          <a href="#">Politicas de Privacidad</a> | <a href="">Visualizadores y Plugins</a> | <a href="#">CC</a>
-                      </div>
-                  </div>
                 </div>
             </div>
         </div>
