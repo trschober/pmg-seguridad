@@ -1,3 +1,7 @@
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
+
 <ol class="breadcrumb">
   <li><a href="/">Seguridad de la Información</a></li>
   <li class="active">Revisi&oacute;n Controles</li>
@@ -95,7 +99,7 @@
                 </td>
                 <td>
                     <?php
-                        $texto = Auth::user()->perfil==='ingreso' ? 'Cargar Evidencia' : 'Revisar';
+                        $texto = Auth::user()->perfil==='ingreso' ? 'Editar' : 'Revisar';
                         $actualizado = '<a href="#" class="ver"><span class="label label-success">'.$texto.'</span></a>';
                         $marca = '';
                         if(count($control->comentarios)==0){
@@ -144,7 +148,7 @@
             <div class="form-group cumpleform">
               <label for="archivo">Archivo</label>
               <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
-              <p class="help-block">Se pueden agregar varios archivos a la vez</p>
+              <p class="help-block">Se pueden agregar varios archivos a la vez. La cantidad máxima permitida es de 20 archivos por control</p>
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
@@ -160,6 +164,7 @@
               <label for="message-text" class="control-label datoscumplimiento">Descripción de los medios de verificación:</label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="des_medios_ver" name="des_medios_ver"></textarea>
             </div>
+            <input type="hidden" name="crud" id="crud">
             <input type="hidden" name="cumplimiento" id="cumplimiento">
             <input type="hidden" name="control_id" id="control_id">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
@@ -238,13 +243,13 @@
                     $("#control_id").val(cid);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
-                        $('h4.modal-title').text('Indique las causas del no cumplimiento');
+                        $('h4.modal-title').text('Indique las causas del no cumplimiento '+'Detalle control '+data.control.codigo);
                         $('.nocumpleform').show();
                         $('.cumpleform').hide();
                         $('.registrar').show();
                     }else{
                         $('#archivo').val('');
-                        $('h4.modal-title').text('Selección de archivos');
+                        $('h4.modal-title').text('Selección de archivos '+'Detalle control '+data.control.codigo);
                         $('.nocumpleform').hide();
                         $('.cumpleform').show();
                         $('#anio_implementacion').attr('disabled',false);
@@ -255,6 +260,7 @@
                         $('#registrar').show();
                     }
                     $('#registrar').attr('disabled', true);
+                    $("#crud").val(0);
                     $('#cumplimiento').val($('#cumple_'+cid).val());
                     $('#modalcomentario').modal('show');
                 }
@@ -297,8 +303,14 @@
     });
 
     $('.datoscumplimiento').on("change", function(){
-        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
-            $('#registrar').removeAttr('disabled');
+        if($('#crud').val()==0){
+            if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
+                $('#registrar').removeAttr('disabled');
+            }
+        }else{
+            if($('#anio_implementacion').val()!=null && $('#des_medios_ver').val()!=''){
+                $('#registrar').removeAttr('disabled');
+            }
         }
     });
 
@@ -311,10 +323,18 @@
     });
 
     $('#des_medios_ver').bind('input propertychange', function() {
-        if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
-            $('#registrar').removeAttr('disabled');
+        if($('#crud').val()==0){
+            if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
+                $('#registrar').removeAttr('disabled');
+            }else{
+                $('#registrar').attr('disabled', true);
+            }
         }else{
-            $('#registrar').attr('disabled', true);
+            if($('#anio_implementacion').val()!=null && $('#des_medios_ver').val()!=''){
+                $('#registrar').removeAttr('disabled');
+            }else{
+                $('#registrar').attr('disabled', true);
+            }
         }
     });
 
@@ -382,6 +402,7 @@
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
                     var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medio_verificacion;
                     $("#control_id").val(cid);
+                    $("#crud").val(1);
                     $('h4.modal-title').text('Detalle control '+data.control.codigo);
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
@@ -395,7 +416,7 @@
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" >(X)</a></div>';
+                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" ><span class="label label-danger">Eliminar</span></a></div>';
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);

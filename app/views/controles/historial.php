@@ -84,7 +84,7 @@
                 </td>
                 <td>
                     <?php
-                        $texto = Auth::user()->perfil==='ingreso' ? 'Cargar Evidencia' : 'Revisar';
+                        $texto = Auth::user()->perfil==='ingreso' ? 'Editar' : 'Revisar';
                         $actualizado = '<a href="#" class="ver"><span class="label label-success">'.$texto.'</span></a>';
                         $marca = '';
                         if(count($control->comentario_historial)==0){
