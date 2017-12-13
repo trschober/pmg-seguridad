@@ -288,7 +288,8 @@ class InstitucionController extends BaseController {
 					$institucion = Institucion::where('id',$objWorksheet->getCellByColumnAndRow(0,$fila)->getValue())->first();
 					if(!is_null($institucion)){
 						$institucion->codigo_indicador = $objWorksheet->getCellByColumnAndRow(3,$fila)->getValue();
-						$institucion->codigo_servicio = $objWorksheet->getCellByColumnAndRow(3,$fila)->getValue();
+						$institucion->sigla = $objWorksheet->getCellByColumnAndRow(4,$fila)->getValue();
+						$institucion->codigo_servicio = $objWorksheet->getCellByColumnAndRow(5,$fila)->getOldCalculatedValue();
 						$institucion->save();
 					}else{
 						echo $objWorksheet->getCellByColumnAndRow(1, $fila)->getValue()."---".$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue()."<br>";
