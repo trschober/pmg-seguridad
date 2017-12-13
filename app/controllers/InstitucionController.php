@@ -256,4 +256,51 @@ class InstitucionController extends BaseController {
 	public function getInformeCumplimiento(){
 		return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'.xls');
 	}
+
+	public function cargaPlanilla(){
+		$this->layout->title= "Carga de controles";
+        $this->layout->content = View::make('controles/cargar');
+	}
+	//Actualizacion de codigo indicador y codigo servicio para instituciones
+	public function uploadPlanilla(){
+		$file = array('excel' => Input::file('excel'));
+		$rules = array('excel' => 'required',);
+		$validator = Validator::make($file, $rules);
+		if ($validator->fails()) {
+			return Redirect::to('instituciones/carga')->withInput()->withErrors($validator);
+		}
+		else {
+			if (Input::file('excel')->isValid()) {
+				$destinationPath = 'uploads';
+				$extension = Input::file('excel')->getClientOriginalExtension();
+				$name = Input::file('excel')->getClientOriginalName();
+				$fileName = $name;
+				Input::file('excel')->move($destinationPath, $fileName);
+				//Cargar excel en tabla
+				$archivo = $destinationPath."/".$fileName;
+				$inputFileType = PHPExcel_IOFactory::identify($archivo);
+				$objReader= PHPExcel_IOFactory::createReader($inputFileType);
+				$objReader->setReadDataOnly(true);
+				$objPHPExcel=$objReader->load($archivo);
+				$objWorksheet = $objPHPExcel->getActiveSheet();
+				$rows = $objPHPExcel->getActiveSheet()->getHighestRow();
+				for($fila=0;$fila<=$rows;$fila++){
+					$institucion = Institucion::where('id',$objWorksheet->getCellByColumnAndRow(0,$fila)->getValue())->first();
+					if(!is_null($institucion)){
+						$institucion->codigo_indicador = $objWorksheet->getCellByColumnAndRow(3,$fila)->getValue();
+						$institucion->codigo_servicio = $objWorksheet->getCellByColumnAndRow(3,$fila)->getValue();
+						$institucion->save();
+					}else{
+						echo $objWorksheet->getCellByColumnAndRow(1, $fila)->getValue()."---".$objWorksheet->getCellByColumnAndRow(3, $fila)->getValue()."<br>";
+					}
+				}
+				Session::flash('success', 'Carga exitosa');
+				return Redirect::to('instituciones/carga');
+			}else {
+				Session::flash('error', 'Archivo invalido');
+				return Redirect::to('instituciones/carga');
+			}
+		}
+	}
+
 }
