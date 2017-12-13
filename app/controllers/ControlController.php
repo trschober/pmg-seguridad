@@ -46,7 +46,8 @@ class ControlController extends BaseController{
 			if($comentario===null){
 				return Response::json(array(
 					'success'=>true,
-				    'comentario'=>null
+				    'comentario'=>null,
+				    'control'=>$control
 				));
 			}else{
 				return Response::json(array(
@@ -71,19 +72,31 @@ class ControlController extends BaseController{
 		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
 		$comentario->institucion_id = Auth::user()->institucion_id;
 		$comentario->control_id = Input::get('control_id');
-		if(Input::hasFile('archivo') && $comentario->cumple=='si'){
+		if($comentario->cumple=='si'){
 			$comentario->observaciones_institucion = null;
 			$comentario->desc_medio_verificacion = Input::get('des_medios_ver');
-			foreach(Input::file('archivo') as $file){				
-				$archivo = new Archivo;
-				$archivo->institucion_id=Auth::user()->institucion_id;
-				$archivo->control_id=Input::get('control_id');
-				$archivo_nombre = $file->getClientOriginalName();
-				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.'-'.$archivo_nombre;
-				$archivo->filename=$archivo_nombre;
-				$file->move('uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
-				$archivo->save();
+			if(Input::hasFile('archivo')){
+				$cantidad_archivos = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->count();
+				if($cantidad_archivos>=20){
+					$archivos=0;
+				}else{
+					$archivos=0;
+					foreach(Input::file('archivo') as $file){
+						if($archivos==21)
+							break;
+						$archivo = new Archivo;
+						$archivo->institucion_id=Auth::user()->institucion_id;
+						$archivo->control_id=Input::get('control_id');
+						$archivo_nombre = $file->getClientOriginalName();
+						$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
+						$codigo_control = str_replace(".","",$control->codigo);
+						$archivo_nombre = Auth::user()->institucion->codigo_indicador.'_'.Auth::user()->institucion->codigo_servicio.'_'.$control->id.'_'.Auth::user()->institucion->sigla.'_'.$codigo_control.'_'.$archivo_nombre;
+						$archivo->filename=$archivo_nombre;
+						$file->move('uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
+						$archivo->save();
+						$archivos++;
+					}
+				}
 			}
 		}else{
 			$comentario->desc_medio_verificacion = NULL;
@@ -116,7 +129,8 @@ class ControlController extends BaseController{
 				$archivo->control_id=Input::get('control_id');
 				$archivo_nombre = $file->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				$archivo_nombre = Session::get('sesion_historial').'-'.Auth::user()->institucion_id.'-'.$control->id.'-'.$archivo_nombre;
+				$codigo_control = str_replace(".","",$control->codigo);
+				$archivo_nombre = Auth::user()->institucion->codigo_indicador.'_'.Auth::user()->institucion->codigo_servicio.'_'.$control->id.'_'.Auth::user()->institucion->sigla.'_'.$codigo_control.'_'.$archivo_nombre;
 				$archivo->filename=$archivo_nombre;
 				$archivo->historial_id = Session::get('historial_id');
 				$archivo->save();

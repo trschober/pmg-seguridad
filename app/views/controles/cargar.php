@@ -1,4 +1,4 @@
-<form action="<?=URL::to('controles/upload')?>" id="myform" method="POST" enctype="multipart/form-data">
+<form action="<?=URL::to('instituciones/upload')?>" id="myform" method="POST" enctype="multipart/form-data">
   <div class="form-group">
   	<label for="archivo">Archivo</label>
   	<input type="file" id="excel" name="excel"></input>

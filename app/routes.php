@@ -50,6 +50,8 @@ Route::group(["before" => "auth"], function() {
 	Route::get('institucion/informe-cierre', 'InstitucionController@getReporteCierre');
 	Route::get('institucion/reporte', 'InstitucionController@reporteCierre');
 	Route::get('institucion/informe-cumplimiento', 'InstitucionController@getInformeCumplimiento');
+	//Route::get('instituciones/carga', 'InstitucionController@cargaPlanilla');
+	//Route::post('instituciones/upload', 'InstitucionController@uploadPlanilla');
 
 	//Riesgos
 	Route::get('riesgos','RiesgoController@index');
