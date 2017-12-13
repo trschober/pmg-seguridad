@@ -16,6 +16,7 @@ class UpdateInstituciones12122017 extends Migration {
 		{
 		    $table->integer('codigo_indicador')->after('observaciones_red')->nullable();
 		    $table->integer('codigo_servicio')->after('codigo_indicador')->nullable();
+		    $table->string('sigla')->after('codigo_servicio')->nullable();
 		});
 	}
 
@@ -28,6 +29,7 @@ class UpdateInstituciones12122017 extends Migration {
 	{
 		$table->dropColumn('codigo_indicador');
 		$table->dropColumn('codigo_servicio');
+		$table->dropColumn('sigla');
 	}
 
 }
