@@ -129,6 +129,7 @@ class ControlController extends BaseController{
 				$archivo->control_id=Input::get('control_id');
 				$archivo_nombre = $file->getClientOriginalName();
 				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
+				$codigo_control = str_replace(".","",$control->codigo);
 				$archivo_nombre = Auth::user()->institucion->codigo_indicador.'_'.Auth::user()->institucion->codigo_servicio.'_'.$control->id.'_'.Auth::user()->institucion->sigla.'_'.$codigo_control.'_'.$archivo_nombre;
 				$archivo->filename=$archivo_nombre;
 				$archivo->historial_id = Session::get('historial_id');
