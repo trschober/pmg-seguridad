@@ -140,7 +140,7 @@ class InstitucionController extends BaseController {
 	    $fpdf->Cell(0,10,utf8_decode("Evaluación Indicador SSI 2017"),0,0,'C');
 	    $fpdf->SetFont('Arial','',12);
 	   	$fpdf->SetXY(10, 70);
-	    $fpdf->Cell(0,10,utf8_decode("Con fecha ".date("d-m-Y").", el Servicio ".Auth::user()->institucion->servicio),0,0,'L');
+	    $fpdf->Cell(0,10,utf8_decode("Con fecha ".date("d-m-Y H:i").", el Servicio ".Auth::user()->institucion->servicio),0,0,'L');
 	   	$fpdf->SetXY(10, 75);
 	    $fpdf->Cell(0,10,utf8_decode("ha informado a la presente Red de Expertos, a través de la Plataforma dispuesta por SEGPRES"),0,0,'L');
 	    $fpdf->SetXY(10, 80);

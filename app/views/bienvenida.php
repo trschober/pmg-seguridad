@@ -152,7 +152,7 @@ $('#validar').click(function() {
 });
 
 $('#cerrar').click(function() {
-	if(confirm('¿Está seguro de cerrar el proceso e informar a la Red?')){
+	if(confirm('¿Está seguro de aprobar y cerrar el proceso, e informar a la Red de Expertos?')){
 		showPleaseWait();
 		$('#rechazar').attr('disabled',true);
 		$(this).attr('disabled',true);
