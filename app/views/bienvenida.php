@@ -168,7 +168,7 @@ $('#clock').countdown(fechaTermino, function(event) {
     + '<span>%d</span> día(s) '
     + '<span>%H</span> horas '
     + '<span>%M</span> minutos '
-    + 'para cerrar el hito de avance</strong>'));
+    + 'para cerrar la Evaluación 2017</strong>'));
 });
 
 </script>
