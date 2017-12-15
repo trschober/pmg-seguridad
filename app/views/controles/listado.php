@@ -18,6 +18,7 @@
                 <ul>
                     <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2017, y registros de operación en el año 2017).</li>
                     <li>Agregar descripción de los medios de verificación, es decir detalle de los documentos adjuntos, y cómo éstos dan cuenta de la implementación del control.</li>
+                    <li>Indicar el primer  año de implementación del control  ("2015 o años anteriores", "2016" o  "2017"). Considerar el primer año en que el control fue documentado, y contó con registros de operación.</li>
                 </ul>
             </p>
             <p>En el caso de escoger la opción No, el Servicio deberá:
