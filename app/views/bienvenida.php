@@ -59,7 +59,7 @@
 				?>
 				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap" id="rechazar" name="rechazar">Rechazar</button>
 				<br><br>
-				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" id="cerrar" name="cerrar">Aprobar y cerrar Proceso</a>
+				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" id="cerrar" name="cerrar">Aprobar y enviar a la Red de Expertos</a>
 				<?php endif;?>
 			</div>
 		</div>
@@ -72,12 +72,6 @@
 				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Certificado Red de Expertos SSI</a><br/><br/>
 				<a href="<?=URL::to('institucion/informe-cumplimiento')?>" class="btn btn-success">Informe de cumplimiento</a><br/><br/>
 				<?php endif;?>
-				<?php
-					if(file_exists('uploads/reportes/reporte-red-'.Auth::user()->institucion_id.'.xls')):
-				?>
-					<a href="<?=URL::to('retroalimentacion/resultado')?>" class="btn btn-success">Reporte red de expertos</a>
-				<?php endif;?>
-				
 			</div>
 		</div>
 		<?php endif ?>
