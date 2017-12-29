@@ -99,6 +99,7 @@ class ControlController extends BaseController{
 				}
 			}
 		}else{
+			$comentario->anio_implementacion = '-';
 			$comentario->desc_medio_verificacion = NULL;
 			$files = Archivo::where('institucion_id',Auth::user()->institucion_id)->where('control_id',Input::get('control_id'))->get();
 			foreach ($files as $file) {
@@ -136,6 +137,7 @@ class ControlController extends BaseController{
 				$archivo->save();
 			}
 		}else{
+			$comentario_historial->anio_implementacion = '-';
 			$comentario_historial->desc_medio_verificacion = NULL;
 			$files = ArchivoHistorial::where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('control_id',Input::get('control_id'))->get();
 			foreach ($files as $file) {

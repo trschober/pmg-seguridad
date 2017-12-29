@@ -224,7 +224,7 @@ class InstitucionController extends BaseController {
 				$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->codigo);
 				$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->nombre);
 				$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->comentarios[0]->cumple);
-				$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->anio_implementacion);
+				$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->cumple=='si' ? $control->comentarios[0]->anio_implementacion : '-');
 				$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->desc_medio_verificacion);
 				$archivos = Archivo::where('institucion_id',Auth::user()->institucion->id)->where('control_id',$control->id)->get();
 				$listado_archivos = "";
@@ -304,4 +304,90 @@ class InstitucionController extends BaseController {
 		}
 	}
 
+	public function informeCumplimientoRed($valor_institucion = 0){
+		if(Auth::user()->perfil=='experto'){
+			$denominador = \Helpers::getDenominador();
+	        $controles = Control::with(array('comentarios' => function($query) use($valor_institucion){
+					    $query->where('institucion_id',$valor_institucion);
+			}))->get();
+			$numerador=0;
+			foreach ($controles as $control) {
+				if(count($control->comentarios)>0){
+	                if($control->comentarios[0]->cumple=='si'){
+	                	$files = Archivo::where('institucion_id',$valor_institucion)->where('control_id',$control->id)->count();
+	                	if($files>0)
+	                		$numerador++;
+	                }
+	            }
+			}
+			$porcentaje = round(($numerador * 100) / $denominador,2) .'%';
+			$objPHPExcel = new PHPExcel();
+			
+			/* Hoja1: Resumen servicio */	
+			$objPHPExcel->setActiveSheetIndex(0)
+				            ->setCellValue('A4', 'Numerador')
+				            ->setCellValue('A5', 'Denominador')
+				            ->setCellValue('A6', 'Porcentaje');
+			
+			$objPHPExcel->getActiveSheet()->setCellValue("A1",Auth::user()->institucion->ministerio);
+			$objPHPExcel->getActiveSheet()->setCellValue("A2",Auth::user()->institucion->servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("B4","N° de controles de seguridad de la Norma NCh-ISO 27001 implementados al año t");
+			$objPHPExcel->getActiveSheet()->setCellValue("B5","N° de controles  establecidos en la Norma NCh-ISO 27001");
+	        $objPHPExcel->getActiveSheet()->setCellValue("C4",$numerador);
+			$objPHPExcel->getActiveSheet()->setCellValue("C5",$denominador);
+			$objPHPExcel->getActiveSheet()->setCellValue("C6",$porcentaje);
+			$objPHPExcel->getActiveSheet()->setTitle("Resumen");
+			$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
+			$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
+			/* Fin hoja1 */
+
+			/* Hoja2: Listado de controles */
+			$objPHPExcel->createSheet();
+			$objPHPExcel->setActiveSheetIndex(1)
+			            ->setCellValue('A1', 'Código')
+			            ->setCellValue('B1', 'Nombre')
+			            ->setCellValue('C1', 'Implementado')
+			            ->setCellValue('D1', 'Año primera implementación')
+			            ->setCellValue('E1', 'Descripción de medios de Verificación')
+			            ->setCellValue('F1', 'Lista Medios de Verificación')
+			            ->setCellValue('G1', 'Justificación no implementación');
+			$rowNumber = 2;
+			$controles = Control::with(array('comentarios' => function($query){
+					    $query->where('institucion_id',Auth::user()->institucion->id);
+				}))->get();
+
+			foreach ($controles as $control){
+				if(count($control->comentarios)>0){
+					$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$control->codigo);
+					$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$control->nombre);
+					$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$control->comentarios[0]->cumple);
+					$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$control->comentarios[0]->cumple=='si' ? $control->comentarios[0]->anio_implementacion : '-');
+					$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$control->comentarios[0]->desc_medio_verificacion);
+					$archivos = Archivo::where('institucion_id',Auth::user()->institucion->id)->where('control_id',$control->id)->get();
+					$listado_archivos = "";
+					foreach($archivos as $archivo){
+						$listado_archivos .= $archivo->filename."\n";
+					}
+					$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$listado_archivos);
+					$objPHPExcel->getActiveSheet()->getStyle("F".$rowNumber)->getAlignment()->setWrapText(true);
+					$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$control->comentarios[0]->observaciones_institucion);
+					$rowNumber++;
+				}
+			}
+			$objPHPExcel->getActiveSheet()->setTitle("Controles");
+			$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
+			$objPHPExcel->getActiveSheet()->getProtection()->setPassword('ebb7e6669f5f547adb0b0b5dd349d524686276f3');
+			/* Fin hoja2 */
+
+			/* Guardar excel en disco */
+			$nombre_archivo = 'uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion->id.'.xls';
+			if(!is_dir("uploads/cierre"))
+				mkdir("uploads/cierre");
+		    
+			$objPHPExcel->setActiveSheetIndex(0);
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save($nombre_archivo);
+			return $nombre_archivo;
+		}
+	}
 }

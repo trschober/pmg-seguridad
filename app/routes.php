@@ -52,6 +52,7 @@ Route::group(["before" => "auth"], function() {
 	Route::get('institucion/informe-cumplimiento', 'InstitucionController@getInformeCumplimiento');
 	//Route::get('instituciones/carga', 'InstitucionController@cargaPlanilla');
 	//Route::post('instituciones/upload', 'InstitucionController@uploadPlanilla');
+	Route::get('institucion/cumplimiento-red/{institucion_id}', 'InstitucionController@informeCumplimientoRed');
 
 	//Riesgos
 	Route::get('riesgos','RiesgoController@index');
