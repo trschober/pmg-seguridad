@@ -20,11 +20,17 @@
 
 <div class="row">
     <div class="text-right">
+        <a class='btn btn-success' href="<?=URL::to('gestion/certificados/exportar')?>">Exportar Certificados Red de Expertos SSI</a>
+        <a class='btn btn-success' href="<?=URL::to('gestion/cumplimientos/exportar')?>">Exportar Informes de cumplimiento</a>
+        <?php if(Auth::user()->perfil=='experto'): ?>
         <a class='btn btn-success' href="<?=URL::to('gestion/informes/exportar')?>">Exportar informes red de expertos</a>
         <a class='btn btn-success' href="<?=URL::to('gestion/detalle/exportar')?>">Exportar Detalle</a>
         <a class='btn btn-success' href="<?=URL::to('gestion/instituciones/exportar')?>">Exportar</a>
+        <?php endif ?>
     </div>
 </div>
+
+<?php $habilitacion_perfil = Auth::user()->perfil=='evaluador' ? 'disabled' : ''; ?>
 
 <table id="instituciones" class="table table-striped table-hover table-condensed">
     <thead>
@@ -36,7 +42,9 @@
             <th>Porcentaje actualizados</th>
             <th>Implementado</th>
             <th>No Implementado</th>
+            <?php if(Auth::user()->perfil=='experto'): ?>
             <th>Análisis de riesgo</th>
+            <?php endif ?>
         </tr>
     </thead>
     <tbody>
@@ -48,7 +56,7 @@
             <div class="cid">
                 <input type="hidden" name="cidv" value="<?=$institucion->id ?>">
             </div>
-            <select class="form-control cumple" name="cumple_<?=$institucion->id?>" id="cumple_<?=$institucion->id?>">
+            <select class="form-control cumple" name="cumple_<?=$institucion->id?>" id="cumple_<?=$institucion->id?>" <?=$habilitacion_perfil?> >
                 <option value="" disabled selected>Seleccione estado</option>
                 <option value="ingresado" <?=$institucion->estado==='ingresado' ? 'selected' : '' ?>>Ingresado</option>
                 <option value="enviado" <?=$institucion->estado==='enviado' ? 'selected' : '' ?>>Enviado</option>
@@ -60,7 +68,9 @@
             <td><?= number_format(($institucion->cumple*100)/$total_controles,1, '.','') ?>%</td>
             <td><?=$institucion->implementado ?></td>
             <td><?=$institucion->no_implementado ?></td>
+            <?php if(Auth::user()->perfil=='experto'): ?>
             <td><?=$institucion->cantidad_archivos_riesgo==0? 'No' : 'Si' ?></td>
+            <?php endif ?>
         </tr>
     	<?php endforeach ?>
     </tbody>

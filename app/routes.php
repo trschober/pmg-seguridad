@@ -72,6 +72,8 @@ Route::group(["before" => "auth"], function() {
 	Route::get('gestion/usuarios/eliminar/{usuario_id?}','GestionController@deleteUsuario');
 	Route::get('gestion/detalle/exportar','GestionController@detalleInstitucionesExportar');
 	Route::get('gestion/informes/exportar','GestionController@exportarInformes');
+	Route::get('gestion/certificados/exportar','GestionController@exportarCertificados');
+	Route::get('gestion/cumplimientos/exportar','GestionController@exportarCumplimientos');
 
 	//Documentos
 	Route::get('documentos','DocumentoController@index');

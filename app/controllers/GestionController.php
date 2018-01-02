@@ -216,4 +216,34 @@ class GestionController extends BaseController {
 		$result = \Helpers::create_zip($archivos,'uploads/reportes/informes.zip');
 		return Response::download('uploads/reportes/informes.zip');
 	}
+
+	public function exportarCertificados(){
+		if(file_exists('uploads/cierre/certificados.zip')){
+			unlink('uploads/cierre/certificados.zip');
+		}
+		$instituciones = Institucion::all();
+		$archivos = array();
+		foreach ($instituciones as $ins) {
+			if(file_exists('uploads/cierre/certificado-cierre-'.$ins->id.'.pdf')){
+				array_push($archivos,'uploads/cierre/certificado-cierre-'.$ins->id.'.pdf');
+			}
+		}
+		$result = \Helpers::create_zip($archivos,'uploads/reportes/certificados.zip');
+		return Response::download('uploads/reportes/certificados.zip');
+	}
+
+	public function exportarCumplimientos(){
+		if(file_exists('uploads/reportes/cumplimientos.zip')){
+			unlink('uploads/reportes/cumplimientos.zip');
+		}
+		$instituciones = Institucion::all();
+		$archivos = array();
+		foreach ($instituciones as $ins) {
+			if(file_exists('uploads/cierre/informe-cumplimiento-'.$ins->id.'.xls')){
+				array_push($archivos,'uploads/cierre/informe-cumplimiento-'.$ins->id.'.xls');
+			}
+		}
+		$result = \Helpers::create_zip($archivos,'uploads/reportes/cumplimientos.zip');
+		return Response::download('uploads/reportes/cumplimientos.zip');
+	}
 }
