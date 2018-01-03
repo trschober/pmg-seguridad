@@ -151,11 +151,13 @@ class GestionController extends BaseController {
 			->select(DB::raw('  instituciones.id as institucion_id,
 								instituciones.ministerio as ministerio,
 								instituciones.servicio as servicio,
+								instituciones.codigo_indicador as codigo_indicador,
+								instituciones.codigo_servicio as codigo_servicio,
 	        						  controles.id as control_id,
 	        						  controles.codigo as control_codigo,
 	        						  controles.nombre as control_nombre,
 	        						  comentarios.cumple as cumple,
-	        						  comentarios.anio_implementacion as anio_implementacion,
+	        						  comentarios.desc_medio_verificacion as desc_medio_verificacion,
 	        						  comentarios.observaciones_institucion as observaciones_institucion'))
             ->join('instituciones','instituciones.id','=','comentarios.institucion_id')
             ->join('controles','controles.id','=','comentarios.control_id')
@@ -166,21 +168,32 @@ class GestionController extends BaseController {
 		$objPHPExcel->setActiveSheetIndex(0)
 						->setCellValue('A1', 'Ministerio')
 			            ->setCellValue('B1', 'Servicio')
-			            ->setCellValue('C1', 'Control ID')
-			            ->setCellValue('D1', 'Control Código')
-			            ->setCellValue('E1', 'Control')
-			            ->setCellValue('F1', 'Implementado')
-			            ->setCellValue('G1', 'Año Implementación')
-			            ->setCellValue('H1', 'Justificación');
+			            ->setCellValue('C1', 'Código indicador')
+			            ->setCellValue('D1', 'id_servicio')
+			            ->setCellValue('E1', 'control_seguridad_informacion_tbid')
+			            ->setCellValue('F1', 'Control')
+			            ->setCellValue('G1', 'Control Descripción')
+			            ->setCellValue('H1', 'Implementado al 2017')
+			            ->setCellValue('I1', 'Razones control no implementado')
+			            ->setCellValue('J1', 'Nombre Medios de Verificación')
+			            ->setCellValue('K1', 'Descripción Medios de Verificación');
 		foreach ($listado as $reg){
 			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$reg->ministerio);
 			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$reg->servicio);
-			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->control_id);
-			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->control_codigo);
-			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->control_nombre);
-			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->cumple);
-			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$reg->anio_implementacion);
-			$objPHPExcel->getActiveSheet()->setCellValue("H".$rowNumber,$reg->observaciones_institucion);
+			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->codigo_indicador);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->codigo_servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->control_id);
+			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->control_codigo);
+			$objPHPExcel->getActiveSheet()->setCellValue("G".$rowNumber,$reg->control_nombre);
+			$objPHPExcel->getActiveSheet()->setCellValue("H".$rowNumber,$reg->cumple);
+			$objPHPExcel->getActiveSheet()->setCellValue("I".$rowNumber,$reg->observaciones_institucion);
+			$archivos = Archivo::where('institucion_id',$reg->institucion_id)->where('control_id',$reg->control_id)->get();
+			$listado_archivos = "";
+			foreach($archivos as $archivo){
+				$listado_archivos .= $archivo->filename."\n";
+			}
+			$objPHPExcel->getActiveSheet()->setCellValue("J".$rowNumber,$listado_archivos);
+			$objPHPExcel->getActiveSheet()->setCellValue("K".$rowNumber,$reg->desc_medio_verificacion);
 			$rowNumber++;
 		}
 		$objPHPExcel->setActiveSheetIndex(0);
