@@ -74,6 +74,7 @@ Route::group(["before" => "auth"], function() {
 	Route::get('gestion/informes/exportar','GestionController@exportarInformes');
 	Route::get('gestion/certificados/exportar','GestionController@exportarCertificados');
 	Route::get('gestion/cumplimientos/exportar','GestionController@exportarCumplimientos');
+	Route::get('gestion/archivos/corregir/{institucion_id?}','GestionController@fixFiles');
 
 	//Documentos
 	Route::get('documentos','DocumentoController@index');
