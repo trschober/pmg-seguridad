@@ -265,10 +265,20 @@ class GestionController extends BaseController {
 			$institucion = Institucion::find($institucion_id);
 			$archivos = Archivo::where('institucion_id',$institucion_id)->whereNull('deleted_at')->get();
 			foreach($archivos as $archivo){
-				$archivo->filename_old = $archivo->filename;
+				$filename_old = $archivo->filename;
 				$pos = strpos($archivo->filename, "_A");
 				$nombre_archivo_original = substr($archivo->filename,$pos,500);
-				$control = Control::find($archivo->control_id);
+				$nombre_archivo_nuevo = $institucion->codigo_indicador.'_'.$institucion->codigo_servicio.'_'.$archivo->control_id.'_'.$institucion->sigla.$nombre_archivo_original;
+				$archivo->filename = $nombre_archivo_nuevo;
+				$archivo->save();
+				if(file_exists('uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$filename_old))
+					rename('uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$filename_old,'uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+			}
+			$archivos = ArchivoHistorial::where('institucion_id',$institucion_id)->where('historial_id',2)->get();
+			foreach($archivos as $archivo){
+				$filename_old = $archivo->filename;
+				$pos = strpos($archivo->filename, "_A");
+				$nombre_archivo_original = substr($archivo->filename,$pos,500);
 				$nombre_archivo_nuevo = $institucion->codigo_indicador.'_'.$institucion->codigo_servicio.'_'.$archivo->control_id.'_'.$institucion->sigla.$nombre_archivo_original;
 				$archivo->filename = $nombre_archivo_nuevo;
 				$archivo->save();
