@@ -272,7 +272,7 @@ class GestionController extends BaseController {
 				$archivo->filename = $nombre_archivo_nuevo;
 				$archivo->save();
 				if(file_exists('uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$filename_old))
-					rename('uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$filename_old,'uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
+					copy('uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$filename_old,'uploads/controles/'.$institucion_id.'/'.$archivo->control_id.'/'.$archivo->filename);
 			}
 			$archivos = ArchivoHistorial::where('institucion_id',$institucion_id)->where('historial_id',2)->get();
 			foreach($archivos as $archivo){
@@ -283,6 +283,7 @@ class GestionController extends BaseController {
 				$archivo->filename = $nombre_archivo_nuevo;
 				$archivo->save();
 			}
+			return 'ok';
 		}else{
 			return Redirect::to('bienvenida');
 		}
