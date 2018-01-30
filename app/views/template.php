@@ -70,7 +70,7 @@
                     <?php if(Auth::user()->perfil!='evaluador'): ?>
                     <li><a href="<?=URL::to('historial')?>">Cambiar Proceso</a></li>
                     <?php endif; ?>
-                    <li><a href="<?=URL::to('logout')?>">Cerrar sesión</a></li>
+                    <li><a id="btn_logout" href="#">Cerrar sesión</a></li>
                 </ul>
             </li>
             <?php endif?>
@@ -122,6 +122,16 @@
             </div>
         </div>
     </footer>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#btn_logout').click(function (){
+                $.ajax({ url: 'https://api.claveunica.gob.cl/api/v1/accounts/app/logout', dataType: 'script' }) .always(function() {
+                    window.location.href = '/logout';
+                });
+            });
+        });
+    </script>
 
 
     
