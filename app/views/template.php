@@ -101,7 +101,7 @@
             <div class="container">
                 <div class="row">
                   <div class="col-xs-2">
-                      <a class="main-logo" href="http://www.minsegpres.gob.cl" target="_blank"><img src="<?=asset('img/logo.png')?>" alt="Ministerio Secretaría General de la Presidencia"></a>
+                      <a class="main-logo" href="http://digital.gob.cl" target="_blank"><img src="<?=asset('img/logo.png')?>" alt="Ministerio Secretaría General de la Presidencia"></a>
                   </div>
                   <div class="col-xs-2">
                       <a class="main-logo" href="http://www.interior.gob.cl" target="_blank"><img src="<?=asset('img/logo-interior.png')?>" alt="Ministerio del Interior y Seguridad Pública"></a>
