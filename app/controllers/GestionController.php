@@ -348,4 +348,44 @@ class GestionController extends BaseController {
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 	}
+
+	public function exportarUsuarios(){
+		$objPHPExcel = new PHPExcel();
+		$usuarios = Usuario::all();
+        $rowNumber = 2;
+		$objPHPExcel->setActiveSheetIndex(0)
+						->setCellValue('A1', 'Rut')
+			            ->setCellValue('B1', 'Nombres')
+			            ->setCellValue('C1', 'Apellidos')
+			            ->setCellValue('D1', 'Correo')
+			            ->setCellValue('E1', 'Institucion')
+			            ->setCellValue('F1', 'Perfil');
+		foreach ($usuarios as $reg){
+			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$reg->rut);
+			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$reg->nombres);
+			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->apellidos);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->correo);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->institucion->servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("F".$rowNumber,$reg->perfil);
+			$listado_archivos = "";
+			$rowNumber++;
+		}
+		$objPHPExcel->setActiveSheetIndex(0);
+		// Redirect output to a client’s web browser (Excel5)
+		$hoy = date("Y-m-d H:i:s");
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="usuarios-ssi-'.date("d-m-Y",strtotime($hoy)).'.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+
+		// If you're serving to IE over SSL, then the following may be needed
+		//header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+	}
 }

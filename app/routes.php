@@ -78,6 +78,7 @@ Route::group(["before" => "auth"], function() {
 	Route::get('gestion/instituciones/editar','GestionController@getInstitucion');
 	Route::post('gestion/instituciones/grabar','GestionController@editInstitucion');
 	Route::get('gestion/codigos/exportar','GestionController@codigosServiciosExportar');
+	Route::get('gestion/usuarios/exportar','GestionController@exportarUsuarios');
 
 	//Documentos
 	Route::get('documentos','DocumentoController@index');

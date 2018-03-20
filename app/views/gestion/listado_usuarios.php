@@ -23,6 +23,7 @@
         </select>
         <input type="submit" value="Actualizar" class="btn btn-success" />
         <a href="<?=URL::to('gestion/usuarios/editar')?>" class="btn btn-info" value="Nuevo" id="nuevo" name="nuevo">Nuevo</a>
+        <a href="<?=URL::to('gestion/usuarios/exportar')?>" class="btn btn-success" value="Nuevo" id="nuevo" name="nuevo">Exportar</a>
         </form>
     </div>
 <?php endif ?>
