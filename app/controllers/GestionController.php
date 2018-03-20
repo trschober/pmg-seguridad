@@ -288,4 +288,64 @@ class GestionController extends BaseController {
 			return Redirect::to('bienvenida');
 		}
 	}
+
+	public function getInstitucion(){
+		if(Auth::user()->perfil==='experto'){
+			$institucion = Institucion::find(Input::get('institucion_id'));
+			return Response::json(['success' => true, 'institucion' => $institucion]);
+		}
+		return Response::json(['success' => false]);
+	}
+
+	public function editInstitucion(){
+		if(Auth::user()->perfil==='experto'){
+			$institucion = Institucion::find(Input::get('institucion_id'));
+			if($institucion!=null){
+				$institucion->codigo_indicador 	= Input::get('indicador');
+				$institucion->codigo_servicio 	= Input::get('servicio');
+				$institucion->sigla 			= Input::get('sigla');
+				$institucion->save();
+				return Response::json(['success' => true]);
+			}
+		}
+		return Response::json(['success' => false]);
+	}
+
+	public function codigosServiciosExportar(){
+		$objPHPExcel = new PHPExcel();
+		$instituciones = DB::table('instituciones')->get();
+        $rowNumber = 2;
+		$objPHPExcel->setActiveSheetIndex(0)
+						->setCellValue('A1', 'Ministerio')
+			            ->setCellValue('B1', 'Servicio')
+			            ->setCellValue('C1', 'Código Indicador')
+			            ->setCellValue('D1', 'Código Servicio')
+			            ->setCellValue('E1', 'Sigla');
+		foreach ($instituciones as $reg){
+			$objPHPExcel->getActiveSheet()->setCellValue("A".$rowNumber,$reg->ministerio);
+			$objPHPExcel->getActiveSheet()->setCellValue("B".$rowNumber,$reg->servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("C".$rowNumber,$reg->codigo_indicador);
+			$objPHPExcel->getActiveSheet()->setCellValue("D".$rowNumber,$reg->codigo_servicio);
+			$objPHPExcel->getActiveSheet()->setCellValue("E".$rowNumber,$reg->sigla);
+			$listado_archivos = "";
+			$rowNumber++;
+		}
+		$objPHPExcel->setActiveSheetIndex(0);
+		// Redirect output to a client’s web browser (Excel5)
+		$hoy = date("Y-m-d H:i:s");
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="instituciones-codigos-'.date("d-m-Y",strtotime($hoy)).'.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+
+		// If you're serving to IE over SSL, then the following may be needed
+		//header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+	}
 }

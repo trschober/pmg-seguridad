@@ -30,6 +30,12 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="text-right">
+        <a class='btn btn-success' href="<?=URL::to('gestion/codigos/exportar')?>">Exportar Códigos y Servicios</a>
+    </div>
+</div>
+
 <?php $habilitacion_perfil = Auth::user()->perfil=='evaluador' ? 'disabled' : ''; ?>
 
 <table id="instituciones" class="table table-striped table-hover table-condensed">
@@ -44,6 +50,7 @@
             <th>No Implementado</th>
             <?php if(Auth::user()->perfil=='experto'): ?>
             <th>Análisis de riesgo</th>
+            <th>Acciones</th>
             <?php endif ?>
         </tr>
     </thead>
@@ -70,11 +77,47 @@
             <td><?=$institucion->no_implementado ?></td>
             <?php if(Auth::user()->perfil=='experto'): ?>
             <td><?=$institucion->cantidad_archivos_riesgo==0? 'No' : 'Si' ?></td>
+            <td><a href="javascript:;" onclick="editar_institucion(<?=$institucion->id?>)"><span class="label label-info">Editar</span></a></td>
             <?php endif ?>
         </tr>
     	<?php endforeach ?>
     </tbody>
 </table>
+
+<!-- Modal instituciones -->
+<div class="modal fade" id="modalcomentario" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modalcomentario"></h4>
+        </div>
+        <span id="thanks"></span>
+        <div class="modal-body">
+          <form action="<?=URL::to('gestion/instituciones/grabar')?>" id="myform" name="myForm" method="POST" enctype="multipart/form-data" >
+            <div class="form-group nocumpleform">
+              <label for="message-text" class="control-label">Código Indicador</label>
+              <input type="text" name="indicador" id="indicador" class="form-control codigos" />
+            </div>
+            <div id="links" class="form-group cumpleform"></div>
+            <div class="form-group cumpleform">
+               <label for="anio_implementacion">Código Servicio</label>
+               <input type="text" name="servicio" id="servicio" class="form-control datepicker codigos" />
+            </div>
+            <div class="form-group cumpleform">
+               <label for="anio_implementacion">Sigla</label>
+               <input type="text" name="sigla" id="sigla" class="form-control datepicker codigos" />
+            </div>
+            <input type="hidden" name="institucion_id" id="institucion_id">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Guardar</button>
+        </div>
+      </div>
+    </div>
+</div>
 
 <!-- Modal loading -->
 <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -105,6 +148,24 @@
         hidePleaseWait = function () {
             pleaseWait.modal('hide');
         };
+
+        var options = { 
+            beforeSubmit:  showPleaseWait,
+            success: hidePleaseWait,
+            dataType: 'json'
+        }; 
+
+        $(".codigos").keyup(function(){
+            if($('#indicador').val().length !=0 && $('#servicio').val().length !=0 && $('#sigla').val().length !=0){
+                $('#registrar').removeAttr('disabled');
+            }else{
+                $('#registrar').attr('disabled', true);
+            }
+        });
+
+        $('body').delegate('#registrar','click', function(){
+            $('#myform').ajaxForm(options).submit();
+        });
     });
 	
 	$('.cumple').change(function(){
@@ -130,5 +191,28 @@
         });
     });
 
+    function editar_institucion(institucion_id){
+        $.ajax({
+            type: 'GET',
+            url:  "<?=URL::to('gestion/instituciones/editar')?>",
+            data: 'institucion_id='+institucion_id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success:function(data){
+                if(data.success==true){
+                    $('h4.modal-title').text(data.institucion.servicio);
+                    $('#indicador').val(data.institucion.codigo_indicador);
+                    $('#servicio').val(data.institucion.codigo_servicio);
+                    $('#sigla').val(data.institucion.sigla);
+                    $('#registrar').removeAttr('disabled');
+                    $('#institucion_id').val(data.institucion.id);
+                    $('#modalcomentario').modal('show');
+                }
+            },
+            error:function(errors){
+                console.log('errors'+errors);
+            }
+        });
+    }
 
 </script>
