@@ -9,13 +9,13 @@ class HistorialController extends BaseController {
 			return Redirect::to('controles');
 		}
 			
-		$data['historial_ejercicios'] = HistorialEjercicio::all();
+		$data['historial_ejercicios'] = HistorialEjercicio::orderBy('id','DESC')->get();
 		$this->layout->title= "Historial de ejercicios";
     	$this->layout->content = View::make('historial_ejercicios/inicio',$data);
 	}
 
-	public function elegirEjercicio(){
-		$historial = HistorialEjercicio::find(Input::get('historial'));
+	public function elegirEjercicio($historial_id = null){
+		$historial = HistorialEjercicio::find($historial_id);
 		Session::put('historial_id',$historial->id);
 		Session::put('sesion_historial',strtoupper($historial->anio.'-'.$historial->tipo));
 		if($historial->activo)

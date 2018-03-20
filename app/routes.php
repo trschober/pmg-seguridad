@@ -32,7 +32,7 @@ Route::group(["before" => "auth"], function() {
 
 	//Historial
 	Route::get('historial', 'HistorialController@index');
-	Route::post('historial', 'HistorialController@elegirEjercicio');
+	Route::get('ejercicio/{historial_id}', 'HistorialController@elegirEjercicio');
 	
 	//Controles
 	Route::get('controles', 'ControlController@getIndex');

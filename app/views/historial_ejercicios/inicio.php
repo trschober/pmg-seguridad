@@ -3,13 +3,22 @@
   <li class="active">Historial de ejercicios</li>
 </ol>
 
-<form action="<?=URL::to('historial')?>" id="myform" method="POST" enctype="multipart/form-data">
-    <label for="institucion">Seleccione el periodo con el que desea trabajar:</label>
-    <select id="historial" name="historial">
-        <option value="" disabled selected>Seleccione opción</option>
-        <?php foreach($historial_ejercicios as $h): ?>
-           <option value="<?=$h->id?>" <?=$h->activo ? 'selected' : '' ?>> <?=$h->anio.'-'.strtoupper($h->tipo)?> <?= $h->activo? '(Activo)' : '' ?></option>
-        <?php endforeach ?>
-    </select>
-    <input type="submit" value="Ir" class="btn btn-success" />
-</form>
+<h3>Seleccione el periodo con el que desea trabajar</h3>
+<table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <td>Año</td>
+        <td>Tipo</td>
+        <td>Acción</td>
+      </tr>
+    </thead>
+    <tbody>
+    <?php foreach($historial_ejercicios as $h): ?>
+        <tr <?= $h->activo? 'class="success"' : '' ?> >
+          <td><?=$h->anio?></td>
+          <td><?=strtoupper($h->tipo)?> <?= $h->activo? '<strong>(Activo)</strong>' : '' ?></td>
+          <td><a href="<?=URL::to('ejercicio')."/".$h->id?>">Revisar</a></td>
+        </tr>
+    <?php endforeach ?>
+    </tbody>
+</table>

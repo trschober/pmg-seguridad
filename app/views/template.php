@@ -40,14 +40,12 @@
         <?php endif ?>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <?php if(Auth::check()):?>
+        <?php if(Auth::check() && Session::has('activo')):?>
         <ul class="nav navbar-nav" id="menu-superior">
             <li><a href="<?=URL::to('documentos')?>">Documentos</a></li>
             <li><a href="<?=URL::to('controles')?>">Controles</a></li>
-            <?php if(!Session::has('activo')): ?>
             <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
             <li><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
-            <?php endif; ?>
         </ul>
         <?php endif?>
 
@@ -56,16 +54,18 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true"><?=Auth::user()->nombres." ".Auth::user()->apellidos.'('.Auth::user()->perfil.')'?><span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                    <?php if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'): ?>
-                    <li class="menu-item dropdown dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Gesti&oacute;n</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?=URL::to('gestion/instituciones')?>">Instituciones</a></li>
-                            <?php if(Auth::user()->perfil==='experto'): ?>
-                            <li><a href="<?=URL::to('gestion/usuarios')?>">Usuarios</a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </li>
+                    <?php if(Session::has('activo')): ?>
+                        <?php if(Auth::user()->perfil==='experto' || Auth::user()->perfil==='evaluador'): ?>
+                        <li class="menu-item dropdown dropdown-submenu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Gesti&oacute;n</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?=URL::to('gestion/instituciones')?>">Instituciones</a></li>
+                                <?php if(Auth::user()->perfil==='experto'): ?>
+                                <li><a href="<?=URL::to('gestion/usuarios')?>">Usuarios</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php if(Auth::user()->perfil!='evaluador'): ?>
                     <li><a href="<?=URL::to('historial')?>">Cambiar Proceso</a></li>

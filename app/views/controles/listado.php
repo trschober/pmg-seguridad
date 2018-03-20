@@ -1,11 +1,11 @@
-<?php if(Session::has('sesion_historial')): ?>
-  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
-<?php endif; ?>
-
 <ol class="breadcrumb">
   <li><a href="/">Seguridad de la Información</a></li>
   <li class="active">Revisi&oacute;n Controles</li>
 </ol>
+
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
 
 <div class="row">
     <div class="col-md-12">

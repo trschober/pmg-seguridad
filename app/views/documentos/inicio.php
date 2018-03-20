@@ -3,6 +3,10 @@
   <li class="active">Documentos</li>
 </ol>
 
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
+
 <?php if(Auth::user()->perfil=='experto'): ?>
 <div class="pull-right"><a href="<?= URL::to('documentos/agregar') ?>" class="btn btn-info">Agregar</a></div>
 <?php endif ?>
