@@ -61,8 +61,8 @@
             <th>Nº</th>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Implementado</th>
             <th>Acciones</th>
+            <th>Implementado</th>
             <?php if(Auth::user()->perfil==='experto'): ?>
             <th>Actualizado Red</th>
             <?php endif; ?>
@@ -71,37 +71,17 @@
     <tbody>
         <?php foreach ($controles as $control):  ?>
             <tr>
-                <td><?=$control->id ?></td>
+                <td><?=$control->id ?>  </td>
                 <td><?=$control->codigo ?></td>
                 <td><?=$control->nombre ?></td>
-                <div class="cid">
-                    <input type="hidden" name="cidv" value="<?=$control->id ?>">
-                </div>
-                </td>
-                <td>
-                    <?php if(count($control->comentarios)>0):?>    
-                        <?php foreach ($control->comentarios as $comentario): ?>
-                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccion opción</option>
-                            <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
-                            <option value="no" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
-                        </select>
-                        <? endforeach ?>
-                    <?php else: ?>
-                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccione opción</option>
-                            <option value="si">Si</option>
-                            <option value="no">No</option>
-                        </select>
-                    <?php endif ?>
-                    <div class="cid">
-                        <input type="hidden" name="cidv" value="<?=$control->id ?>">
-                    </div>
-                </td>
+                
                 <td>
                     <?php
                         $texto = Auth::user()->perfil==='ingreso' ? 'Editar' : 'Revisar';
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">'.$texto.'</span></a>';
+                        $actualizado = '<a href="javascript:;" class="ver" id='.$control->id.'><span class="label label-success">'.$texto.'</span></a>';
+                        
+
+                        /*
                         $marca = '';
                         if(count($control->comentarios)==0){
                             $desplegar = 'style="display:none"';
@@ -111,21 +91,32 @@
                             if(is_null($control->comentarios[0]->cumple))
                                 $marca = Session::has('marca') ? '<span id="marca_'.$control->id.'" class="label label-danger">se necesita actualizar</span>' : '';
                         }
+                        */
                     ?>
-                    <span id="actualizado_<?=$control->id?>" <?=$desplegar?>><?=$actualizado?></span>
-                    <?=$marca?>
+                    <span id="actualizado_<?=$control->id?>"><?=$actualizado?></span>
+                    
                     <?php if(Auth::user()->perfil==='experto'): ?>
-                        <a href="#" class="actualizar"  data-dismiss="modal"><span class="label label-info">Actualizar</span></a>
+                    <a href="javascript:;" class="actualizar" id="<?=$control->id ?>"  data-dismiss="modal"><span class="label label-info">Actualizar</span></a>    
+                    <?php endif; ?>
+
+                    <div class="cid">
+                        <input type="hidden" name="cidv" value="<?=$control->id ?>">
+                    </div>
+
+                </td>
+                <td>
+                    
+                    <?php if(Auth::user()->perfil==='experto'): ?>
+                    <?php
+                        $red_expertos = '';
+                        $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
+                        $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
+                    ?>
+                    <?=$red_expertos ?>
                     <?php endif; ?>
                 </td>
-                <?php if(Auth::user()->perfil==='experto'): ?>
-                <?php
-                    $red_expertos = '';
-                    $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
-                    $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
-                ?>
-                <td><?=$red_expertos ?></td>
-                <?php endif; ?>
+                
+                
             </tr>
         <?php endforeach ?>
     </tbody>
@@ -141,20 +132,46 @@
         </div>
         <div id="thanks"></div>
         <div class="modal-body">
+
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+
           <form action="<?=URL::to('controles/actualizar')?>" id="myform" method="POST" enctype="multipart/form-data" >
+
+            <div class="form-group">
+                <label for="cumple" class="control-label">Implementado</label>
+                <label class="radio-inline">
+                    <input type="radio" name="cumple" id="si" value="si" /> SI
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="cumple" id="no" value="no" /> NO
+                </label>
+            </div>
+
+             <div class="progress cumpleform">
+                <div class="bar progress-bar progress-bar-success progress-bar-striped"></div>
+                <div class="percent">0%</div >
+            </div>
+            <div id="status" class="cumpleform"></div>
+
             <div class="form-group nocumpleform">
               <label for="message-text" class="control-label">Justificaciones:</label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
               <label for="archivo">Archivo</label>
-              <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
+              <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" data-url="/upload" multiple  />
               <p class="help-block">Se pueden agregar varios archivos a la vez. La cantidad máxima permitida es de 20 archivos por control</p>
             </div>
+            <!-- jquery upload -->
+            <div id="files_list"></div>
+            <p id="loading"></p>
+            <input type="hidden" name="file_ids" id="file_ids" value="" />
+            <!-- jquery upload -->
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
                <label for="anio_implementacion">Año de 1° implementación</label>
-               <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
+               <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" >
                 <option value="" disabled selected>Seleccione opción</option>
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
@@ -169,14 +186,18 @@
             <input type="hidden" name="cumplimiento" id="cumplimiento">
             <input type="hidden" name="control_id" id="control_id">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
-          </form>
+          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Guardar</button>
+          <input type="submit" class="btn btn-success upload-image registrar" id="registrar" disabled value="Guardar">
         </div>
+        </form>
       </div>
     </div>
+
+
+
 </div>
 
 <!-- Modal loading -->
@@ -228,7 +249,7 @@
 
 <script type="text/javascript">
     //modal cumplimiento(si/no)
-    $('.cumple').change(function(){
+    /*$('.cumple').change(function(){
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $.ajax({
             type: 'GET',
@@ -270,7 +291,7 @@
                 console.log('errors'+errors);
             }
         });
-     });
+     });*/
 
     //archivos
     $(document).ready(function() {
@@ -279,19 +300,68 @@
             //beforeSubmit:  showRequest,
             success: showResponse,
             dataType: 'json' 
-            }; 
+            };
+        /*
         $('body').delegate('#registrar','click', function(){
             $('#registrar').attr('disabled', true);
             $('#marca_'+$('#control_id').val()).text('');
-            showPleaseWait();
+            //showPleaseWait();
             $('#myform').ajaxForm(options).submit();
         });
+        */
 
-        $('body').delegate('#actualizar','click', function(){
+        var bar = $('.bar');
+        var percent = $('.percent');
+        var status = $('#status');
+
+        $(".cumpleform").hide();
+        $(".nocumpleform").hide();
+        $('input:radio[name="cumple"]').change(
+        function(){
+            if ($(this).is(':checked') && $(this).val() == 'si') {
+                $(".cumpleform").show();
+                $(".nocumpleform").hide();
+            }else{
+                $(".cumpleform").hide();
+                $(".nocumpleform").show();
+            }
+        });
+
+        /*
+        $('body').delegate('#registrar','click', function(){
+            
             //$('#marca_'+$('#control_id').val()).text('');
-            $('#actualizado_experto_'+$('#control_experto').val()).show();
-            showPleaseWait();
-            $('#myformexperto').ajaxForm(options).submit();
+            //$('#actualizado_experto_'+$('#control_experto').val()).show();
+            //showPleaseWait();
+            //$('#myformexperto').ajaxForm(options).submit();
+            
+
+        });
+        */
+
+        $('#myform').ajaxForm({
+            beforeSend: function() {
+                //alert('ok');
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+                //console.log(percentVal, position, total);
+            },
+            success: function() {
+                var percentVal = '100%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            complete: function(xhr) {
+                //status.html(xhr.responseText);
+                $('#modalcomentario').modal('hide');
+            }
         });
         
         var pleaseWait = $('#pleaseWaitDialog'); 
@@ -303,13 +373,13 @@
         };
     });
 
-    $('.datoscumplimiento').on("change", function(){
+    $('.datoscumplimiento').keyup(function(){
         if($('#crud').val()==0){
-            if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
+            if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
                 $('#registrar').removeAttr('disabled');
             }
         }else{
-            if($('#anio_implementacion').val()!=null && $('#des_medios_ver').val()!=''){
+            if($('#anio_implementacion').val().length !=0 && $('#des_medios_ver').val().length !=0){
                 $('#registrar').removeAttr('disabled');
             }
         }
@@ -391,6 +461,11 @@
 
     $('.ver').click(function(e) {
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
+        /*
+        var percentVal = '0%';
+        $('.bar').html();
+        $('.bar').width(percentVal);
+        */
         $.ajax({
             type: 'GET',
             url:  "<?=URL::to('controles/estado')?>",
@@ -400,6 +475,17 @@
             success:function(data){
                 //Comentario no existe
                 if(data.success==true){
+
+                    var $radios = $('input:radio[name=cumple]');
+                    if($radios.is(':checked') === false) {
+                        if(data.comentario.cumple!=null){
+                            if(data.comentario.cumple=='si'){
+                                $("input[name='cumple'][value='si'").prop('checked',true);
+                            }else{
+                                $("input[name='cumple'][value='no'").prop('checked',true);
+                            }
+                        }
+                    }
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
                     var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medio_verificacion;
                     $("#control_id").val(cid);
@@ -408,16 +494,16 @@
                     if($('#cumple_'+cid).val()=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
                         //$('#comentario_incumplimiento').attr('disabled',true);
-                        $('.nocumpleform').show();
-                        $('.cumpleform').hide();
+                        //$('.nocumpleform').show();
+                        //$('.cumpleform').hide();
                     }else{
                         $('#archivo').val('');
-                        $('.nocumpleform').hide();
-                        $('.cumpleform').show();
+                        //$('.nocumpleform').hide();
+                        //$('.cumpleform').show();
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" ><span class="label label-danger">Eliminar</span></a></div>';
+                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="javascript:;" ><span class="label label-danger">Eliminar</span></a></div>';
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
@@ -452,6 +538,6 @@
                 console.log('errors'+errors);
             }
         });
-    }     
+    }    
 
 </script>

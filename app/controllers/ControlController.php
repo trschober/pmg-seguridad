@@ -65,8 +65,8 @@ class ControlController extends BaseController{
 		$control = Control::find(Input::get('control_id'));
 		if($comentario===null)
 			$comentario = new Comentario;
-		if(Input::has('cumplimiento'))
-			$comentario->cumple = Input::get('cumplimiento');
+		if(Input::has('cumple'))
+			$comentario->cumple = Input::get('cumple');
 		if(Input::has('comentario_incumplimiento'))
 			$comentario->observaciones_institucion = Input::get('comentario_incumplimiento');
 		$comentario->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
