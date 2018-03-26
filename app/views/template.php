@@ -42,10 +42,10 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <?php if(Auth::check() && Session::has('activo')):?>
         <ul class="nav navbar-nav" id="menu-superior">
-            <li><a href="<?=URL::to('documentos')?>">Documentos</a></li>
-            <li><a href="<?=URL::to('controles')?>">Controles</a></li>
-            <li><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
-            <li><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
+            <li <?=Request::is('documentos') ? 'class="active"' : '' ?>><a href="<?=URL::to('documentos')?>">Documentos</a></li>
+            <li <?=Request::is('controles') ? 'class="active"' : '' ?>><a href="<?=URL::to('controles')?>">Controles</a></li>
+            <li <?=Request::is('riesgos') ? 'class="active"' : '' ?>><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
+            <li <?=Request::is('retroalimentacion') ? 'class="active"' : '' ?>><a href="<?=URL::to('retroalimentacion')?>">Observaciones Generales</a></li>
         </ul>
         <?php endif?>
 
