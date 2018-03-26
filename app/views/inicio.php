@@ -6,7 +6,7 @@
 	<div class="col-md-12">
 		<div class="jumbotron">
 		</br><span class="label label-danger">Atenci&oacute;n</span>&nbsp;
-		Estimado(a) encargado(a) de Seguridad de la Información, le damos la bienvenida a la plataforma de reporte del Indicador de Seguridad de la Información 2017.<br><br>
+		Estimado(a) encargado(a) de Seguridad de la Información, le damos la bienvenida a la plataforma de reporte del Indicador de Seguridad de la Información 2018<br><br>
 		Saludos Cordiales<br>
 		Red de Expertos SSI<br>
 		</div>
