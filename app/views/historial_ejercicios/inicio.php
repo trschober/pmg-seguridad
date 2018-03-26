@@ -8,7 +8,7 @@
     <thead>
       <tr>
         <td>Año</td>
-        <td>Tipo</td>
+        <td>Proceso</td>
         <td>Acción</td>
       </tr>
     </thead>
