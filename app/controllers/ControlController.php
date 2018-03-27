@@ -146,7 +146,7 @@ class ControlController extends BaseController{
 		}
 		$comentario_historial->save();
 
-		return Response::json(['success' => true,'control'=>$control->id]);
+		return Response::json(['success' => true,'control'=>$control->id, 'implementado'=> ucfirst($comentario->cumple)]);
 	}
 
 	public function getFile($archivo_id){
@@ -191,10 +191,9 @@ class ControlController extends BaseController{
 						$comentario->anio_implementacion=NULL;
 						$comentario->desc_medio_verificacion=NULL;
 						$comentario->save();
-					}					
+					}
 				}
-
-				return Response::json(['success' => true]);
+				return Response::json(['success' => true, 'cantidad_archivos'=> $cantidad_archivos, 'control_id'=>$control_id]);
 			}else{
 				return Response::json(['success' => false]);
 			}

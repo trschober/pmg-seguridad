@@ -11,22 +11,18 @@
     <div class="col-md-12">
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
-            <p>En esta sección deberán indicar si el control se encuentra implementado o no implementado.<br>
-               En el caso de escoger la opción Sí, el Servicio deberá:
-            </p>
-            <p>
+            <p>En esta sección deberá indicar el estado de implementación de los 114 controles de la NCh-ISO 27001 vigente.<br></p>
+            <p>Si indica que un control SI se encuentra implementado, deberá
                 <ul>
-                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2017, y registros de operación en el año 2017).</li>
-                    <li>Agregar descripción de los medios de verificación, es decir detalle de los documentos adjuntos, y cómo éstos dan cuenta de la implementación del control.</li>
-                    <li>Indicar el primer  año de implementación del control  ("2015 o años anteriores", "2016" o  "2017"). Considerar el primer año en que el control fue documentado, y contó con registros de operación.</li>
+                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2018, y registros de operación en el año 2019).</li>
+                    <li>Indicar el primer año de implementación del control ("2015 o años anteriores", "2016",  "2017"o "2018"). Considerar el primer año en que el control fue documentado, y contó con registros de operación.</li>
                 </ul>
             </p>
-            <p>En el caso de escoger la opción No, el Servicio deberá:
+            <p>Si indica que un control NO se encuentra implementado, deberá:
                 <ul>
-                    <li>Indicar las razones de dicho incumplimiento señalando las causas, sean externas o internas a la gestión del Servicio.</li>
+                    <li>Indicar las razones de dicho incumplimiento, señalando las causas externas o internas a la gestión del Servicio.</li>
                 </ul>
             </p>
-            <p>Lo anterior, debe ser realizado para los 114 controles de la NCh-ISO 27001 vigente.</p>
         </div>
     </div>
 </div>
@@ -93,7 +89,7 @@
                         }
                         */
                     ?>
-                    <span id="actualizado_<?=$control->id?>"><?=$actualizado?></span>
+                    <span><?=$actualizado?></span>
                     
                     <?php if(Auth::user()->perfil==='experto'): ?>
                     <a href="javascript:;" class="actualizar" id="<?=$control->id ?>"  data-dismiss="modal"><span class="label label-info">Actualizar</span></a>    
@@ -105,7 +101,7 @@
 
                 </td>
                 <td>
-                    
+                    <span id="actualizado_<?=$control->id?>"><?= $control->comentarios[0]->cumple=='si' ? "Si" :  ($control->comentarios[0]->cumple=='no' ? "No" : "") ?></span>
                     <?php if(Auth::user()->perfil==='experto'): ?>
                     <?php
                         $red_expertos = '';
@@ -155,7 +151,7 @@
             <div id="status" class="cumpleform"></div>
 
             <div class="form-group nocumpleform">
-              <label for="message-text" class="control-label">Justificaciones:</label>
+              <label for="message-text" class="control-label">Indique las causas del incumplimiento, debe indicar el código del control <span id="titulo_justificacion"></span></label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
@@ -173,6 +169,7 @@
                <label for="anio_implementacion">Año de 1° implementación</label>
                <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" >
                 <option value="" disabled selected>Seleccione opción</option>
+                <option value="2018">2018</option>
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
                 <option value="2015">2015 o anteriores</option>
@@ -295,13 +292,13 @@
 
     //archivos
     $(document).ready(function() {
-
+        /*
         var options = { 
             //beforeSubmit:  showRequest,
             success: showResponse,
             dataType: 'json' 
             };
-        /*
+        
         $('body').delegate('#registrar','click', function(){
             $('#registrar').attr('disabled', true);
             $('#marca_'+$('#control_id').val()).text('');
@@ -360,7 +357,14 @@
             },
             complete: function(xhr) {
                 //status.html(xhr.responseText);
+                var response = JSON.parse(xhr.responseText);
+                //console.log(response);
+                
                 $('#modalcomentario').modal('hide');
+                $('#actualizado_'+response.control).text('');
+                $('#actualizado_'+response.control).append(response.implementado);
+                $('#actualizado_'+response.control).show();
+                
             }
         });
         
@@ -373,14 +377,64 @@
         };
     });
 
+    /*
     $('.datoscumplimiento').keyup(function(){
         if($('#crud').val()==0){
+            console.log('anio--'+$('#anio_implementacion').val());
+            console.log('archivo--'+$('#archivo').val());
+            console.log('desc--'+$('#des_medios_ver').val());
             if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
                 $('#registrar').removeAttr('disabled');
             }
         }else{
             if($('#anio_implementacion').val().length !=0 && $('#des_medios_ver').val().length !=0){
                 $('#registrar').removeAttr('disabled');
+            }
+        }
+    });
+    */
+
+    $('#archivo').on("change", function(){
+        if($('#crud').val()==0){
+            if($('#anio_implementacion').val() != null){
+                if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
+                    $('#registrar').removeAttr('disabled');
+                }else{
+                    $('#registrar').attr('disabled', true);
+                }
+            }
+        }else{
+            if($('#anio_implementacion').val() != null){
+                if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
+                    $('#registrar').removeAttr('disabled');
+                }else{
+                    $('#registrar').attr('disabled', true);
+                }
+            }
+        }
+    });
+
+    $('#anio_implementacion').bind('input propertychange', function() {
+        if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
+            $('#registrar').removeAttr('disabled');
+        }else{
+            $('#registrar').attr('disabled', true);
+        }
+    });
+
+    $('#des_medios_ver').keyup(function(){
+        if($('#crud').val()==0){
+            if($('#anio_implementacion').val().length !=0 && $('#archivo').val().length !=0 && $('#des_medios_ver').val().length !=0){
+                $('#registrar').removeAttr('disabled');
+            }else{
+                $('#registrar').attr('disabled', true);
+            }
+        }else{
+            console.log($('#links').text().length);
+            if($('#anio_implementacion').val().length !=0 && $('#des_medios_ver').val().length !=0){
+                $('#registrar').removeAttr('disabled');
+            }else{
+                $('#registrar').attr('disabled', true);
             }
         }
     });
@@ -393,6 +447,7 @@
         }
     });
 
+    /*
     $('#des_medios_ver').bind('input propertychange', function() {
         if($('#crud').val()==0){
             if($('#anio_implementacion').val()!=null && $('#archivo').val()!='' && $('#des_medios_ver').val()!=''){
@@ -408,8 +463,9 @@
             }
         }
     });
+    */
 
-    function showResponse(response, statusText, xhr, $form) {
+    /*function showResponse(response, statusText, xhr, $form) {
         //alert(response);
         if(response.success == false){
             var arr = response.errors;
@@ -431,9 +487,9 @@
                 $('#thanks').html('');
                 $('#archivo').val('');
             },3000);
-            */
+            
         }
-    }
+    }*/
 
     $('.actualizar').click(function(e) {
         //showPleaseWait();
@@ -461,11 +517,18 @@
 
     $('.ver').click(function(e) {
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
-        /*
+        $(".nocumpleform").hide();
+        $(".cumpleform").hide();
+        $("input[name='cumple']").prop('checked',false);
+        $('#links').text('');
+        $('#anio_implementacion').val('');
+        $('#des_medios_ver').val('');
+
+        
         var percentVal = '0%';
         $('.bar').html();
         $('.bar').width(percentVal);
-        */
+        
         $.ajax({
             type: 'GET',
             url:  "<?=URL::to('controles/estado')?>",
@@ -480,9 +543,11 @@
                     if($radios.is(':checked') === false) {
                         if(data.comentario.cumple!=null){
                             if(data.comentario.cumple=='si'){
-                                $("input[name='cumple'][value='si'").prop('checked',true);
+                                $("input[name='cumple'][value='si']").prop('checked',true);
+                                $(".cumpleform").show();
                             }else{
-                                $("input[name='cumple'][value='no'").prop('checked',true);
+                                $("input[name='cumple'][value='no']").prop('checked',true);
+                                $(".nocumpleform").show();
                             }
                         }
                     }
@@ -491,26 +556,28 @@
                     $("#control_id").val(cid);
                     $("#crud").val(1);
                     $('h4.modal-title').text('Detalle control '+data.control.codigo);
-                    if($('#cumple_'+cid).val()=='no'){
-                        $('#comentario_incumplimiento').val(comentarios);
-                        //$('#comentario_incumplimiento').attr('disabled',true);
-                        //$('.nocumpleform').show();
-                        //$('.cumpleform').hide();
+                    $('#titulo_justificacion').text(data.control.codigo);
+                    //console.log(data.comentario.cumple);
+                    if(data.comentario.cumple===null){
+                        $("#crud").val(0);
                     }else{
-                        $('#archivo').val('');
-                        //$('.nocumpleform').hide();
-                        //$('.cumpleform').show();
-                        var links='';
-                        $('#links').text('');
-                        for(x=0; x<data.archivos.length; x++){
-                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="javascript:;" ><span class="label label-danger">Eliminar</span></a></div>';
+                        if(data.comentario.cumple=='no'){
+                            $('#comentario_incumplimiento').val(comentarios);
+                        }else{
+                            $('#archivo').val('');
+                            var links='';
+                            $('#links').text('');
+                            for(x=0; x<data.archivos.length; x++){
+                                links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="javascript:;" ><span class="label label-danger">Eliminar</span></a></div>';
+                            }
+                            $('#links').append(links);
+                            $('#anio_implementacion').val(data.comentario.anio_implementacion);
+                            $('#des_medios_ver').val(descr_medios_ver);
+                            //$('#anio_implementacion').attr('disabled',true);
+                            //$('#archivo').hide();
                         }
-                        $('#links').append(links);
-                        $('#anio_implementacion').val(data.comentario.anio_implementacion);
-                        $('#des_medios_ver').val(descr_medios_ver);
-                        //$('#anio_implementacion').attr('disabled',true);
-                        //$('#archivo').hide();
                     }
+                    console.log($("#crud").val());
                     //$('#registrar').hide();
                     $('#cumplimiento').val($('#cumple_'+cid).val());
                     $('#modalcomentario').modal('show');
@@ -532,6 +599,11 @@
             success:function(data){
                 if(data.success==true){
                     $('#div_file_'+file).hide();
+                    if(data.cantidad_archivos==0){
+                        $('#actualizado_'+data.control_id).text('');
+                        $('#modalcomentario').modal('hide');
+                    }
+                    
                 }
             },
             error:function(errors){
