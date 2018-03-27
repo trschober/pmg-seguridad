@@ -30,18 +30,23 @@
 				<table class="table table-hover">
 					<thead>
 				        <tr>
-				            <th>Analista</th>
+				            <th>Nombre</th>
 				            <th>Correo</th>
+				            <th>Teléfono</th>
 				        </tr>
 				    </thead>
 				    <tbody>
-				    	<tr><td>Hernán Espinoza</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
-				    	<tr><td>Luis Carrasco</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
-				    	<tr><td>Juan Pablo Meier</td><td><a href="mailto:ssi@interior.gob.cl">ssi@interior.gob.cl</a></td></tr>
-				    	<tr><td>Nicole Merino</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Tomás Riveros</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Macarena Calderón</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Rodrigo Pérez</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
+				    	<?php if(Auth::user()->institucion->entidad_analista=='interior'): ?>
+					    	<tr><td>Hernán Espinoza</td><td><a href="mailto:hespinoza@interior.gob.cl">hespinoza@interior.gob.cl</a></td><td>2 2486 3552</td></tr>
+					    	<tr><td>Juan Pablo Meier</td><td><a href="mailto:fmeier@interior.gob.cl">fmeier@interior.gob.cl</a></td><td>2 2486 3746</td></tr>
+					    	<tr><td>Luis Carrasco</td><td><a href="mailto:lcarrasco@interior.gob.cl">lcarrasco@interior.gob.cl</a></td><td>2 2486 3336</td></tr>
+				    	<?php elseif(Auth::user()->institucion->entidad_analista=='subtel'): ?>
+				    		<tr><td>Rodrigo Pérez</td><td><a href="mailto:rperez@subtel.gob.cl">rperez@subtel.gob.cl</a></td><td>2 2588 8000 anexo 3589</td></tr>
+				    	<?php else: ?>
+					    	<tr><td>Nicole Merino</td><td><a href="mailto:nmerino@minsegpres.gob.cl">nmerino@minsegpres.gob.cl</a></td><td>2 2219 8439</td></tr>
+					    	<tr><td>Macarena Calderón</td><td><a href="mailto:mcalderon@minsegpres.gob.cl">mcalderon@minsegpres.gob.cl</a></td><td>2 2219 8362</td></tr>
+					    	<tr><td>Tomás Riveros</td><td><a href="mailto:triveros@minsegpres.gob.cl">triveros@minsegpres.gob.cl</a></td><td>2 2219 8393</td></tr>
+				    	<?php endif;?>
 				    </tbody>
 				</table>
 			</div>
