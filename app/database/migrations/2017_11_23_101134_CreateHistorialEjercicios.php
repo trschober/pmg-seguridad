@@ -15,7 +15,7 @@ class CreateHistorialEjercicios extends Migration {
 		Schema::create('historial_ejercicios', function($table) {
 			$table->increments('id');
 			$table->integer('anio')->nullable();
-			$table->enum('tipo', array('ejercicio','evaluacion'))->nullable();
+			$table->enum('tipo', array('ejercicio','formulacion','evaluacion'))->nullable();
 			$table->boolean('activo')->nullable();
 		});
 	}
