@@ -33,15 +33,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <?php if(Auth::check()):?>
-            <a href="<?=URL::to('bienvenida')?>" class="navbar-brand">Seguridad de la Información</a>
-        <?php else: ?>
-            <a href="<?=URL::to('/')?>" class="navbar-brand">Seguridad de la Información</a>
-        <?php endif ?>
+        <a href="javascript:;" class="navbar-brand">Seguridad de la Información</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <?php if(Auth::check() && Session::has('activo')):?>
         <ul class="nav navbar-nav" id="menu-superior">
+            <li <?=Request::is('bienvenida') ? 'class="active"' : '' ?>><a href="<?=URL::to('bienvenida')?>">Inicio</a></li>
             <li <?=Request::is('documentos') ? 'class="active"' : '' ?>><a href="<?=URL::to('documentos')?>">Documentos</a></li>
             <li <?=Request::is('controles') ? 'class="active"' : '' ?>><a href="<?=URL::to('controles')?>">Controles</a></li>
             <li <?=Request::is('riesgos') ? 'class="active"' : '' ?>><a href="<?=URL::to('riesgos')?>">Análisis de riesgo</a></li>
