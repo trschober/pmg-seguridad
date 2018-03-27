@@ -13,7 +13,10 @@
     <script src="<?=URL::asset('js/bootstrap.min.js')?>"></script>
     <script src="<?=URL::asset('js/jquery.countdown.min.js')?>"></script>
     <script src="<?=URL::asset('js/jquery.form.js')?>"></script>
-    
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
