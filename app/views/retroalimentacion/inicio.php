@@ -3,6 +3,10 @@
   <li class="active">Retroalimentacion</li>
 </ol>
 
+<?php if(Session::has('sesion_historial')): ?>
+  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+<?php endif; ?>
+
 <?php if (Session::has('success')): ?>
   <div class="alert alert-success" role="alert"><?php echo Session::get('success');?></div>
 <?php endif ?>
