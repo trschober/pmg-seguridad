@@ -144,21 +144,83 @@
                 </label>
             </div>
 
-             <div class="progress cumpleform">
+            <!--<div class="progress cumpleform">
                 <div class="bar progress-bar progress-bar-success progress-bar-striped"></div>
                 <div class="percent">0%</div >
-            </div>
+            </div>-->
             <div id="status" class="cumpleform"></div>
 
             <div class="form-group nocumpleform">
               <label for="message-text" class="control-label">Indique las causas del incumplimiento, debe indicar el código del control <span id="titulo_justificacion"></span></label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
-            <div class="form-group cumpleform">
+            <!--<div class="form-group cumpleform">
               <label for="archivo">Archivo</label>
               <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" data-url="/upload" multiple  />
               <p class="help-block">Se pueden agregar varios archivos a la vez. La cantidad máxima permitida es de 20 archivos por control</p>
+            </div>-->
+
+            <!--1 -->
+            <div class="row">
+                <div class="col-lg-12">
+                  <!-- The global file processing state -->
+                  <span class="fileupload-process cumpleform">
+                    <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                      <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress=""></div>
+                    </div>
+                  </span>
+                </div>
             </div>
+            <div id="actions" class="row cumpleform">
+                <div class="col-lg-12">
+                  <!-- The fileinput-button span is used to style the file input field as button -->
+                  <span class="btn btn-success fileinput-button dz-clickable">
+                      <i class="glyphicon glyphicon-plus"></i>
+                      <span>Agregar archivos</span>
+                  </span>
+                  
+                  <button type="reset" class="btn btn-warning cancel">
+                      <i class="glyphicon glyphicon-ban-circle"></i>
+                      <span>Cancelar carga</span>
+                  </button>
+                </div>
+            </div>
+            
+            <div class="table table-striped files" id="previews">
+                <div id="template" class="file-row dz-image-preview">
+                    <!-- This is used as the file preview template -->
+                    <div>
+                        <span class="preview"><img data-dz-thumbnail></span>
+                    </div>
+                    <div>
+                        <p class="name" data-dz-name></p>
+                        <strong class="error text-danger" data-dz-errormessage></strong>
+                    </div>
+                    <div>
+                        <p class="size" data-dz-size></p>
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        </div>
+                    </div>
+                    <div>
+                        <button data-dz-remove class="btn btn-warning cancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>Eliminar</span>
+                        </button>
+                        <!--<button class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Start</span>
+                        </button>
+                        
+                        <button data-dz-remove class="btn btn-danger delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>-->
+                    </div>
+                </div>
+            </div>
+            <!--2 -->
+
             <!-- jquery upload -->
             <div id="files_list"></div>
             <p id="loading"></p>
@@ -185,9 +247,12 @@
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
           
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" id="actions2">
           <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <input type="submit" class="btn btn-success upload-image registrar" id="registrar" disabled value="Guardar">
+          <!--<input type="submit" class="btn btn-success upload-image registrar" id="registrar" disabled value="Guardar">-->
+          <button type="submit" class="btn btn-primary start">
+              <span>Guardar</span>
+          </button>
         </div>
         </form>
       </div>
@@ -198,6 +263,7 @@
 </div>
 
 <!-- Modal loading -->
+<!--
 <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -214,7 +280,7 @@
       
     </div>
   </div>
-</div>
+</div>-->
 
 <!-- Modal Red de expertos -->
 <div class="modal fade" id="modalexpertos" tabindex="-1" role="dialog" aria-labelledby="modalexpertos">
@@ -360,7 +426,7 @@
                 var response = JSON.parse(xhr.responseText);
                 //console.log(response);
                 
-                $('#modalcomentario').modal('hide');
+                //$('#modalcomentario').modal('hide');
                 $('#actualizado_'+response.control).text('');
                 $('#actualizado_'+response.control).append(response.implementado);
                 $('#actualizado_'+response.control).show();
@@ -392,7 +458,7 @@
             }
         }
     });
-    */
+    
 
     $('#archivo').on("change", function(){
         if($('#crud').val()==0){
@@ -445,7 +511,7 @@
         }else{
             $('#registrar').removeAttr('disabled');
         }
-    });
+    });*/
 
     /*
     $('#des_medios_ver').bind('input propertychange', function() {
@@ -516,6 +582,7 @@
     });
 
     $('.ver').click(function(e) {
+        document.querySelector("#total-progress .progress-bar").style.width = "0%";
         var cid = $(this).parents('tr').find('.cid input[type="hidden"]').val();
         $(".nocumpleform").hide();
         $(".cumpleform").hide();
@@ -528,6 +595,9 @@
         var percentVal = '0%';
         $('.bar').html();
         $('.bar').width(percentVal);
+
+        $("#previews").hide();
+        $("#previews").empty();
         
         $.ajax({
             type: 'GET',
@@ -545,9 +615,11 @@
                             if(data.comentario.cumple=='si'){
                                 $("input[name='cumple'][value='si']").prop('checked',true);
                                 $(".cumpleform").show();
+                                $("#actions").show();
                             }else{
                                 $("input[name='cumple'][value='no']").prop('checked',true);
                                 $(".nocumpleform").show();
+                                $("#actions").hide();
                             }
                         }
                     }
@@ -611,5 +683,74 @@
             }
         });
     }    
+
+</script>
+
+<script type="text/javascript">
+    
+    // para cuando es no implementado cambiar boton OJO AHI
+
+    $(document).ready(function() {
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template");
+        previewNode.id = "";
+        var previewTemplate = previewNode.parentNode.innerHTML;
+        previewNode.parentNode.removeChild(previewNode);
+
+        var myDropzone = new Dropzone(".container", { // Make the whole body a dropzone
+          url: "/controles/actualizar", // Set the url
+          thumbnailWidth: 80,
+          thumbnailHeight: 80,
+          parallelUploads: 20,
+          previewTemplate: previewTemplate,
+          autoQueue: false, // Make sure the files aren't queued until manually added
+          previewsContainer: "#previews", // Define the container to display the previews
+          clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        });
+
+        myDropzone.on("addedfile", function(file) {
+          $("#previews").show();
+          // Hookup the start button
+          //file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+        });
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function(progress) {
+          document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+        });
+
+        myDropzone.on("sending", function(file, xhr, formData) {
+            console.log($("input[name='cumple']:checked").val());
+          // Show the total progress bar when upload starts
+          document.querySelector("#total-progress").style.opacity = "1";
+          formData.append("control_id", $('#control_id').val());
+          formData.append("cumple", $("input[name='cumple']:checked").val());
+          formData.append("anio_implementacion", $('#anio_implementacion').val());
+          formData.append("des_medios_ver", $('#des_medios_ver').val());
+          // And disable the start button
+          //file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+        });
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function(progress) {
+          document.querySelector("#total-progress").style.opacity = "0";
+          $('#modalcomentario').modal('hide');
+        });
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions2 .start").onclick = function() {
+          myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+          var count= myDropzone.files.length;
+          if($("input[name='cumple']:checked").val()=='no')
+            $('#modalcomentario').modal('hide');
+          if($("input[name='cumple']:checked").val()=='si' && count==0)
+            $('#modalcomentario').modal('hide');
+        };
+        document.querySelector("#actions .cancel").onclick = function() {
+          myDropzone.removeAllFiles(true);
+        };
+    });
 
 </script>

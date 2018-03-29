@@ -13,6 +13,7 @@
     <script src="<?=URL::asset('js/bootstrap.min.js')?>"></script>
     <script src="<?=URL::asset('js/jquery.countdown.min.js')?>"></script>
     <script src="<?=URL::asset('js/jquery.form.js')?>"></script>
+    <script src="<?=URL::asset('js/dropzone.js')?>"></script>
 
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
