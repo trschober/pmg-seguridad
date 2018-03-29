@@ -702,6 +702,7 @@
           thumbnailWidth: 80,
           thumbnailHeight: 80,
           parallelUploads: 20,
+          timeout:120000, 
           previewTemplate: previewTemplate,
           autoQueue: false, // Make sure the files aren't queued until manually added
           previewsContainer: "#previews", // Define the container to display the previews
