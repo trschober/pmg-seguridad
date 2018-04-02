@@ -144,6 +144,8 @@
                 </label>
             </div>
 
+            <div class="alert alert-info cumpleform" role="alert">Para subir los archivos pendientes haga click en guardar</div>
+
             <!--<div class="progress cumpleform">
                 <div class="bar progress-bar progress-bar-success progress-bar-striped"></div>
                 <div class="percent">0%</div >
