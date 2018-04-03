@@ -62,30 +62,15 @@
                 </div>
                 </td>
                 <td>
-                    
-                    <?php if(count($control->comentario_historial)>0):?>    
-                        <?php foreach ($control->comentario_historial as $comentario): ?>
-                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccion opción</option>
-                            <option value="si" <?=$comentario->cumple=='si' ? 'selected' : '' ?>>Si</option>
-                            <option value="no" <?=$comentario->cumple=='no' ? 'selected' : '' ?>>No</option>
-                        </select>
-                        <? endforeach ?>
-                    <?php else: ?>
-                        <select <?=$disabled?> class="form-control cumple" name="cumple_<?=$control->id?>" id="cumple_<?=$control->id?>" >
-                            <option value="" disabled selected>Seleccione opción</option>
-                            <option value="si">Si</option>
-                            <option value="no">No</option>
-                        </select>
-                    <?php endif ?>
+                    <span id="actualizado_<?=$control->id?>"><?= $control->comentario_historial[0]->cumple=='si' ? "Si" :  ($control->comentario_historial[0]->cumple=='no' ? "No" : "") ?></span>
                     <div class="cid">
                         <input type="hidden" name="cidv" value="<?=$control->id ?>">
                     </div>
                 </td>
                 <td>
                     <?php
-                        $texto = Auth::user()->perfil==='ingreso' ? 'Editar' : 'Revisar';
-                        $actualizado = '<a href="#" class="ver"><span class="label label-success">'.$texto.'</span></a>';
+                        $texto = 'Revisar';
+                        $actualizado = '<a href="javascript:;" class="ver"><span class="label label-success">'.$texto.'</span></a>';
                         $marca = '';
                         if(count($control->comentario_historial)==0){
                             $desplegar = 'style="display:none"';
@@ -128,15 +113,14 @@
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <div class="form-group cumpleform">
-              <label for="archivo">Archivo</label>
-              <input <?=$disabled?> class="form-control datoscumplimiento" type="file" name="archivo[]" id="archivo" multiple required />
-              <p class="help-block">Se pueden agregar varios archivos a la vez</p>
+              <label for="archivo">Archivos</label>
             </div>
             <div id="links" class="form-group cumpleform"></div>
             <div class="form-group cumpleform">
                <label for="anio_implementacion">Año documentación</label>
                <select <?=$disabled?> class="form-control datoscumplimiento" name="anio_implementacion" id="anio_implementacion" required>
                 <option value="" disabled selected>Seleccione opción</option>
+                <option value="2017">2018</option>
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
                 <option value="2015">2015</option>
@@ -163,8 +147,6 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-success upload-image registrar" id="registrar" data-dismiss="modal" disabled>Registrar</button>
         </div>
       </div>
     </div>
@@ -371,9 +353,10 @@
                 //Comentario no existe
                 if(data.success==true){
                     var comentarios = data.comentario===null ? '' : data.comentario.observaciones_institucion;
+                    var descr_medios_ver = data.comentario===null ? '' : data.comentario.desc_medio_verificacion;
                     $("#control_id").val(cid);
                     $('h4.modal-title').text('Detalle control '+data.control.codigo);
-                    if($('#cumple_'+cid).val()=='no'){
+                    if(data.comentario.cumple=='no'){
                         $('#comentario_incumplimiento').val(comentarios);
                         //$('#comentario_incumplimiento').attr('disabled',true);
                         $('.nocumpleform').show();
@@ -385,10 +368,11 @@
                         var links='';
                         $('#links').text('');
                         for(x=0; x<data.archivos.length; x++){
-                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="#" >(X)</a></div>';
+                            links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a></div>';
                         }
                         $('#links').append(links);
                         $('#anio_implementacion').val(data.comentario.anio_implementacion);
+                        $('#des_medios_ver').val(descr_medios_ver);
                         //$('#anio_implementacion').attr('disabled',true);
                         //$('#archivo').hide();
                     }
