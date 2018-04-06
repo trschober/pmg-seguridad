@@ -252,7 +252,7 @@
         <div class="modal-footer" id="actions2">
           <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
           <!--<input type="submit" class="btn btn-success upload-image registrar" id="registrar" disabled value="Guardar">-->
-          <button type="submit" class="btn btn-primary start">
+          <button type="submit" class="btn btn-primary start" id="registrar" name="registrar">
               <span>Guardar</span>
           </button>
         </div>
@@ -593,7 +593,7 @@
         $('#anio_implementacion').val('');
         $('#des_medios_ver').val('');
 
-        
+        $('#registrar').attr('disabled', true);
         var percentVal = '0%';
         $('.bar').html();
         $('.bar').width(percentVal);
@@ -711,10 +711,77 @@
           clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
         });
 
+        $('input[type=radio][name=cumple]').change(function() {
+            $('#registrar').attr('disabled', true);
+        });
+
         myDropzone.on("addedfile", function(file) {
+          var count= myDropzone.files.length;
+          //console.log($('#anio_implementacion').val().length);
           $("#previews").show();
+          if(count>0 && $('#anio_implementacion').val() && $('#des_medios_ver').val()){
+            $('#registrar').removeAttr('disabled');
+          }else{
+            $('#registrar').attr('disabled', true);
+          }
           // Hookup the start button
           //file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+        });
+
+        myDropzone.on("removedfile", function(file) {
+          var count= myDropzone.files.length;
+          var percentVal = '0%';
+          $('.progress-bar').html();
+          $('.progress-bar').width(percentVal);
+          if(count>0){
+            $('#registrar').removeAttr('disabled');
+          }else{
+            $('#registrar').attr('disabled', true);
+          }
+          // Hookup the start button
+          //file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+        });
+
+        $('#anio_implementacion').bind('input propertychange', function() {
+            var count= myDropzone.files.length;
+            if($('#crud').val()==0){
+              if(count>0 && $('#anio_implementacion').val() && $('#des_medios_ver').val()){
+                  $('#registrar').removeAttr('disabled');
+              }else{
+                  $('#registrar').attr('disabled', true);
+              }
+            }else{
+              if($('#anio_implementacion').val() && $('#des_medios_ver').val()){
+                  $('#registrar').removeAttr('disabled');
+              }else{
+                  $('#registrar').attr('disabled', true);
+              }
+            }
+        });
+
+        $('#des_medios_ver').keyup(function(){
+            var count= myDropzone.files.length;
+            if($('#crud').val()==0){
+                if(count>0 && $('#anio_implementacion').val() && $('#des_medios_ver').val()){
+                    $('#registrar').removeAttr('disabled');
+                }else{
+                    $('#registrar').attr('disabled', true);
+                }
+            }else{
+                if($('#anio_implementacion').val() && $('#des_medios_ver').val()){
+                    $('#registrar').removeAttr('disabled');
+                }else{
+                    $('#registrar').attr('disabled', true);
+                }
+            }
+        });
+
+        $('#comentario_incumplimiento').bind('input propertychange', function() {
+            if($("input[name='cumple']:checked").val()=='no' && $('#comentario_incumplimiento').val()){
+                $('#registrar').removeAttr('disabled');
+            }else{
+               $('#registrar').attr('disabled', true);
+            }
         });
 
         // Update the total progress bar
@@ -746,13 +813,22 @@
         document.querySelector("#actions2 .start").onclick = function() {
           myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
           var count= myDropzone.files.length;
+          console.log('myDropzone--'+count);
           if($("input[name='cumple']:checked").val()=='no')
             $('#modalcomentario').modal('hide');
           if($("input[name='cumple']:checked").val()=='si' && count==0)
             $('#modalcomentario').modal('hide');
         };
+
+        myDropzone.on("complete", function() {
+          myDropzone.removeAllFiles();
+        });
+
         document.querySelector("#actions .cancel").onclick = function() {
           myDropzone.removeAllFiles(true);
+          var percentVal = '0%';
+          $('.progress-bar').html();
+          $('.progress-bar').width(percentVal);
         };
     });
 
