@@ -12,7 +12,7 @@
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
             <p>En esta sección los Servicios deberán agregar el instrumento o metodología utilizada para realizar el análisis de riesgo institucional. Como por ejemplo, el instrumento publicado en DIPRES
-            (<a href="http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx" target="_blank">http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx</a>) presentado como medio de verificación en el año 2015, con las respectivas actualizaciones al año 2017.</p>
+            (<a href="http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx" target="_blank">http://www.dipres.gob.cl/594/articles-51683_intro_instrumentos_2016_18_05.xlsx</a>) presentado como medio de verificación en el año 2015, con las respectivas actualizaciones al año <?=date("Y") ?>.</p>
         </div>
     </div>
 </div>
@@ -57,6 +57,7 @@
     <thead>
         <tr>
             <th>Archivo</th>
+            <th>Fecha carga</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -65,6 +66,7 @@
     	<?php foreach ($riesgos as $riesgo):  ?>
     	<tr>
     		<td><?=$riesgo->filename?></td>
+            <td><?=$riesgo->created_at->copy()->tz(Auth::user()->timezone)->format('d-m-Y')?></td>
     		<td>
             <?php if(Auth::user()->perfil!='experto'): ?>
             <a <?=$mostrar?> href="<?= $habilitado ? URL::to('riesgos/eliminar/'.$riesgo->id) : '#' ?>" class="eliminar" onclick="return confirm('¿Est&aacute; seguro que desea eliminar el archivo?')"><span class="label label-danger">Eliminar</span></a>
