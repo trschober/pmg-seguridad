@@ -594,7 +594,7 @@
         $('#links').text('');
         $('#anio_implementacion').val('');
         $('#des_medios_ver').val('');
-
+        $('#comentario_incumplimiento').val('');
         $('#registrar').attr('disabled', true);
         var percentVal = '0%';
         $('.bar').html();
