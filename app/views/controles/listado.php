@@ -12,15 +12,16 @@
         <div class="alert alert-info">
             <h3>Instrucciones</h3>
             <p>En esta sección deberá indicar el estado de implementación de los 114 controles de la NCh-ISO 27001 vigente.<br></p>
-            <p>Si indica que un control SI se encuentra implementado, deberá
+            <p>Si indica que un control SI se encuentra implementado, deberá:
                 <ul>
-                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente al año 2018, y registros de operación en el año 2019).</li>
-                    <li>Indicar el primer año de implementación del control ("2015 o años anteriores", "2016",  "2017"o "2018"). Considerar el primer año en que el control fue documentado, y contó con registros de operación.</li>
+                    <li>Agregar los medios de verificación que den cuenta de la implementación del control (documentación vigente, y registros de operación del año 2018).</li>
+                    <li>Indicar el primer año de implementación del control ("2015 o años anteriores", "2016", "2017" o "2018"). Considerar el primer año en que el control fue documentado, y contó con registros de operación.</li>
                 </ul>
             </p>
+            <br>
             <p>Si indica que un control NO se encuentra implementado, deberá:
                 <ul>
-                    <li>Indicar las razones de dicho incumplimiento, señalando las causas externas o internas a la gestión del Servicio.</li>
+                    <li>Indicar las razones, señalando las causas externas o internas a la gestión del Servicio.</li>
                 </ul>
             </p>
         </div>
