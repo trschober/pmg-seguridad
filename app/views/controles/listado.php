@@ -188,9 +188,10 @@
                 </div>
             </div>
             
-            <div class="table table-striped files" id="previews">
+            <div class="table table-striped files cumpleform" id="previews">
                 <div id="template" class="file-row dz-image-preview">
                     <!-- This is used as the file preview template -->
+                    <span><strong>Archivos por cargar</strong></span>
                     <div>
                         <span class="preview"><img data-dz-thumbnail></span>
                     </div>
@@ -644,7 +645,8 @@
                             for(x=0; x<data.archivos.length; x++){
                                 links = links + '<div id="div_file_'+data.archivos[x].id+'"><a href="<?=URL::to('controles/download')?>'+"/"+data.archivos[x].id+'" id="'+data.archivos[x].id+'">'+data.archivos[x].filename+'</a> <a <?=$mostrar?> onclick="eliminar_archivo('+data.archivos[x].id+')" href="javascript:;" ><span class="label label-danger">Eliminar</span></a></div>';
                             }
-                            $('#links').append(links);
+                            var listado_archivos = '<div><strong>Archivos cargados</strong></div>'+links;
+                            $('#links').append(listado_archivos);
                             $('#anio_implementacion').val(data.comentario.anio_implementacion);
                             $('#des_medios_ver').val(descr_medios_ver);
                             //$('#anio_implementacion').attr('disabled',true);
