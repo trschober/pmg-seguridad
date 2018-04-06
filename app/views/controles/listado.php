@@ -154,7 +154,7 @@
             <div id="status" class="cumpleform"></div>
 
             <div class="form-group nocumpleform">
-              <label for="message-text" class="control-label">Indique las causas del incumplimiento, debe indicar el código del control <span id="titulo_justificacion"></span></label>
+              <label for="message-text" class="control-label">Indique las causas del incumplimiento del control <span id="titulo_justificacion"></span></label>
               <textarea <?=$disabled?> cols="10" rows="5" style="resize:none" class="form-control" id="comentario_incumplimiento" name="comentario_incumplimiento"></textarea>
             </div>
             <!--<div class="form-group cumpleform">
