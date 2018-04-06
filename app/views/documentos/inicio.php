@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-  <li><a href="/">Seguridad de la Información</a></li>
+  <li><a href="<?= Session::has('sesion_historial') ? URL::to('bienvenida') : URL::to('historial')?>">Seguridad de la Información</a></li>
   <li class="active">Documentos</li>
 </ol>
 
