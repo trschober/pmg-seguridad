@@ -47,7 +47,7 @@
   <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
   <?php if(Auth::user()->perfil==='experto'): ?>
   <div class="modal-footer">
-    <input type="submit" class="btn btn-success upload-image registrar" id="actualizar" value="Agregar observación"/>
+    <input type="submit" class="btn btn-success upload-image registrar" id="actualizar" value="Guardar"/>
     <a href="<?=URL::to('retroalimentacion/reporte')?>" class="btn btn-info">Generar Informe Red de Expertos</a>
   </div>
   <?php endif ?>
