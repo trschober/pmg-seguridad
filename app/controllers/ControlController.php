@@ -203,10 +203,14 @@ class ControlController extends BaseController{
 		else
 			$valor_institucion = Session::has('sesion_institucion') ? Session::get('sesion_institucion') : Auth::user()->institucion_id; //experto con sesión o usuario de perfil reporte o validador
 		$comentario = Comentario::where('institucion_id',$valor_institucion)->where('control_id',Input::get('control_experto'))->first();
+		$comentario_historial = ComentarioHistorial::where('institucion_id',$valor_institucion)->where('control_id',Input::get('control_experto'))->where('historial_id',Session::get('historial_id'))->first();
 		if($comentario!=NULL){
-			if(Input::has('observaciones_expertos'))
-				$comentario->observaciones_red = Input::get('observaciones_expertos');
+			if(Input::has('observaciones_expertos')){
+				$comentario->observaciones_red 			 = Input::get('observaciones_expertos');
+				$comentario_historial->observaciones_red = Input::get('observaciones_expertos');
+			}
 			$comentario->save();
+			$comentario_historial->save();
 			return Response::json(['success' => true]);
 		}
 	}

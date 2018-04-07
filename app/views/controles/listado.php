@@ -47,7 +47,7 @@
                 <?php endif ?>
             <?php endforeach ?>
         </select>
-        <input type="submit" value="Actualizar" class="btn btn-success" />
+        <input type="submit" value="Seleccionar" class="btn btn-success" />
         </form>
     </div>
 <?php endif ?>
@@ -103,14 +103,16 @@
                 </td>
                 <td>
                     <span id="actualizado_<?=$control->id?>"><?= $control->comentarios[0]->cumple=='si' ? "Si" :  ($control->comentarios[0]->cumple=='no' ? "No" : "") ?></span>
-                    <?php if(Auth::user()->perfil==='experto'): ?>
-                    <?php
-                        $red_expertos = '';
-                        $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
-                        $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
-                    ?>
-                    <?=$red_expertos ?>
-                    <?php endif; ?>
+                </td>
+                <td>
+                <?php if(Auth::user()->perfil==='experto'): ?>
+                <?php
+                    $red_expertos = '';
+                    $desplegar = count($control->comentarios)==0 ? 'style="display:none"' : (is_null($control->comentarios[0]->observaciones_red) ? 'style="display:none"' : '');
+                    $red_expertos="<span id='actualizado_experto_$control->id' class='glyphicon glyphicon-ok-sign text-success' $desplegar></span>";
+                ?>
+                <?=$red_expertos ?>
+                <?php endif; ?>
                 </td>
                 
                 
@@ -138,13 +140,14 @@
             <div class="form-group">
                 <label for="cumple" class="control-label">Implementado</label>
                 <label class="radio-inline">
-                    <input type="radio" name="cumple" id="si" value="si" /> SI
+                    <input type="radio" name="cumple" id="si" value="si" <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> /> SI
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="cumple" id="no" value="no" /> NO
+                    <input type="radio" name="cumple" id="no" value="no" <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> /> NO
                 </label>
             </div>
 
+            <?php if(Auth::user()->perfil=='ingreso'): ?>
             <div class="alert alert-info cumpleform" role="alert">Para subir los archivos pendientes haga click en guardar</div>
 
             <!--<div class="progress cumpleform">
@@ -152,6 +155,7 @@
                 <div class="percent">0%</div >
             </div>-->
             <div id="status" class="cumpleform"></div>
+            <?php endif ?>
 
             <div class="form-group nocumpleform">
               <label for="message-text" class="control-label">Indique las causas del incumplimiento del control <span id="titulo_justificacion"></span></label>
@@ -164,6 +168,7 @@
             </div>-->
 
             <!--1 -->
+
             <div class="row">
                 <div class="col-lg-12">
                   <!-- The global file processing state -->
@@ -174,15 +179,16 @@
                   </span>
                 </div>
             </div>
+            <?php if(Auth::user()->perfil=='ingreso'): ?>
             <div id="actions" class="row cumpleform">
                 <div class="col-lg-12">
                   <!-- The fileinput-button span is used to style the file input field as button -->
-                  <span class="btn btn-success fileinput-button dz-clickable">
+                  <span <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> class="btn btn-success fileinput-button dz-clickable">
                       <i class="glyphicon glyphicon-plus"></i>
                       <span>Agregar archivos</span>
                   </span>
                   
-                  <button type="reset" class="btn btn-warning cancel">
+                  <button <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> type="reset" class="btn btn-warning cancel">
                       <i class="glyphicon glyphicon-ban-circle"></i>
                       <span>Cancelar carga</span>
                   </button>
@@ -223,6 +229,7 @@
                     </div>
                 </div>
             </div>
+            <?php endif ?>
             <!--2 -->
 
             <!-- jquery upload -->
@@ -305,7 +312,7 @@
       <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
       <div class="modal-footer">
         <button type="button" class="btn btn-default upload-image" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success upload-image registrar" id="actualizar" data-dismiss="modal">Actualizar</button>
+        <button type="button" class="btn btn-success upload-image registrar" id="actualizar" name="actualizar" data-dismiss="modal">Actualizar</button>
       </div>
     </div>
     </form>
@@ -362,13 +369,12 @@
 
     //archivos
     $(document).ready(function() {
-        /*
+        
         var options = { 
             //beforeSubmit:  showRequest,
-            success: showResponse,
             dataType: 'json' 
             };
-        
+        /*
         $('body').delegate('#registrar','click', function(){
             $('#registrar').attr('disabled', true);
             $('#marca_'+$('#control_id').val()).text('');
@@ -394,17 +400,12 @@
             }
         });
 
-        /*
-        $('body').delegate('#registrar','click', function(){
-            
-            //$('#marca_'+$('#control_id').val()).text('');
-            //$('#actualizado_experto_'+$('#control_experto').val()).show();
+        $('body').delegate('#actualizar','click', function(){
+            $('#marca_'+$('#control_id').val()).text('');
+            $('#actualizado_experto_'+$('#control_experto').val()).show();
             //showPleaseWait();
-            //$('#myformexperto').ajaxForm(options).submit();
-            
-
+            $('#myformexperto').ajaxForm(options).submit();
         });
-        */
 
         $('#myform').ajaxForm({
             beforeSend: function() {
@@ -575,6 +576,7 @@
                 if(data.success==true){
                     $("#control_experto").val(cid);
                     var observaciones = data.comentario===null ? '' : data.comentario.observaciones_red;
+                    $('h4.modal-title').text('Control '+data.control.codigo);
                     $('#observaciones_expertos').val(observaciones);
                     $('#modalexpertos').modal('show');
                 }
@@ -690,7 +692,7 @@
     }    
 
 </script>
-
+<?php if(Auth::user()->perfil=='ingreso'): ?>
 <script type="text/javascript">
     
     // para cuando es no implementado cambiar boton OJO AHI
@@ -836,3 +838,4 @@
     });
 
 </script>
+<?php endif ?>
