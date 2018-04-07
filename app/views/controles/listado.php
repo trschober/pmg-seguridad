@@ -140,10 +140,10 @@
             <div class="form-group">
                 <label for="cumple" class="control-label">Implementado</label>
                 <label class="radio-inline">
-                    <input type="radio" name="cumple" id="si" value="si" <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> /> SI
+                    <input type="radio" name="cumple" id="si" value="si" <?= Auth::user()->perfil!='ingreso' ? 'disabled' : '' ?> /> SI
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="cumple" id="no" value="no" <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> /> NO
+                    <input type="radio" name="cumple" id="no" value="no" <?= Auth::user()->perfil!='ingreso' ? 'disabled' : '' ?> /> NO
                 </label>
             </div>
 
@@ -183,12 +183,12 @@
             <div id="actions" class="row cumpleform">
                 <div class="col-lg-12">
                   <!-- The fileinput-button span is used to style the file input field as button -->
-                  <span <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> class="btn btn-success fileinput-button dz-clickable">
+                  <span <?= Auth::user()->perfil!='ingreso' ? 'disabled' : '' ?> class="btn btn-success fileinput-button dz-clickable">
                       <i class="glyphicon glyphicon-plus"></i>
                       <span>Agregar archivos</span>
                   </span>
                   
-                  <button <?= Auth::user()->pefil!='ingreso' ? 'disabled' : '' ?> type="reset" class="btn btn-warning cancel">
+                  <button <?= Auth::user()->perfil!='ingreso' ? 'disabled' : '' ?> type="reset" class="btn btn-warning cancel">
                       <i class="glyphicon glyphicon-ban-circle"></i>
                       <span>Cancelar carga</span>
                   </button>
