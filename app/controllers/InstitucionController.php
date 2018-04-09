@@ -171,13 +171,13 @@ class InstitucionController extends BaseController {
 		$fpdf->Cell(0,10,utf8_decode("Porcentaje(resultado): ".$porcentaje),0,0,'L');
 	    if(!is_dir("uploads/cierre"))
 			mkdir("uploads/cierre");
-		$nombre_archivo = "uploads/cierre/certificado-cierre-".Auth::user()->institucion->id.".pdf";
+		$nombre_archivo = "uploads/cierre/certificado-cierre-".Auth::user()->institucion->id."-".Session::get('historial_id').".pdf";
 		$fpdf->Output($nombre_archivo,'F');
 		return $nombre_archivo;
 	}
 
 	public function getReporteCierre(){
-		return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'.pdf');
+		return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'-'.Session::get("historial_id").'.pdf');
 	}
 
 	public function informeCumplimiento(){
@@ -243,7 +243,7 @@ class InstitucionController extends BaseController {
 		/* Fin hoja2 */
 
 		/* Guardar excel en disco */
-		$nombre_archivo = 'uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion->id.'.xls';
+		$nombre_archivo = 'uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion->id.'-'.Session::get('historial_id').'.xls';
 		if(!is_dir("uploads/cierre"))
 			mkdir("uploads/cierre");
 	    
@@ -254,7 +254,7 @@ class InstitucionController extends BaseController {
 	}
 
 	public function getInformeCumplimiento(){
-		return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'.xls');
+		return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'-'.Session::get('historial_id').'.xls');
 	}
 
 	public function cargaPlanilla(){
