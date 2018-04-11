@@ -25,7 +25,7 @@
             <?php endif ?>
         <?php endforeach ?>
     </select>
-    <input type="submit" value="Actualizar" class="btn btn-info" />
+    <input type="submit" value="Seleccionar" class="btn btn-info" />
     </form>
 </div>
 <?php endif ?>

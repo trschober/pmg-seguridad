@@ -19,7 +19,7 @@ class RetroalimentacionController extends BaseController {
 		}
 		$data['institucion'] = Session::has('activo') ? Institucion::find($valor_institucion) : InstitucionHistorial::where('id',$valor_institucion)->where('historial_id',Session::get('historial_id'))->first();
 		$this->layout->title="Retroalimentación";
-        $this->layout->content = Session::has('activo') ? View::make('retroalimentacion/inicio',$data) : View::make('retroalimentacion/historial',$data);
+        $this->layout->content = Session::get('proceso_tipo')=='ejercicio' && Session::has('activo') ? View::make('retroalimentacion/inicio',$data) : View::make('retroalimentacion/historial',$data);
 	}
 
 	public function setObservacionesRed(){

@@ -25,7 +25,7 @@
             <?php endif ?>
         <?php endforeach ?>
     </select>
-    <input type="submit" value="Actualizar" class="btn btn-info" />
+    <input type="submit" value="Seleccionar" class="btn btn-info" />
     </form>
 </div>
 <?php endif ?>
@@ -35,13 +35,20 @@
 
 <div class="form-group">
 <form action="<?=URL::to('retroalimentacion/observaciones')?>" method="POST" enctype="multipart/form-data">
-      <?php if(!is_null($institucion->observaciones_red)): ?>
-        <div class="form-group">
-          <label for="message-text" class="control-label">Observaciones:</label>
-            <textarea cols="20" rows="20" style="resize:none" class="form-control" id="observacion_red" name="observacion_red" <?=$disabled?> ><?=$institucion->observaciones_red?></textarea>
-        </div>
+      <?php if(Auth::user()->perfil!='experto'): ?>
+        <?php if(!is_null($institucion->observaciones_red)): ?>
+          <div class="form-group">
+            <label for="message-text" class="control-label">Observaciones:</label>
+              <textarea cols="20" rows="20" style="resize:none" class="form-control" id="observacion_red" name="observacion_red" <?=$disabled?> ><?=$institucion->observaciones_red?></textarea>
+          </div>
+        <?php else: ?>
+          <div class="alert alert-info" role="alert">No se registran observaciones para el proceso</div>
+        <?php endif ?>
       <?php else: ?>
-        <div class="alert alert-info" role="alert">No se registran observaciones para el proceso</div>
+        <div class="form-group">
+            <label for="message-text" class="control-label">Observaciones:</label>
+              <textarea cols="20" rows="20" style="resize:none" class="form-control" id="observacion_red" name="observacion_red" <?=$disabled?> ><?=$institucion->observaciones_red?></textarea>
+          </div>
       <?php endif ?>
   </div>
   <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
