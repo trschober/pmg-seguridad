@@ -177,7 +177,10 @@ class InstitucionController extends BaseController {
 	}
 
 	public function getReporteCierre(){
-		return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'-'.Session::get("historial_id").'.pdf');
+		if(Session::get("historial_id")>2)
+			return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'-'.Session::get("historial_id").'.pdf');
+		else
+			return Response::download('uploads/cierre/certificado-cierre-'.Auth::user()->institucion_id.'.pdf');
 	}
 
 	public function informeCumplimiento(){
@@ -254,7 +257,10 @@ class InstitucionController extends BaseController {
 	}
 
 	public function getInformeCumplimiento(){
-		return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'-'.Session::get('historial_id').'.xls');
+		if(Session::get("historial_id")>2)
+			return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'-'.Session::get('historial_id').'.xls');
+		else
+			return Response::download('uploads/cierre/informe-cumplimiento-'.Auth::user()->institucion_id.'-'.'.xls');
 	}
 
 	public function cargaPlanilla(){

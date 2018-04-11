@@ -18,7 +18,8 @@ class HomeController extends BaseController {
 		$porcentaje_actualizados = ($data['controles_actualizados']*100)/$data['total_controles'];
 		$data['porcentaje_actualizados'] = number_format($porcentaje_actualizados, 1, '.', '');
 		$data['habilitado'] = $this->getHabilitacion();
+		$data['documentos_descarga'] = Session::get("historial_id")>1 ? true : false;
 		$this->layout->title= "Seguridad de la Información";
     	$this->layout->content = View::make('bienvenida',$data);
-	}
+	}	
 }

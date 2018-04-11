@@ -3,16 +3,22 @@
 </ol>
 
 <div id="home-container" class="row">
+
+	<?php if(Session::has('sesion_historial')): ?>
+	  <div class="alert alert-warning" role="alert"><h3>Estás viendo el <strong><?=Session::get('sesion_historial')?></strong></h3></div>
+	<?php endif; ?>
 	
-	<?php if(Auth::user()->perfil!='experto' && Auth::user()->institucion->estado!='cerrado'): ?>
-	<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
-	<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado=='rechazado'): ?>
-		<div class="alert alert-warning" role="alert"><h2><strong>Observaciones validador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
-	<?php endif;?>
-	<div class="alert alert-success" role="alert"><h2><strong>Controles actualizados</strong></h2><h3>El servicio tiene <?=$controles_actualizados?> controles actualizados de un total de <?=$total_controles?></h3></div>
-	<div class="progress">
-		<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <?=$porcentaje_actualizados?>%;"><?=$porcentaje_actualizados?>%</div>
-	</div>
+	<?php if(Session::has('activo')): ?>
+		<?php if(Auth::user()->perfil!='experto' && Auth::user()->institucion->estado!='cerrado'): ?>
+		<div class="alert alert-warning" role="alert"><div id="clock" class="lead"></div></div>
+		<?php if(!is_null(Auth::user()->institucion->observaciones_aprobador) && Auth::user()->institucion->estado=='rechazado'): ?>
+			<div class="alert alert-warning" role="alert"><h2><strong>Observaciones validador</strong></h2><br><?=Auth::user()->institucion->observaciones_aprobador?></div>
+		<?php endif;?>
+		<div class="alert alert-success" role="alert"><h2><strong>Controles actualizados</strong></h2><h3>El servicio tiene <?=$controles_actualizados?> controles actualizados de un total de <?=$total_controles?></h3></div>
+		<div class="progress">
+			<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <?=$porcentaje_actualizados?>%;"><?=$porcentaje_actualizados?>%</div>
+		</div>
+		<?php endif ?>
 	<?php endif ?>
 	
 	<div class="well">
@@ -56,11 +62,11 @@
 			<div class="">
 				<h3>Acciones</h3>
 				<?php
-					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado")) && $habilitado):
+					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado")) && $habilitado && Session::has('activo')):
 				?>
 				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" id="validar" name="validar">Enviar a validador</a>
 				<?php
-					elseif(Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado"))):
+					elseif(Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado")) && Session::has('activo')):
 				?>
 				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap" id="rechazar" name="rechazar">Rechazar</button>
 				<br><br>
@@ -70,12 +76,14 @@
 		</div>
 		<div class="col-md-3">
 			<div class="">
+				<?php if($documentos_descarga): ?>
 				<h3>Descarga</h3>
-				<?php
-					if(Auth::user()->institucion->estado=='cerrado'):
-				?>
-				<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Certificado Red de Expertos SSI</a><br/><br/>
-				<a href="<?=URL::to('institucion/informe-cumplimiento')?>" class="btn btn-success">Informe de cumplimiento</a><br/><br/>
+					<?php if( (Auth::user()->institucion->estado=='cerrado' && Session::get('proceso_tipo')=='ejercicio' && Session::has('activo')) || (!Session::has('activo') && Session::get('proceso_tipo')=='ejercicio') ): ?>
+						<a href="<?=URL::to('institucion/informe-cumplimiento')?>" class="btn btn-success">Informe de cumplimiento</a><br/><br/>
+					<?php endif;?>
+					<?php if( !Session::has('activo') || (Session::has('activo') && Auth::user()->institucion->estado=='cerrado') ): ?>
+						<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Certificado Red de Expertos SSI</a><br/><br/>
+					<?php endif;?>
 				<?php endif;?>
 			</div>
 		</div>
