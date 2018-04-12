@@ -90,6 +90,13 @@ class ControlController extends BaseController{
 						$archivo->filename=$archivo_nombre;
 						$file->move('uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
 						$archivo->save();
+
+						$archivoh = new ArchivoHistorial;
+						$archivoh->institucion_id=Auth::user()->institucion_id;
+						$archivoh->control_id=Input::get('control_id');
+						$archivoh->filename=$archivo_nombre;
+						$archivoh->historial_id=Session::get('historial_id');
+						$archivoh->save();
 			}
 		}else{
 			$comentario->anio_implementacion = '-';
@@ -117,14 +124,6 @@ class ControlController extends BaseController{
 		if($comentario->cumple=='si'){
 			$comentario_historial->observaciones_institucion = null;
 			$comentario_historial->desc_medio_verificacion = Input::get('des_medios_ver');
-			if(Input::hasFile('file')){
-				$file = Input::file('file');
-				$archivoh = new ArchivoHistorial;
-				$archivoh->institucion_id=Auth::user()->institucion_id;
-				$archivoh->control_id=Input::get('control_id');
-				$archivoh->filename=$archivo_nombre;
-				$archivoh->save();
-			}
 		}else{
 			$comentario_historial->anio_implementacion = '-';
 			$comentario_historial->desc_medio_verificacion = NULL;
