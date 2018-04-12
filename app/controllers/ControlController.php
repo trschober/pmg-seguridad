@@ -102,34 +102,28 @@ class ControlController extends BaseController{
 		$comentario->save();
 
 		//Historial del ejercicio activo
-		/*
 		$comentario_historial = ComentarioHistorial::where('institucion_id',Auth::user()->institucion_id)->where('historial_id',Session::get('historial_id'))->where('control_id',Input::get('control_id'))->first();
 		$control = Control::find(Input::get('control_id'));
 		if($comentario_historial===null)
 			$comentario_historial = new ComentarioHistorial;
-		if(Input::has('cumplimiento'))
-			$comentario_historial->cumple = Input::get('cumplimiento');
+		if(Input::has('cumple'))
+			$comentario_historial->cumple = Input::get('cumple');
 		if(Input::has('comentario_incumplimiento'))
 			$comentario_historial->observaciones_institucion = Input::get('comentario_incumplimiento');
 		$comentario_historial->anio_implementacion = Input::has('anio_implementacion') ? Input::get('anio_implementacion') : '-';
 		$comentario_historial->institucion_id = Auth::user()->institucion_id;
 		$comentario_historial->control_id = Input::get('control_id');
 		$comentario_historial->historial_id = Session::get('historial_id');
-		$comentario_historial->desc_medio_verificacion = Input::get('des_medios_ver');
-		if(Input::hasFile('file') && $comentario->cumple=='si'){
+		if($comentario->cumple=='si'){
 			$comentario_historial->observaciones_institucion = null;
+			$comentario_historial->desc_medio_verificacion = Input::get('des_medios_ver');
 			if(Input::hasFile('file')){
 				$file = Input::file('file');
-				$archivo = new Archivo;
-				$archivo->institucion_id=Auth::user()->institucion_id;
-				$archivo->control_id=Input::get('control_id');
-				$archivo_nombre = $file->getClientOriginalName();
-				$archivo_nombre = \Helpers::cleanFileName($archivo_nombre);
-				$codigo_control = str_replace(".","",$control->codigo);
-				$archivo_nombre = Auth::user()->institucion->codigo_indicador.'_'.Auth::user()->institucion->codigo_servicio.'_'.$control->id.'_'.Auth::user()->institucion->sigla.'_'.$codigo_control.'_'.$archivo_nombre;
-				$archivo->filename=$archivo_nombre;
-				$file->move('uploads/controles/'.Auth::user()->institucion_id.'/'.$control->id,$archivo_nombre);
-				$archivo->save();
+				$archivoh = new ArchivoHistorial;
+				$archivoh->institucion_id=Auth::user()->institucion_id;
+				$archivoh->control_id=Input::get('control_id');
+				$archivoh->filename=$archivo_nombre;
+				$archivoh->save();
 			}
 		}else{
 			$comentario_historial->anio_implementacion = '-';
@@ -139,7 +133,7 @@ class ControlController extends BaseController{
 				$file->delete();
 			}
 		}
-		$comentario_historial->save();*/
+		$comentario_historial->save();
 
 		return Response::json(['success' => true,'control'=>$control->id, 'implementado'=> ucfirst($comentario->cumple)]);
 	}
