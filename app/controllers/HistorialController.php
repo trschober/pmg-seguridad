@@ -24,9 +24,6 @@ class HistorialController extends BaseController {
 		else
 			Session::forget('activo');
 
-		if(Auth::user()->perfil==='validador')
-			return Redirect::to('bienvenida');
-		else
-			return Redirect::to('controles');
+		return Redirect::to('bienvenida');
 	}
 }
