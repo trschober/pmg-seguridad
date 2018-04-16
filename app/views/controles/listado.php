@@ -187,11 +187,6 @@
                       <i class="glyphicon glyphicon-plus"></i>
                       <span>Agregar archivos</span>
                   </span>
-                  
-                  <button <?= Auth::user()->perfil!='ingreso' ? 'disabled' : '' ?> type="reset" class="btn btn-warning cancel">
-                      <i class="glyphicon glyphicon-ban-circle"></i>
-                      <span>Cancelar carga</span>
-                  </button>
                 </div>
             </div>
             
