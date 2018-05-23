@@ -17,7 +17,7 @@
         <tr <?= $h->activo? 'class="success"' : '' ?> >
           <td><?=$h->anio?></td>
           <td><?=strtoupper($h->tipo)?> <?= $h->activo? '<strong>(Activo)</strong>' : '' ?></td>
-          <td><a href="<?=URL::to('ejercicio')."/".$h->id?>">Revisar</a></td>
+          <td><a href="<?=URL::to('ejercicio')."/".$h->id?>">Ir</a></td>
         </tr>
     <?php endforeach ?>
     </tbody>
