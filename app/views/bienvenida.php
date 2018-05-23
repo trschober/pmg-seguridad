@@ -62,27 +62,28 @@
 			<div class="">
 				<h3>Acciones</h3>
 				<?php
-					if(Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado")) && $habilitado && Session::has('activo')):
+					if(Auth::user()->perfil=='ingreso'):
 				?>
-				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success" id="validar" name="validar">Enviar a validador</a>
+				<a href="<?=URL::to('institucion/aprobar')?>" class="btn btn-success btn-sm" id="validar" name="validar" <?= Auth::user()->perfil=='ingreso' && in_array(Auth::user()->institucion->estado,array("ingresado","rechazado")) && $habilitado && Session::has('activo') ? '' : 'disabled'?> >Enviar a validador</a>
 				<?php
-					elseif(Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado")) && Session::has('activo')):
+					elseif(Auth::user()->perfil=='validador'):
 				?>
-				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap" id="rechazar" name="rechazar">Rechazar</button>
+				<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalaprobador" data-whatever="@getbootstrap" id="rechazar" name="rechazar" <?= Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado")) && Session::has('activo') ? '' : 'disabled' ?> >Rechazar</button>
 				<br><br>
-				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success" id="cerrar" name="cerrar">Aprobar y enviar a la Red de Expertos</a>
+				<a href="<?=URL::to('institucion/cerrar')?>" class="btn btn-success btn-sm" id="cerrar" name="cerrar" <?= Auth::user()->perfil=='validador' && in_array(Auth::user()->institucion->estado,array("enviado")) && Session::has('activo') ? '' : 'disabled' ?>>Aprobar y enviar a la Red de Expertos</a>
 				<?php endif;?>
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="">
 				<?php if($documentos_descarga): ?>
-				<h3>Descarga</h3>
+				<h3>Certificados</h3>
 					<?php if( (Auth::user()->institucion->estado=='cerrado' && Session::get('proceso_tipo')=='ejercicio' && Session::has('activo')) || (!Session::has('activo') && Session::get('proceso_tipo')=='ejercicio') ): ?>
-						<a href="<?=URL::to('institucion/informe-cumplimiento')?>" class="btn btn-success">Informe de cumplimiento</a><br/><br/>
+						<a href="<?=URL::to('institucion/informe-cumplimiento')?>"><span class='glyphicon glyphicon-download'></span>&nbsp;Informe de cumplimiento</a><br>
+						<a href="<?=URL::to('retroalimentacion/resultado-cumplimiento')?>"><span class='glyphicon glyphicon-download'></span>&nbsp;Informe Red de Expertos</a><br>
 					<?php endif;?>
 					<?php if( !Session::has('activo') || (Session::has('activo') && Auth::user()->institucion->estado=='cerrado') ): ?>
-						<a href="<?=URL::to('institucion/informe-cierre')?>" class="btn btn-success">Certificado Red de Expertos SSI</a><br/><br/>
+						<a href="<?=URL::to('institucion/informe-cierre')?>"><span class='glyphicon glyphicon-download'></span>&nbsp;Certificado Red de Expertos SSI</a>
 					<?php endif;?>
 				<?php endif;?>
 			</div>
