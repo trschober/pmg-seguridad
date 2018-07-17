@@ -41,7 +41,8 @@
 				    	<tr><td>Nicole Merino</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
 				    	<tr><td>Tomás Riveros</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
 				    	<tr><td>Macarena Calderón</td><td><a href="mailto:ssi@minsegpres.gob.cl">ssi@minsegpres.gob.cl</a></td></tr>
-				    	<tr><td>Rodrigo Pérez</td><td><a href="mailto:ssi@subtel.gob.cl">ssi@subtel.gob.cl</a></td></tr>
+				    	<tr><td>Marco Valderrama</td><td><a href="mailto:marco.valderrama@subtel.gob.cl">marco.valderrama@subtel.gob.cl</a></td><td>2 2588 8000 anexo 3021</td></tr>
+                		<tr><td>Marco Espoz</td><td><a href="mailto:mespoz@subtel.gob.cl">mespoz@subtel.gob.cl</a></td><td>2 2588 8000 anexo 3035</td></tr>
 				    </tbody>
 				</table>
 			</div>
